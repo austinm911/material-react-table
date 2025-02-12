@@ -43,18 +43,11 @@ import type { AutocompleteProps } from "@mui/material/Autocomplete";
 import type { BoxProps } from "@mui/material/Box";
 import type { ChipProps } from "@mui/material/Chip";
 import type { CircularProgressProps } from "@mui/material/CircularProgress";
-import type { DialogProps } from "@mui/material/Dialog";
 import type { LinearProgressProps } from "@mui/material/LinearProgress";
 import type { PaginationProps } from "@mui/material/Pagination";
 import type { PaperProps } from "@mui/material/Paper";
 import type { RadioProps } from "@mui/material/Radio";
-import type { TableProps } from "@mui/material/Table";
-import type { TableBodyProps } from "@mui/material/TableBody";
-import type { TableCellProps } from "@mui/material/TableCell";
 import type { TableContainerProps } from "@mui/material/TableContainer";
-import type { TableFooterProps } from "@mui/material/TableFooter";
-import type { TableHeadProps } from "@mui/material/TableHead";
-import type { TableRowProps } from "@mui/material/TableRow";
 import type { TextFieldProps } from "@mui/material/TextField";
 import type { Theme } from "@mui/material/styles";
 import type {
@@ -73,6 +66,14 @@ import type { Slider } from "./components/ui/slider";
 import type { Select } from "./components/ui/select";
 import type { RadioGroup, RadioGroupItem } from "./components/ui/radio-group";
 import type { Dialog } from "./components/ui/dialog";
+import type {
+	Table as ShadcnTable,
+	TableBody,
+	TableCell,
+	TableFooter,
+	TableHead,
+	TableRow,
+} from "./components/ui/table";
 
 // type DatePickerProps = React.ComponentProps<typeof DatePicker>;
 type RadioItemProps = React.ComponentProps<typeof RadioGroupItem>;
@@ -83,7 +84,12 @@ type SelectProps = React.ComponentProps<typeof Select>;
 type DialogProps = React.ComponentProps<typeof Dialog>;
 type SkeletonProps = React.ComponentProps<typeof Skeleton>;
 type SliderProps = React.ComponentProps<typeof Slider>;
-
+type TableProps = React.ComponentProps<typeof ShadcnTable>;
+type TableBodyProps = React.ComponentProps<typeof TableBody>;
+type TableCellProps = React.ComponentProps<typeof TableCell>;
+type TableFooterProps = React.ComponentProps<typeof TableFooter>;
+type TableHeadProps = React.ComponentProps<typeof TableHead>;
+type TableRowProps = React.ComponentProps<typeof TableRow>;
 export type { MRT_Icons };
 export type LiteralUnion<T extends U, U = string> =
 	| T

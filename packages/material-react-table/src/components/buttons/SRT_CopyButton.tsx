@@ -30,7 +30,7 @@ export const SRT_CopyButton = <TData extends MRT_RowData>({
 		setTimeout(() => setCopied(false), 4000);
 	};
 
-	// Merge additional props from table and column def
+	// Merge additional props from table and column definition
 	const buttonProps = {
 		...parseFromValuesOrFunc(muiCopyButtonProps, { cell, column, row, table }),
 		...parseFromValuesOrFunc(columnDef.muiCopyButtonProps, {
