@@ -3,18 +3,18 @@ import { cn } from "@/lib/utils";
 import { Separator } from "../ui/separator";
 import type { MRT_Header, MRT_RowData, MRT_TableInstance } from "../../types";
 
-export interface XXX_TableHeadCellResizeHandleProps<TData extends MRT_RowData>
+export interface SRT_TableHeadCellResizeHandleProps<TData extends MRT_RowData>
 	extends React.ComponentProps<"div"> {
 	header: MRT_Header<TData>;
 	table: MRT_TableInstance<TData>;
 }
 
-export const XXX_TableHeadCellResizeHandle = <TData extends MRT_RowData>({
+export const SRT_TableHeadCellResizeHandle = <TData extends MRT_RowData>({
 	header,
 	table,
 	className,
 	...rest
-}: XXX_TableHeadCellResizeHandleProps<TData>) => {
+}: SRT_TableHeadCellResizeHandleProps<TData>) => {
 	const {
 		getState,
 		options: { columnResizeDirection, columnResizeMode },

@@ -4,17 +4,17 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import type { MRT_Cell, MRT_RowData, MRT_TableInstance } from "../../types";
 import { parseFromValuesOrFunc } from "../../utils/utils";
 
-export interface XXX_CopyButtonProps<TData extends MRT_RowData>
+export interface SRT_CopyButtonProps<TData extends MRT_RowData>
 	extends React.ComponentProps<"button"> {
 	cell: MRT_Cell<TData>;
 	table: MRT_TableInstance<TData>;
 }
 
-export const XXX_CopyButton = <TData extends MRT_RowData>({
+export const SRT_CopyButton = <TData extends MRT_RowData>({
 	cell,
 	table,
 	...rest
-}: XXX_CopyButtonProps<TData>) => {
+}: SRT_CopyButtonProps<TData>) => {
 	const {
 		options: { localization, muiCopyButtonProps },
 	} = table;

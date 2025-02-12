@@ -1,6 +1,8 @@
 import { type DragEvent, useMemo } from "react";
-import { cn } from "@/lib/utils";
-import { TableHead } from "../ui/table";
+import Box from "@mui/material/Box";
+import TableCell, { type TableCellProps } from "@mui/material/TableCell";
+import { useTheme } from "@mui/material/styles";
+import type { Theme } from "@mui/material/styles";
 import { MRT_TableHeadCellColumnActionsButton } from "./MRT_TableHeadCellColumnActionsButton";
 import { MRT_TableHeadCellFilterContainer } from "./MRT_TableHeadCellFilterContainer";
 import { MRT_TableHeadCellFilterLabel } from "./MRT_TableHeadCellFilterLabel";
@@ -17,22 +19,22 @@ import { getCommonMRTCellStyles } from "../../utils/style.utils";
 import { parseFromValuesOrFunc } from "../../utils/utils";
 import { cellKeyboardShortcuts } from "../../utils/cell.utils";
 
-export interface XXX_TableHeadCellProps<TData extends MRT_RowData>
-	extends React.ComponentProps<"th"> {
+export interface SRT_TableHeadCellProps<TData extends MRT_RowData>
+	extends TableCellProps {
 	columnVirtualizer?: MRT_ColumnVirtualizer;
 	header: MRT_Header<TData>;
 	staticColumnIndex?: number;
 	table: MRT_TableInstance<TData>;
 }
 
-export const XXX_TableHeadCell = <TData extends MRT_RowData>({
+export const SRT_TableHeadCell = <TData extends MRT_RowData>({
 	columnVirtualizer,
 	header,
 	staticColumnIndex,
 	table,
 	...rest
-}: XXX_TableHeadCellProps<TData>) => {
-	// const theme = useTheme();
+}: SRT_TableHeadCellProps<TData>) => {
+	const theme = useTheme();
 	const {
 		getState,
 		options: {
@@ -107,11 +109,11 @@ export const XXX_TableHeadCell = <TData extends MRT_RowData>({
 			!header.subHeaders.length;
 
 		const borderStyle = showResizeBorder
-			? "2px solid var(--mrt-dragging-border-color)"
+			? `2px solid ${draggingBorderColor} !important`
 			: draggingColumn?.id === column.id
-				? "1px dashed hsl(var(--muted-foreground))"
+				? `1px dashed ${theme.palette.grey[500]}`
 				: hoveredColumn?.id === column.id
-					? "2px dashed var(--mrt-dragging-border-color)"
+					? `2px dashed ${draggingBorderColor}`
 					: undefined;
 
 		if (showResizeBorder) {
@@ -119,13 +121,15 @@ export const XXX_TableHeadCell = <TData extends MRT_RowData>({
 				? { borderRight: borderStyle }
 				: { borderLeft: borderStyle };
 		}
-		return borderStyle
+		const draggingBorders = borderStyle
 			? {
 					borderLeft: borderStyle,
 					borderRight: borderStyle,
 					borderTop: borderStyle,
 				}
 			: undefined;
+
+		return draggingBorders;
 	}, [draggingColumn, hoveredColumn, columnSizingInfo.isResizingColumn]);
 
 	const handleDragEnter = (_e: DragEvent) => {
@@ -145,10 +149,10 @@ export const XXX_TableHeadCell = <TData extends MRT_RowData>({
 		}
 	};
 
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLTableCellElement>) => {
-		tableCellProps?.onKeyDown?.(e);
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLTableCellElement>) => {
+		tableCellProps?.onKeyDown?.(event);
 		cellKeyboardShortcuts({
-			event: e,
+			event,
 			cellValue: header.column.columnDef.header,
 			table,
 			header,
@@ -163,20 +167,20 @@ export const XXX_TableHeadCell = <TData extends MRT_RowData>({
 		}) ?? columnDef.header;
 
 	return (
-		<TableHead
+		<TableCell
 			align={
 				columnDefType === "group"
 					? "center"
-					: column.columnDef.headerAlign?.(
-							header.getContext(),
-						) /* RTL handled by CSS */
+					: theme.direction === "rtl"
+						? "right"
+						: "left"
 			}
 			aria-sort={
 				column.getIsSorted()
 					? column.getIsSorted() === "asc"
 						? "ascending"
 						: "descending"
-					: undefined
+					: "none"
 			}
 			colSpan={header.colSpan}
 			data-can-sort={column.getCanSort() || undefined}
@@ -187,7 +191,7 @@ export const XXX_TableHeadCell = <TData extends MRT_RowData>({
 			onDragOver={handleDragOver}
 			ref={(node: HTMLTableCellElement) => {
 				if (node) {
-					tableHeadCellRefs.current[column.id] = node;
+					tableHeadCellRefs.current![column.id] = node;
 					if (columnDefType !== "group") {
 						columnVirtualizer?.measureElement?.(node);
 					}
@@ -195,75 +199,146 @@ export const XXX_TableHeadCell = <TData extends MRT_RowData>({
 			}}
 			tabIndex={enableKeyboardShortcuts ? 0 : undefined}
 			{...tableCellProps}
-			className={cn(
-				"group/head align-top",
-				layoutMode?.startsWith("grid") ? "flex-col" : "flex",
-				enableMultiSort && column.getCanSort() && "select-none",
-				density === "compact"
-					? "p-2"
-					: density === "comfortable"
-						? columnDefType === "display"
-							? "p-3"
-							: "p-4"
-						: "p-6",
-				tableCellProps?.className,
-			)}
 			onKeyDown={handleKeyDown}
-			style={{
+			sx={(theme: Theme) => ({
+				"& :hover": {
+					".MuiButtonBase-root": {
+						opacity: 1,
+					},
+				},
+				flexDirection: layoutMode?.startsWith("grid") ? "column" : undefined,
+				fontWeight: "bold",
+				overflow: "visible",
+				p:
+					density === "compact"
+						? "0.5rem"
+						: density === "comfortable"
+							? columnDefType === "display"
+								? "0.75rem"
+								: "1rem"
+							: columnDefType === "display"
+								? "1rem 1.25rem"
+								: "1.5rem",
+				pb:
+					columnDefType === "display"
+						? 0
+						: showColumnFilters || density === "compact"
+							? "0.4rem"
+							: "0.6rem",
+				pt:
+					columnDefType === "group" || density === "compact"
+						? "0.25rem"
+						: density === "comfortable"
+							? ".75rem"
+							: "1.25rem",
+				userSelect: enableMultiSort && column.getCanSort() ? "none" : undefined,
+				verticalAlign: "top",
+				...getCommonMRTCellStyles({
+					column,
+					header,
+					table,
+					tableCellProps,
+					theme,
+				}),
 				...draggingBorders,
-				...tableCellProps?.style,
-			}}
+			})}
 		>
-			{header.isPlaceholder ? null : (
-				<div className="flex w-full items-center justify-between gap-2">
-					<div
-						className={cn(
-							"flex items-center gap-1",
-							column.getCanSort() &&
-								columnDefType !== "group" &&
-								"cursor-pointer",
-							columnDefType === "data" && "min-w-[4ch]",
-						)}
-						onClick={column.getToggleSortingHandler()}
-					>
-						<span className="truncate font-medium">{HeaderElement}</span>
-						{column.getCanFilter() && (
-							<MRT_TableHeadCellFilterLabel header={header} table={table} />
-						)}
-						{column.getCanSort() && (
-							<MRT_TableHeadCellSortLabel header={header} table={table} />
-						)}
-					</div>
-
-					<div className="flex items-center gap-1">
-						{columnDefType !== "group" && (
-							<>
-								{showDragHandle && (
-									<MRT_TableHeadCellGrabHandle
-										column={column}
-										table={table}
-										tableHeadCellRef={{
-											current: tableHeadCellRefs.current?.[column.id]!,
-										}}
-									/>
+			{header.isPlaceholder
+				? null
+				: (tableCellProps.children ?? (
+						<Box
+							className="Mui-TableHeadCell-Content"
+							sx={{
+								alignItems: "center",
+								display: "flex",
+								flexDirection:
+									tableCellProps?.align === "right" ? "row-reverse" : "row",
+								justifyContent:
+									columnDefType === "group" ||
+									tableCellProps?.align === "center"
+										? "center"
+										: column.getCanResize()
+											? "space-between"
+											: "flex-start",
+								position: "relative",
+								width: "100%",
+							}}
+						>
+							<Box
+								className="Mui-TableHeadCell-Content-Labels"
+								onClick={column.getToggleSortingHandler()}
+								sx={{
+									alignItems: "center",
+									cursor:
+										column.getCanSort() && columnDefType !== "group"
+											? "pointer"
+											: undefined,
+									display: "flex",
+									flexDirection:
+										tableCellProps?.align === "right" ? "row-reverse" : "row",
+									overflow: columnDefType === "data" ? "hidden" : undefined,
+									pl:
+										tableCellProps?.align === "center"
+											? `${headerPL}rem`
+											: undefined,
+								}}
+							>
+								<Box
+									className="Mui-TableHeadCell-Content-Wrapper"
+									sx={{
+										"&:hover": {
+											textOverflow: "clip",
+										},
+										minWidth: `${Math.min(columnDef.header?.length ?? 0, 4)}ch`,
+										overflow: columnDefType === "data" ? "hidden" : undefined,
+										textOverflow: "ellipsis",
+										whiteSpace:
+											(columnDef.header?.length ?? 0) < 20
+												? "nowrap"
+												: "normal",
+									}}
+								>
+									{HeaderElement}
+								</Box>
+								{column.getCanFilter() && (
+									<MRT_TableHeadCellFilterLabel header={header} table={table} />
 								)}
-								{showColumnActions && (
-									<MRT_TableHeadCellColumnActionsButton
-										header={header}
-										table={table}
-									/>
+								{column.getCanSort() && (
+									<MRT_TableHeadCellSortLabel header={header} table={table} />
 								)}
-							</>
-						)}
-						{column.getCanResize() && (
-							<MRT_TableHeadCellResizeHandle header={header} table={table} />
-						)}
-					</div>
-				</div>
-			)}
+							</Box>
+							{columnDefType !== "group" && (
+								<Box
+									className="Mui-TableHeadCell-Content-Actions"
+									sx={{
+										whiteSpace: "nowrap",
+									}}
+								>
+									{showDragHandle && (
+										<MRT_TableHeadCellGrabHandle
+											column={column}
+											table={table}
+											tableHeadCellRef={{
+												current: tableHeadCellRefs.current?.[column.id]!,
+											}}
+										/>
+									)}
+									{showColumnActions && (
+										<MRT_TableHeadCellColumnActionsButton
+											header={header}
+											table={table}
+										/>
+									)}
+								</Box>
+							)}
+							{column.getCanResize() && (
+								<MRT_TableHeadCellResizeHandle header={header} table={table} />
+							)}
+						</Box>
+					))}
 			{columnFilterDisplayMode === "subheader" && column.getCanFilter() && (
 				<MRT_TableHeadCellFilterContainer header={header} table={table} />
 			)}
-		</TableHead>
+		</TableCell>
 	);
 };

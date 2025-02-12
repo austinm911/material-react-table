@@ -12,18 +12,18 @@ import type { MRT_Header, MRT_RowData, MRT_TableInstance } from "../../types";
 import { parseFromValuesOrFunc } from "../../utils/utils";
 import { Button } from "../ui/button";
 
-export interface XXX_TableHeadCellSortLabelProps<TData extends MRT_RowData>
+export interface SRT_TableHeadCellSortLabelProps<TData extends MRT_RowData>
 	extends React.ComponentProps<"button"> {
 	header: MRT_Header<TData>;
 	table: MRT_TableInstance<TData>;
 }
 
-export const XXX_TableHeadCellSortLabel = <TData extends MRT_RowData>({
+export const SRT_TableHeadCellSortLabel = <TData extends MRT_RowData>({
 	header,
 	table,
 	className,
 	...rest
-}: XXX_TableHeadCellSortLabelProps<TData>) => {
+}: SRT_TableHeadCellSortLabelProps<TData>) => {
 	const {
 		getState,
 		options: { localization },

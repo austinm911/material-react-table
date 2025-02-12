@@ -16,18 +16,18 @@ import {
 import { getValueAndLabel, parseFromValuesOrFunc } from "../../utils/utils";
 import { cn } from "@/lib/utils";
 
-export interface XXX_TableHeadCellFilterLabelProps<TData extends MRT_RowData>
+export interface SRT_TableHeadCellFilterLabelProps<TData extends MRT_RowData>
 	extends React.ComponentProps<"button"> {
 	header: MRT_Header<TData>;
 	table: MRT_TableInstance<TData>;
 }
 
-export const XXX_TableHeadCellFilterLabel = <TData extends MRT_RowData>({
+export const SRT_TableHeadCellFilterLabel = <TData extends MRT_RowData>({
 	header,
 	table,
 	className,
 	...rest
-}: XXX_TableHeadCellFilterLabelProps<TData>) => {
+}: SRT_TableHeadCellFilterLabelProps<TData>) => {
 	const {
 		options: {
 			columnFilterDisplayMode,

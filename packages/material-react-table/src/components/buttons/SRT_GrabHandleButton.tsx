@@ -9,7 +9,7 @@ import {
 import type { MRT_RowData, MRT_TableInstance } from "../../types";
 import { cn } from "@/lib/utils";
 
-export interface XXX_GrabHandleButtonProps<TData extends MRT_RowData>
+export interface SRT_GrabHandleButtonProps<TData extends MRT_RowData>
 	extends React.ComponentProps<"button"> {
 	location?: "column" | "row";
 	onDragEnd: DragEventHandler<HTMLButtonElement>;
@@ -17,13 +17,13 @@ export interface XXX_GrabHandleButtonProps<TData extends MRT_RowData>
 	table: MRT_TableInstance<TData>;
 }
 
-export const XXX_GrabHandleButton = <TData extends MRT_RowData>({
+export const SRT_GrabHandleButton = <TData extends MRT_RowData>({
 	className,
 	location,
 	table,
 	title,
 	...rest
-}: XXX_GrabHandleButtonProps<TData>) => {
+}: SRT_GrabHandleButtonProps<TData>) => {
 	const {
 		options: {
 			icons: { DragHandleIcon },

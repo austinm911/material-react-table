@@ -5,7 +5,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import MenuItem, { type MenuItemProps } from "@mui/material/MenuItem";
 import type { MRT_RowData, MRT_TableInstance } from "../../types";
 
-export interface MRT_ActionMenuItemProps<TData extends MRT_RowData>
+export interface SRT_ActionMenuItemProps<TData extends MRT_RowData>
 	extends MenuItemProps {
 	icon: ReactNode;
 	label: string;
@@ -13,13 +13,13 @@ export interface MRT_ActionMenuItemProps<TData extends MRT_RowData>
 	table: MRT_TableInstance<TData>;
 }
 
-export const MRT_ActionMenuItem = <TData extends MRT_RowData>({
+export const SRT_ActionMenuItem = <TData extends MRT_RowData>({
 	icon,
 	label,
 	onOpenSubMenu,
 	table,
 	...rest
-}: MRT_ActionMenuItemProps<TData>) => {
+}: SRT_ActionMenuItemProps<TData>) => {
 	const {
 		options: {
 			icons: { ArrowRightIcon },

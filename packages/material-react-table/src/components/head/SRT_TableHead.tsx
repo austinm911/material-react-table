@@ -1,7 +1,7 @@
 import type React from "react";
 import { cn } from "@/lib/utils";
-import { MRT_TableHeadRow } from "./MRT_TableHeadRow";
-import { TableHeader } from "../ui/table";
+import { SRT_TableHeadRow } from "./SRT_TableHeadRow";
+import { TableHead, TableHeader, TableRow } from "../ui/table";
 import type {
 	MRT_ColumnVirtualizer,
 	MRT_RowData,
@@ -10,17 +10,17 @@ import type {
 import { parseFromValuesOrFunc } from "../../utils/utils";
 import { MRT_ToolbarAlertBanner } from "../toolbar/MRT_ToolbarAlertBanner";
 
-export interface XXX_TableHeadProps<TData extends MRT_RowData>
+export interface SRT_TableHeadProps<TData extends MRT_RowData>
 	extends React.ComponentProps<"thead"> {
 	columnVirtualizer?: MRT_ColumnVirtualizer;
 	table: MRT_TableInstance<TData>;
 }
 
-export const XXX_TableHead = <TData extends MRT_RowData>({
+export const SRT_TableHead = <TData extends MRT_RowData>({
 	columnVirtualizer,
 	table,
 	...rest
-}: XXX_TableHeadProps<TData>) => {
+}: SRT_TableHeadProps<TData>) => {
 	const {
 		getState,
 		options: {
@@ -75,7 +75,7 @@ export const XXX_TableHead = <TData extends MRT_RowData>({
 				table
 					.getHeaderGroups()
 					.map((headerGroup) => (
-						<MRT_TableHeadRow
+						<SRT_TableHeadRow
 							columnVirtualizer={columnVirtualizer}
 							headerGroup={headerGroup}
 							key={headerGroup.id}

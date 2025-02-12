@@ -2,21 +2,21 @@ import type { DragEvent, RefObject } from "react";
 import type { MRT_Column, MRT_RowData, MRT_TableInstance } from "../../types";
 import { reorderColumn } from "../../utils/column.utils";
 import { parseFromValuesOrFunc } from "../../utils/utils";
-import { XXX_GrabHandleButton } from "../buttons/XXX_GrabHandleButton";
+import { SRT_GrabHandleButton } from "../buttons/SRT_GrabHandleButton";
 
-export interface MRT_TableHeadCellGrabHandleProps<TData extends MRT_RowData>
+export interface SRT_TableHeadCellGrabHandleProps<TData extends MRT_RowData>
 	extends React.ComponentProps<"button"> {
 	column: MRT_Column<TData>;
 	table: MRT_TableInstance<TData>;
 	tableHeadCellRef: RefObject<HTMLTableCellElement | null>;
 }
 
-export const XXX_TableHeadCellGrabHandle = <TData extends MRT_RowData>({
+export const SRT_TableHeadCellGrabHandle = <TData extends MRT_RowData>({
 	column,
 	table,
 	tableHeadCellRef,
 	...rest
-}: MRT_TableHeadCellGrabHandleProps<TData>) => {
+}: SRT_TableHeadCellGrabHandleProps<TData>) => {
 	const {
 		getState,
 		options: { enableColumnOrdering, muiColumnDragHandleProps },
@@ -69,7 +69,7 @@ export const XXX_TableHeadCellGrabHandle = <TData extends MRT_RowData>({
 	};
 
 	return (
-		<XXX_GrabHandleButton
+		<SRT_GrabHandleButton
 			{...buttonProps}
 			location="column"
 			onDragEnd={handleDragEnd}

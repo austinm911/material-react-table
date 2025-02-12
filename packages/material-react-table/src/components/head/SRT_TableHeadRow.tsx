@@ -1,6 +1,5 @@
 import type React from "react";
 import { cn } from "@/lib/utils";
-import { MRT_TableHeadCell } from "./MRT_TableHeadCell";
 import { TableRow } from "../ui/table";
 import type {
 	MRT_ColumnVirtualizer,
@@ -11,20 +10,21 @@ import type {
 	MRT_VirtualItem,
 } from "../../types";
 import { parseFromValuesOrFunc } from "../../utils/utils";
+import { SRT_TableHeadCell } from "./SRT_TableHeadCell";
 
-export interface MRT_TableHeadRowProps<TData extends MRT_RowData>
+export interface SRT_TableHeadRowProps<TData extends MRT_RowData>
 	extends React.ComponentProps<"tr"> {
 	columnVirtualizer?: MRT_ColumnVirtualizer;
 	headerGroup: MRT_HeaderGroup<TData>;
 	table: MRT_TableInstance<TData>;
 }
 
-export const MRT_TableHeadRow = <TData extends MRT_RowData>({
+export const SRT_TableHeadRow = <TData extends MRT_RowData>({
 	columnVirtualizer,
 	headerGroup,
 	table,
 	...rest
-}: MRT_TableHeadRowProps<TData>) => {
+}: SRT_TableHeadRowProps<TData>) => {
 	const {
 		options: {
 			enableStickyHeader,
@@ -72,7 +72,7 @@ export const MRT_TableHeadRow = <TData extends MRT_RowData>({
 						: (headerOrVirtualHeader as MRT_Header<TData>);
 
 					return currentHeader ? (
-						<MRT_TableHeadCell
+						<SRT_TableHeadCell
 							columnVirtualizer={columnVirtualizer}
 							header={currentHeader}
 							key={currentHeader.id}

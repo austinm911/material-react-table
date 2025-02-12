@@ -1,4 +1,4 @@
-# Material React Table V3
+# Shadcn React Table
 
 View [Documentation](https://www.material-react-table.com/)
 
