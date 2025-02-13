@@ -10,7 +10,7 @@ import {
 import Skeleton from "@mui/material/Skeleton";
 import TableCell, { type TableCellProps } from "@mui/material/TableCell";
 import { useTheme } from "@mui/material/styles";
-import { MRT_TableBodyCellValue } from "./MRT_TableBodyCellValue";
+import { SRT_TableBodyCellValue } from "./SRT_TableBodyCellValue";
 import type { MRT_Cell, MRT_RowData, MRT_TableInstance } from "../../types";
 import {
 	isCellEditable,
@@ -19,10 +19,10 @@ import {
 } from "../../utils/cell.utils";
 import { getCommonMRTCellStyles } from "../../utils/style.utils";
 import { parseFromValuesOrFunc } from "../../utils/utils";
-import { MRT_CopyButton } from "../buttons/MRT_CopyButton";
+import { SRT_CopyButton } from "../buttons/SRT_CopyButton";
 import { MRT_EditCellTextField } from "../inputs/MRT_EditCellTextField";
 
-export interface MRT_TableBodyCellProps<TData extends MRT_RowData>
+export interface SRT_TableBodyCellProps<TData extends MRT_RowData>
 	extends TableCellProps {
 	cell: MRT_Cell<TData>;
 	numRows?: number;
@@ -32,7 +32,7 @@ export interface MRT_TableBodyCellProps<TData extends MRT_RowData>
 	table: MRT_TableInstance<TData>;
 }
 
-export const MRT_TableBodyCell = <TData extends MRT_RowData>({
+export const SRT_TableBodyCell = <TData extends MRT_RowData>({
 	cell,
 	numRows,
 	rowRef,
@@ -40,7 +40,7 @@ export const MRT_TableBodyCell = <TData extends MRT_RowData>({
 	staticRowIndex,
 	table,
 	...rest
-}: MRT_TableBodyCellProps<TData>) => {
+}: SRT_TableBodyCellProps<TData>) => {
 	const theme = useTheme();
 	const {
 		getState,
@@ -326,11 +326,11 @@ export const MRT_TableBodyCell = <TData extends MRT_RowData>({
 					) : isCreating || isEditing ? (
 						<MRT_EditCellTextField cell={cell} table={table} />
 					) : showClickToCopyButton && columnDef.enableClickToCopy !== false ? (
-						<MRT_CopyButton cell={cell} table={table}>
-							<MRT_TableBodyCellValue {...cellValueProps} />
-						</MRT_CopyButton>
+						<SRT_CopyButton cell={cell} table={table}>
+							<SRT_TableBodyCellValue {...cellValueProps} />
+						</SRT_CopyButton>
 					) : (
-						<MRT_TableBodyCellValue {...cellValueProps} />
+						<SRT_TableBodyCellValue {...cellValueProps} />
 					)}
 					{cell.getIsGrouped() && !columnDef.GroupedCell && (
 						<> ({row.subRows?.length})</>
@@ -341,7 +341,7 @@ export const MRT_TableBodyCell = <TData extends MRT_RowData>({
 	);
 };
 
-export const Memo_MRT_TableBodyCell = memo(
-	MRT_TableBodyCell,
+export const Memo_SRT_TableBodyCell = memo(
+	SRT_TableBodyCell,
 	(prev, next) => next.cell === prev.cell,
-) as typeof MRT_TableBodyCell;
+) as typeof SRT_TableBodyCell;

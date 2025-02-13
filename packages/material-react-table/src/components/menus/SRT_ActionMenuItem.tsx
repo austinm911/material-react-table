@@ -1,62 +1,51 @@
-import type { ReactNode } from "react";
-import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import MenuItem, { type MenuItemProps } from "@mui/material/MenuItem";
-import type { MRT_RowData, MRT_TableInstance } from "../../types";
+import type { ReactNode } from 'react'
+import { Button } from '../ui/button'
+import { DropdownMenuItem } from '../ui/dropdown-menu'
+import type { DropdownMenuItemProps, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
 
-export interface SRT_ActionMenuItemProps<TData extends MRT_RowData>
-	extends MenuItemProps {
-	icon: ReactNode;
-	label: string;
-	onOpenSubMenu?: MenuItemProps["onClick"] | MenuItemProps["onMouseEnter"];
-	table: MRT_TableInstance<TData>;
+export interface SRT_ActionMenuItemProps<TData extends SRT_RowData> extends DropdownMenuItemProps {
+	icon: ReactNode
+	label: string
+	onOpenSubMenu?: (event: React.MouseEvent | React.KeyboardEvent) => void
+	table: SRT_TableInstance<TData>
+	onClick?: (event: React.MouseEvent | React.KeyboardEvent) => void
 }
 
-export const SRT_ActionMenuItem = <TData extends MRT_RowData>({
+export const SRT_ActionMenuItem = <TData extends SRT_RowData>({
 	icon,
 	label,
 	onOpenSubMenu,
 	table,
+	onClick,
 	...rest
 }: SRT_ActionMenuItemProps<TData>) => {
 	const {
 		options: {
 			icons: { ArrowRightIcon },
 		},
-	} = table;
+	} = table
 
 	return (
-		<MenuItem
-			sx={{
-				alignItems: "center",
-				justifyContent: "space-between",
-				minWidth: "120px",
-				my: 0,
-				py: "6px",
-			}}
-			tabIndex={0}
+		<DropdownMenuItem
+			className="flex items-center justify-between min-w-[120px] py-1.5"
+			onClick={onClick}
 			{...rest}
 		>
-			<Box
-				sx={{
-					alignItems: "center",
-					display: "flex",
-				}}
-			>
-				<ListItemIcon>{icon}</ListItemIcon>
+			<div className="flex items-center gap-2">
+				{icon}
 				{label}
-			</Box>
+			</div>
 			{onOpenSubMenu && (
-				<IconButton
-					onClick={onOpenSubMenu as any}
-					onMouseEnter={onOpenSubMenu as any}
-					size="small"
-					sx={{ p: 0 }}
+				<Button
+					variant="ghost"
+					size="icon"
+					className="p-0 h-auto"
+					onClick={onOpenSubMenu}
+					onMouseEnter={onOpenSubMenu}
 				>
-					<ArrowRightIcon />
-				</IconButton>
+					<ArrowRightIcon className="h-4 w-4" />
+				</Button>
 			)}
-		</MenuItem>
-	);
-};
+		</DropdownMenuItem>
+	)
+}

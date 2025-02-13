@@ -1,4 +1,3 @@
-import TableFooter, { type TableFooterProps } from "@mui/material/TableFooter";
 import { SRT_TableFooterRow } from "./SRT_TableFooterRow";
 import type {
 	MRT_ColumnVirtualizer,
@@ -6,6 +5,9 @@ import type {
 	MRT_TableInstance,
 } from "../../types";
 import { parseFromValuesOrFunc } from "../../utils/utils";
+import type { TableFooterProps } from "@/types-SRT";
+import { TableFooter } from "../ui/table";
+import { cn } from "@/lib/utils";
 
 export interface SRT_TableFooterProps<TData extends MRT_RowData>
 	extends TableFooterProps {
@@ -16,19 +18,15 @@ export interface SRT_TableFooterProps<TData extends MRT_RowData>
 export const SRT_TableFooter = <TData extends MRT_RowData>({
 	columnVirtualizer,
 	table,
+	className,
 	...rest
 }: SRT_TableFooterProps<TData>) => {
 	const {
 		getState,
-		options: { enableStickyFooter, layoutMode, muiTableFooterProps },
+		options: { enableStickyFooter, layoutMode },
 		refs: { tableFooterRef },
 	} = table;
 	const { isFullScreen } = getState();
-
-	const tableFooterProps = {
-		...parseFromValuesOrFunc(muiTableFooterProps, { table }),
-		...rest,
-	};
 
 	const stickFooter =
 		(isFullScreen || enableStickyFooter) && enableStickyFooter !== false;
@@ -51,32 +49,21 @@ export const SRT_TableFooter = <TData extends MRT_RowData>({
 
 	return (
 		<TableFooter
-			{...tableFooterProps}
+			{...rest}
 			ref={(ref: HTMLTableSectionElement) => {
 				tableFooterRef.current = ref;
-				if (tableFooterProps?.ref) {
-					// @ts-expect-error
-					tableFooterProps.ref.current = ref;
-				}
 			}}
-			sx={(theme) => ({
-				bottom: stickFooter ? 0 : undefined,
-				display: layoutMode?.startsWith("grid") ? "grid" : undefined,
-				opacity: stickFooter ? 0.97 : undefined,
-				outline: stickFooter
-					? theme.palette.mode === "light"
-						? `1px solid ${theme.palette.grey[300]}`
-						: `1px solid ${theme.palette.grey[700]}`
-					: undefined,
-				position: stickFooter ? "sticky" : "relative",
-				zIndex: stickFooter ? 1 : undefined,
-				...(parseFromValuesOrFunc(tableFooterProps?.sx, theme) as any),
-			})}
+			className={cn(
+				"bg-muted/50 border-t font-medium [&>tr]:last:border-b-0",
+				stickFooter && "sticky bottom-0 z-10 opacity-95",
+				layoutMode?.startsWith("grid") && "grid",
+				className,
+			)}
 		>
 			{footerGroups.map((footerGroup) => (
 				<SRT_TableFooterRow
 					columnVirtualizer={columnVirtualizer}
-					footerGroup={footerGroup as any}
+					footerGroup={footerGroup}
 					key={footerGroup.id}
 					table={table}
 				/>

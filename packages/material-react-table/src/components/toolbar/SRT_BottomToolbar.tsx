@@ -1,18 +1,17 @@
-import Box, { type BoxProps } from "@mui/material/Box";
 import { alpha } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { MRT_LinearProgressBar } from "./MRT_LinearProgressBar";
-import { MRT_TablePagination } from "./MRT_TablePagination";
-import { MRT_ToolbarAlertBanner } from "./MRT_ToolbarAlertBanner";
-import { MRT_ToolbarDropZone } from "./MRT_ToolbarDropZone";
+import { SRT_LinearProgressBar } from "./SRT_LinearProgressBar";
+import { SRT_TablePagination } from "./SRT_TablePagination";
+import { SRT_ToolbarAlertBanner } from "./SRT_ToolbarAlertBanner";
+import { SRT_ToolbarDropZone } from "./SRT_ToolbarDropZone";
 import type { MRT_RowData, MRT_TableInstance } from "../../types";
 import { getCommonToolbarStyles } from "../../utils/style.utils";
 import { parseFromValuesOrFunc } from "../../utils/utils";
 import { cn } from "@/lib/utils";
 
-export interface MRT_BottomToolbarProps<TData extends MRT_RowData> {
+export interface SRT_BottomToolbarProps<TData extends MRT_RowData> {
 	table: MRT_TableInstance<TData>;
-	xxxBottomToolbarProps?:
+	SRTBottomToolbarProps?:
 		| ((props: {
 				table: MRT_TableInstance<TData>;
 		  }) => React.ComponentProps<"div">)
@@ -23,10 +22,10 @@ export interface MRT_BottomToolbarProps<TData extends MRT_RowData> {
 	}) => React.ReactNode;
 }
 
-export const MRT_BottomToolbar = <TData extends MRT_RowData>({
+export const SRT_BottomToolbar = <TData extends MRT_RowData>({
 	table,
 	...rest
-}: MRT_BottomToolbarProps<TData>) => {
+}: SRT_BottomToolbarProps<TData>) => {
 	const {
 		getState,
 		options: {
@@ -39,7 +38,10 @@ export const MRT_BottomToolbar = <TData extends MRT_RowData>({
 		},
 		refs: { bottomToolbarRef },
 	} = table;
-	const { xxxBottomToolbarProps, renderBottomToolbarCustom } = rest;
+	const {
+		SRTBottomToolbarProps: xxxBottomToolbarProps,
+		renderBottomToolbarCustom,
+	} = rest;
 	const { isFullScreen } = getState();
 
 	const isMobile = useMediaQuery("(max-width:720px)");
@@ -78,12 +80,12 @@ export const MRT_BottomToolbar = <TData extends MRT_RowData>({
 	// Default toolbar content constructed using current table state
 	const defaultToolbar = (
 		<>
-			<MRT_LinearProgressBar isTopToolbar={false} table={table} />
+			<SRT_LinearProgressBar isTopToolbar={false} table={table} />
 			{positionToolbarAlertBanner === "bottom" && (
-				<MRT_ToolbarAlertBanner table={table} />
+				<SRT_ToolbarAlertBanner table={table} />
 			)}
 			{["both", "bottom"].includes(positionToolbarDropZone ?? "") && (
-				<MRT_ToolbarDropZone table={table} />
+				<SRT_ToolbarDropZone table={table} />
 			)}
 			<div className="flex items-center justify-end">
 				{renderBottomToolbarCustomActions ? (
@@ -93,7 +95,7 @@ export const MRT_BottomToolbar = <TData extends MRT_RowData>({
 				)}
 				{enablePagination &&
 					["both", "bottom"].includes(positionPagination ?? "") && (
-						<MRT_TablePagination position="bottom" table={table} />
+						<SRT_TablePagination position="bottom" table={table} />
 					)}
 			</div>
 		</>

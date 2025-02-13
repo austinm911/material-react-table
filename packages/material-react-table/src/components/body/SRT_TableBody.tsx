@@ -2,7 +2,7 @@ import { memo, useMemo } from "react";
 import type { VirtualItem } from "@tanstack/react-virtual";
 import TableBody, { type TableBodyProps } from "@mui/material/TableBody";
 import Typography from "@mui/material/Typography";
-import { MRT_TableBodyRow, Memo_MRT_TableBodyRow } from "./MRT_TableBodyRow";
+import { SRT_TableBodyRow, Memo_SRT_TableBodyRow } from "./SRT_TableBodyRow";
 import { useMRT_RowVirtualizer } from "../../hooks/useMRT_RowVirtualizer";
 import { useMRT_Rows } from "../../hooks/useMRT_Rows";
 import type {
@@ -97,9 +97,9 @@ export const SRT_TableBody = <TData extends MRT_RowData>({
 								staticRowIndex,
 							};
 							return memoMode === "rows" ? (
-								<Memo_MRT_TableBodyRow key={row.id} {...props} />
+								<Memo_SRT_TableBodyRow key={row.id} {...props} />
 							) : (
-								<MRT_TableBodyRow key={row.id} {...props} />
+								<SRT_TableBodyRow key={row.id} {...props} />
 							);
 						})}
 					</TableBody>
@@ -177,9 +177,9 @@ export const SRT_TableBody = <TData extends MRT_RowData>({
 								};
 								const key = `${row.id}-${row.index}`;
 								return memoMode === "rows" ? (
-									<Memo_MRT_TableBodyRow key={key} {...props} />
+									<Memo_SRT_TableBodyRow key={key} {...props} />
 								) : (
-									<MRT_TableBodyRow key={key} {...props} />
+									<SRT_TableBodyRow key={key} {...props} />
 								);
 							})}
 						</>
@@ -204,9 +204,9 @@ export const SRT_TableBody = <TData extends MRT_RowData>({
 								staticRowIndex,
 							};
 							return memoMode === "rows" ? (
-								<Memo_MRT_TableBodyRow key={row.id} {...props} />
+								<Memo_SRT_TableBodyRow key={row.id} {...props} />
 							) : (
-								<MRT_TableBodyRow key={row.id} {...props} />
+								<SRT_TableBodyRow key={row.id} {...props} />
 							);
 						})}
 					</TableBody>
@@ -215,7 +215,7 @@ export const SRT_TableBody = <TData extends MRT_RowData>({
 	);
 };
 
-export const Memo_MRT_TableBody = memo(
+export const Memo_SRT_TableBody = memo(
 	SRT_TableBody,
 	(prev, next) => prev.table.options.data === next.table.options.data,
 ) as typeof SRT_TableBody;

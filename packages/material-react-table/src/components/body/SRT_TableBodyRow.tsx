@@ -8,8 +8,8 @@ import {
 	lighten,
 	useTheme,
 } from "@mui/material/styles";
-import { MRT_TableBodyCell, Memo_MRT_TableBodyCell } from "./MRT_TableBodyCell";
-import { MRT_TableDetailPanel } from "./MRT_TableDetailPanel";
+import { SRT_TableBodyCell, Memo_SRT_TableBodyCell } from "./SRT_TableBodyCell";
+import { SRT_TableDetailPanel } from "./SRT_TableDetailPanel";
 import type {
 	MRT_Cell,
 	MRT_ColumnVirtualizer,
@@ -257,9 +257,9 @@ export const SRT_TableBodyRow = <TData extends MRT_RowData>({
 							!draggingRow &&
 							editingCell?.id !== cell.id &&
 							editingRow?.id !== row.id ? (
-								<Memo_MRT_TableBodyCell key={key} {...props} />
+								<Memo_SRT_TableBodyCell key={key} {...props} />
 							) : (
-								<MRT_TableBodyCell key={key} {...props} />
+								<SRT_TableBodyCell key={key} {...props} />
 							)
 						) : null;
 					},
@@ -269,7 +269,7 @@ export const SRT_TableBodyRow = <TData extends MRT_RowData>({
 				) : null}
 			</TableRow>
 			{renderDetailPanel && !row.getIsGrouped() && (
-				<MRT_TableDetailPanel
+				<SRT_TableDetailPanel
 					parentRowRef={rowRef}
 					row={row}
 					rowVirtualizer={rowVirtualizer}
@@ -282,7 +282,7 @@ export const SRT_TableBodyRow = <TData extends MRT_RowData>({
 	);
 };
 
-export const Memo_MRT_TableBodyRow = memo(
+export const Memo_SRT_TableBodyRow = memo(
 	SRT_TableBodyRow,
 	(prev, next) =>
 		prev.row === next.row && prev.staticRowIndex === next.staticRowIndex,
