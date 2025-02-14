@@ -1,34 +1,44 @@
 import type { CSSProperties } from 'react'
-import type { TableCellProps } from '@mui/material/TableCell'
-import type { TooltipProps } from '@mui/material/Tooltip'
+// import type { TooltipProps } from '@mui/material/Tooltip'
 import { alpha, darken, lighten } from '@mui/material/styles'
 import type { Theme } from '@mui/material/styles'
-import type { SRT_Column, SRT_Header, SRT_RowData, SRT_TableInstance, SRT_TableOptions, SRT_Theme } from '../types-SRT'
+import type {
+	SRT_Column,
+	SRT_Header,
+	SRT_RowData,
+	SRT_TableInstance,
+	SRT_TableOptions,
+	SRT_Theme,
+	TableCellProps,
+	TooltipContentProps,
+	TooltipProps,
+	TooltipProviderProps,
+} from '../types-SRT'
 import { parseFromValuesOrFunc } from './utils'
 
 export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_')
 
 export const getSRTTheme = <TData extends SRT_RowData>(
 	srtTheme: SRT_TableOptions<TData>['shadcnTheme'],
-	muiTheme: Theme,
+	shadcnTheme: Theme,
 ): SRT_Theme => {
-	const srtThemeOverrides = parseFromValuesOrFunc(srtTheme, muiTheme)
+	const srtThemeOverrides = parseFromValuesOrFunc(srtTheme, shadcnTheme)
 	const baseBackgroundColor =
 		srtThemeOverrides?.baseBackgroundColor ??
-		(muiTheme.palette.mode === 'dark'
-			? lighten(muiTheme.palette.background.default, 0.05)
-			: muiTheme.palette.background.default)
+		(shadcnTheme.palette.mode === 'dark'
+			? lighten(shadcnTheme.palette.background.default, 0.05)
+			: shadcnTheme.palette.background.default)
 	return {
 		baseBackgroundColor,
-		cellNavigationOutlineColor: muiTheme.palette.primary.main,
-		draggingBorderColor: muiTheme.palette.primary.main,
+		cellNavigationOutlineColor: shadcnTheme.palette.primary.main,
+		draggingBorderColor: shadcnTheme.palette.primary.main,
 		matchHighlightColor:
-			muiTheme.palette.mode === 'dark'
-				? darken(muiTheme.palette.warning.dark, 0.25)
-				: lighten(muiTheme.palette.warning.light, 0.5),
+			shadcnTheme.palette.mode === 'dark'
+				? darken(shadcnTheme.palette.warning.dark, 0.25)
+				: lighten(shadcnTheme.palette.warning.light, 0.5),
 		menuBackgroundColor: lighten(baseBackgroundColor, 0.07),
-		pinnedRowBackgroundColor: alpha(muiTheme.palette.primary.main, 0.1),
-		selectedRowBackgroundColor: alpha(muiTheme.palette.primary.main, 0.2),
+		pinnedRowBackgroundColor: alpha(shadcnTheme.palette.primary.main, 0.1),
+		selectedRowBackgroundColor: alpha(shadcnTheme.palette.primary.main, 0.2),
 		...srtThemeOverrides,
 	}
 }
@@ -52,7 +62,7 @@ export const getCommonPinnedCellStyles = <TData extends SRT_RowData>({
 	table: SRT_TableInstance<TData>
 	theme: Theme
 }) => {
-	const { baseBackgroundColor } = table.options.srtTheme
+	const { baseBackgroundColor } = table.options.shadcnTheme
 	const isPinned = column?.getIsPinned()
 
 	return {
@@ -72,7 +82,7 @@ export const getCommonPinnedCellStyles = <TData extends SRT_RowData>({
 	}
 }
 
-export const getCommonMRTCellStyles = <TData extends SRT_RowData>({
+export const getCommonSRTCellStyles = <TData extends SRT_RowData>({
 	column,
 	header,
 	table,
@@ -141,12 +151,12 @@ export const getCommonMRTCellStyles = <TData extends SRT_RowData>({
 					? 1
 					: 0,
 		'&:focus-visible': {
-			outline: `2px solid ${table.options.srtTheme.cellNavigationOutlineColor}`,
+			outline: `2px solid ${table.options.shadcnTheme.cellNavigationOutlineColor}`,
 			outlineOffset: '-2px',
 		},
 		...pinnedStyles,
 		...widthStyles,
-		...(parseFromValuesOrFunc(tableCellProps?.sx, theme) as any),
+		...(parseFromValuesOrFunc(tableCellProps?.className, theme) as any),
 	}
 }
 
@@ -154,10 +164,9 @@ export const getCommonToolbarStyles = <TData extends SRT_RowData>({
 	table,
 }: {
 	table: SRT_TableInstance<TData>
-	theme: Theme
 }) => ({
 	alignItems: 'flex-start',
-	backgroundColor: table.options.srtTheme.baseBackgroundColor,
+	backgroundColor: table.options.shadcnTheme.baseBackgroundColor,
 	display: 'grid',
 	flexWrap: 'wrap-reverse',
 	minHeight: '3.5rem',
@@ -170,9 +179,14 @@ export const getCommonToolbarStyles = <TData extends SRT_RowData>({
 export const flipIconStyles = (theme: Theme) =>
 	theme.direction === 'rtl' ? { style: { transform: 'scaleX(-1)' } } : undefined
 
-export const getCommonTooltipProps = (placement?: TooltipProps['placement']): Partial<TooltipProps> => ({
-	disableInteractive: true,
-	enterDelay: 1000,
-	enterNextDelay: 1000,
-	placement,
+// Spread the different props into the provider and content
+export const getCommonTooltipProps = (
+	side?: TooltipContentProps['side'],
+): { provider: Partial<TooltipProviderProps>; content: Partial<TooltipContentProps> } => ({
+	provider: {
+		delayDuration: 1000,
+	},
+	content: {
+		side,
+	},
 })

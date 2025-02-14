@@ -20,7 +20,7 @@ export const SRT_TablePaper = <TData extends SRT_RowData>({
 		options: {
 			enableBottomToolbar,
 			enableTopToolbar,
-			srtTheme: { baseBackgroundColor },
+			shadcnTheme: { baseBackgroundColor },
 			shadcnTablePaperProps: muiTablePaperProps,
 			renderBottomToolbar,
 			renderTopToolbar,

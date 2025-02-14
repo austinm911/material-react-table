@@ -19,7 +19,12 @@ import type {
 	SRT_TableState,
 	SRT_Updater,
 } from '../types-SRT'
-import { getAllLeafColumnDefs, getColumnId, getDefaultColumnFilterFn, prepareColumns } from '../utils/column.utils'
+import {
+	getAllLeafColumnDefs,
+	getColumnId,
+	getDefaultColumnFilterFn,
+	prepareColumns,
+} from '../utils/column.utils.shadcn'
 import {
 	getDefaultColumnOrderIds,
 	showRowActionsColumn,
@@ -29,8 +34,8 @@ import {
 	showRowPinningColumn,
 	showRowSelectionColumn,
 	showRowSpacerColumn,
-} from '../utils/displayColumn.utils'
-import { createRow } from '../utils/tanstack.helpers'
+} from '../utils/displayColumn.utils.shadcn'
+import { createRow } from '../utils/tanstack.helpers.shadcn'
 import { getSRT_RowActionsColumnDef } from './display-columns/getSRT_RowActionsColumnDef'
 import { getSRT_RowDragColumnDef } from './display-columns/getSRT_RowDragColumnDef'
 import { getSRT_RowExpandColumnDef } from './display-columns/getSRT_RowExpandColumnDef'
@@ -41,9 +46,9 @@ import { getSRT_RowSpacerColumnDef } from './display-columns/getSRT_RowSpacerCol
 import { useSRT_Effects } from './useSRT_Effects'
 
 /**
- * The MRT hook that wraps the TanStack useReactTable hook and adds additional functionality
+ * The SRT hook that wraps the TanStack useReactTable hook and adds additional functionality
  * @param definedTableOptions - table options with proper defaults set
- * @returns the MRT table instance
+ * @returns the SRT table instance
  */
 export const useSRT_TableInstance = <TData extends SRT_RowData>(
 	definedTableOptions: SRT_DefinedTableOptions<TData>,

@@ -8,6 +8,9 @@
 		"rules": {
 			"suspicious": {
 				"noExplicitAny": "warn"
+			},
+			"correctness": {
+				"useExhaustiveDependencies": "warn"
 			}
 		}
 	},

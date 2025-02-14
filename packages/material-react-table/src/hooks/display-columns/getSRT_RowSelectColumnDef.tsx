@@ -1,19 +1,19 @@
-import { MRT_SelectCheckbox } from '../../components/inputs/MRT_SelectCheckbox'
-import type { MRT_ColumnDef, MRT_RowData, MRT_StatefulTableOptions } from '../../types'
-import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils'
+import { SRT_SelectCheckbox } from '../../components/inputs/SRT_SelectCheckbox'
+import type { SRT_ColumnDef, SRT_RowData, SRT_StatefulTableOptions } from '../../types-SRT'
+import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils.shadcn'
 
-export const getMRT_RowSelectColumnDef = <TData extends MRT_RowData>(
-	tableOptions: MRT_StatefulTableOptions<TData>,
-): MRT_ColumnDef<TData> => {
+export const getSRT_RowSelectColumnDef = <TData extends SRT_RowData>(
+	tableOptions: SRT_StatefulTableOptions<TData>,
+): SRT_ColumnDef<TData> => {
 	const { enableMultiRowSelection, enableSelectAll } = tableOptions
 
 	return {
 		Cell: ({ row, staticRowIndex, table }) => (
-			<MRT_SelectCheckbox row={row} staticRowIndex={staticRowIndex} table={table} />
+			<SRT_SelectCheckbox row={row} staticRowIndex={staticRowIndex} table={table} />
 		),
 		Header:
 			enableSelectAll && enableMultiRowSelection
-				? ({ table }) => <MRT_SelectCheckbox table={table} />
+				? ({ table }) => <SRT_SelectCheckbox table={table} />
 				: undefined,
 		grow: false,
 		...defaultDisplayColumnProps({

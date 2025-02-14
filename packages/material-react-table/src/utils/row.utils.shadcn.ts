@@ -1,5 +1,5 @@
 import type { ChangeEvent, MouseEvent } from 'react'
-import { rankGlobalFuzzy } from '../fns/sortingFns'
+import { rankGlobalFuzzy } from '../fns/sortingFns.shadcn'
 import type { SRT_Row, SRT_RowData, SRT_TableInstance } from '../types-SRT'
 import { parseFromValuesOrFunc } from './utils'
 
@@ -149,7 +149,7 @@ export const getSRT_RowSelectionHandler =
 			(event as any).nativeEvent.shiftKey &&
 			lastSelectedRowId.current !== null
 		) {
-			const rows = getMRT_Rows(table, true)
+			const rows = getSRT_Rows(table, true)
 
 			const lastIndex = rows.findIndex((r) => r.id === lastSelectedRowId.current)
 
@@ -178,7 +178,7 @@ export const getSRT_RowSelectionHandler =
 
 		// if all sub rows were selected, unselect them
 		if (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected()) {
-			for (const r of row.subRows) {
+			for (const r of row.subRows ?? []) {
 				r.toggleSelected(false)
 			}
 		}
@@ -193,7 +193,7 @@ export const getSRT_RowSelectionHandler =
 							: 'top'
 						: false,
 				)
-			})
+			}
 		}
 	}
 

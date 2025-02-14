@@ -26,7 +26,7 @@ export const SRT_TableDetailPanel = <TData extends SRT_RowData>({
 		getVisibleLeafColumns,
 		options: {
 			layoutMode,
-			srtTheme: { baseBackgroundColor },
+			shadcnTheme: { baseBackgroundColor },
 			shadcnDetailPanelProps,
 			shadcnTableBodyRowProps,
 			renderDetailPanel,

@@ -1,11 +1,11 @@
 import type { MouseEvent } from 'react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 import type { CheckboxProps, SRT_Row, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
-import { getIsRowSelected, getMRT_RowSelectionHandler, getMRT_SelectAllHandler } from '../../utils/row.utils'
-import { getCommonTooltipProps } from '../../utils/style.utils'
+import { getIsRowSelected, getSRT_RowSelectionHandler, getSRT_SelectAllHandler } from '../../utils/row.utils.shadcn'
+import { getCommonTooltipProps } from '../../utils/style.utils.shadcn'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 
 export interface SRT_SelectCheckboxProps<TData extends SRT_RowData> extends CheckboxProps {
@@ -27,8 +27,8 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
 		options: {
 			enableMultiRowSelection,
 			localization,
-			shadcnSelectAllCheckboxProps: muiSelectAllCheckboxProps,
-			shadcnSelectCheckboxProps: muiSelectCheckboxProps,
+			shadcnSelectAllCheckboxProps,
+			shadcnSelectCheckboxProps,
 			selectAllMode,
 		},
 	} = table
@@ -45,22 +45,22 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
 
 	const checkboxProps = {
 		...(selectAll
-			? parseFromValuesOrFunc(muiSelectAllCheckboxProps, { table })
-			: parseFromValuesOrFunc(muiSelectCheckboxProps, {
+			? parseFromValuesOrFunc(shadcnSelectAllCheckboxProps, { table })
+			: parseFromValuesOrFunc(shadcnSelectCheckboxProps, {
 					row,
 					staticRowIndex,
 					table,
 				})),
 	}
 
-	const onSelectionChange = row ? getMRT_RowSelectionHandler({ row, staticRowIndex, table }) : undefined
+	const onSelectionChange = row ? getSRT_RowSelectionHandler({ row, staticRowIndex, table }) : undefined
 
-	const onSelectAllChange = getMRT_SelectAllHandler({ table })
+	const onSelectAllChange = getSRT_SelectAllHandler({ table })
 
 	const commonProps = {
 		'aria-label': selectAll ? localization.toggleSelectAll : localization.toggleSelectRow,
 		checked: isChecked,
-		disabled: isLoading || (row && !row.getCanSelect()) || row?.id === 'mrt-row-create',
+		disabled: isLoading || (row && !row.getCanSelect()) || row?.id === 'srt-row-create',
 		onCheckedChange: (checked: boolean) => {
 			const event = { target: { checked } } as unknown as Event
 			selectAll ? onSelectAllChange(event) : onSelectionChange?.(event)
@@ -78,26 +78,28 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
 	}
 
 	return (
-		<Tooltip {...getCommonTooltipProps()}>
-			<TooltipTrigger>
-				{enableMultiRowSelection === false ? (
-					<RadioGroup>
-						<RadioGroupItem {...commonProps} value={row?.id ?? 'select-all'} />
-					</RadioGroup>
-				) : (
-					<Checkbox
-						indeterminate={
-							!isChecked && selectAll
-								? table.getIsSomeRowsSelected()
-								: row?.getIsSomeSelected() && row.getCanSelectSubRows()
-						}
-						{...commonProps}
-					/>
-				)}
-			</TooltipTrigger>
-			<TooltipContent>
-				{checkboxProps?.title ?? (selectAll ? localization.toggleSelectAll : localization.toggleSelectRow)}
-			</TooltipContent>
-		</Tooltip>
+		<TooltipProvider {...getCommonTooltipProps().provider}>
+			<Tooltip>
+				<TooltipTrigger>
+					{enableMultiRowSelection === false ? (
+						<RadioGroup>
+							<RadioGroupItem {...commonProps} value={row?.id ?? 'select-all'} />
+						</RadioGroup>
+					) : (
+						<Checkbox
+							indeterminate={
+								!isChecked && selectAll
+									? table.getIsSomeRowsSelected()
+									: row?.getIsSomeSelected() && row.getCanSelectSubRows()
+							}
+							{...commonProps}
+						/>
+					)}
+				</TooltipTrigger>
+				<TooltipContent {...getCommonTooltipProps().content}>
+					{checkboxProps?.title ?? (selectAll ? localization.toggleSelectAll : localization.toggleSelectRow)}
+				</TooltipContent>
+			</Tooltip>
+		</TooltipProvider>
 	)
 }

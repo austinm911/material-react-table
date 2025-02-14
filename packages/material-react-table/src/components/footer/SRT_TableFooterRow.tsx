@@ -28,7 +28,7 @@ export const SRT_TableFooterRow = <TData extends SRT_RowData>({
 	const {
 		options: {
 			layoutMode,
-			srtTheme: { baseBackgroundColor },
+			shadcnTheme: { baseBackgroundColor },
 			shadcnTableFooterRowProps: muiTableFooterRowProps,
 		},
 	} = table

@@ -87,6 +87,7 @@ import type { SRT_AggregationFns } from './fns/aggregationFns.shadcn'
 import type { SRT_FilterFns } from './fns/filterFns.shadcn'
 import type { SRT_SortingFns } from './fns/sortingFns.shadcn'
 import type { MRT_Icons } from './icons'
+import type { Tooltip, TooltipContent, TooltipProvider } from './components/ui/tooltip'
 
 // type DatePickerProps = React.ComponentProps<typeof DatePicker>;
 export type AlertProps = React.ComponentProps<typeof Alert>
@@ -110,6 +111,9 @@ export type TableCellProps = React.ComponentProps<typeof TableCell>
 export type TableFooterProps = React.ComponentProps<typeof TableFooter>
 export type TableHeadProps = React.ComponentProps<typeof TableHead>
 export type TableRowProps = React.ComponentProps<typeof TableRow>
+export type TooltipProviderProps = React.ComponentProps<typeof TooltipProvider>
+export type TooltipProps = React.ComponentProps<typeof Tooltip>
+export type TooltipContentProps = React.ComponentProps<typeof TooltipContent>
 
 export type { MRT_Icons }
 
@@ -379,7 +383,7 @@ export type SRT_DefinedTableOptions<TData extends SRT_RowData> = Omit<
 > & {
 	icons: MRT_Icons
 	localization: SRT_Localization
-	srtTheme: Required<SRT_Theme>
+	shadcnTheme: Required<SRT_Theme>
 }
 
 export type SRT_StatefulTableOptions<TData extends SRT_RowData> = SRT_DefinedTableOptions<TData> & {

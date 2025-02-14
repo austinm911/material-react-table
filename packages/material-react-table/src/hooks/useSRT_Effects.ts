@@ -1,103 +1,89 @@
-import { useEffect, useReducer, useRef } from "react";
-import type {
-	MRT_RowData,
-	MRT_SortingState,
-	MRT_TableInstance,
-} from "../types";
-import { getDefaultColumnOrderIds } from "../utils/displayColumn.utils";
-import { getCanRankRows } from "../utils/row.utils";
+import { useEffect, useReducer, useRef } from 'react'
+import type { SRT_RowData, SRT_SortingState, SRT_TableInstance } from '../types-SRT'
+import { getDefaultColumnOrderIds } from '../utils/displayColumn.utils.shadcn'
+import { getCanRankRows } from '../utils/row.utils.shadcn'
 
-export const useMRT_Effects = <TData extends MRT_RowData>(
-	table: MRT_TableInstance<TData>,
-) => {
+export const useSRT_Effects = <TData extends SRT_RowData>(table: SRT_TableInstance<TData>) => {
 	const {
 		getIsSomeRowsPinned,
 		getPrePaginationRowModel,
 		getState,
 		options: { enablePagination, enableRowPinning, rowCount },
-	} = table;
-	const {
-		columnOrder,
-		density,
-		globalFilter,
-		isFullScreen,
-		isLoading,
-		pagination,
-		showSkeletons,
-		sorting,
-	} = getState();
+	} = table
+	const { columnOrder, density, globalFilter, isFullScreen, isLoading, pagination, showSkeletons, sorting } =
+		getState()
 
-	const totalColumnCount = table.options.columns.length;
-	const totalRowCount = rowCount ?? getPrePaginationRowModel().rows.length;
+	const totalColumnCount = table.options.columns.length
+	const totalRowCount = rowCount ?? getPrePaginationRowModel().rows.length
 
-	const rerender = useReducer(() => ({}), {})[1];
-	const initialBodyHeight = useRef<string>(null);
-	const previousTop = useRef<number>(null);
+	const rerender = useReducer(() => ({}), {})[1]
+	const initialBodyHeight = useRef<string>(null)
+	const previousTop = useRef<number>(null)
 
 	useEffect(() => {
-		if (typeof window !== "undefined") {
-			initialBodyHeight.current = document.body.style.height;
+		if (typeof window !== 'undefined') {
+			initialBodyHeight.current = document.body.style.height
 		}
-	}, []);
+	}, [])
 
 	//hide scrollbars when table is in full screen mode, preserve body scroll position after full screen exit
 	useEffect(() => {
-		if (typeof window !== "undefined") {
+		if (typeof window !== 'undefined') {
 			if (isFullScreen) {
-				previousTop.current = document.body.getBoundingClientRect().top; //save scroll position
-				document.body.style.height = "100dvh"; //hide page scrollbars when table is in full screen mode
+				previousTop.current = document.body.getBoundingClientRect().top //save scroll position
+				document.body.style.height = '100dvh' //hide page scrollbars when table is in full screen mode
 			} else {
-				document.body.style.height = initialBodyHeight.current as string;
-				if (!previousTop.current) return;
+				document.body.style.height = initialBodyHeight.current as string
+				if (!previousTop.current) return
 				//restore scroll position
 				window.scrollTo({
-					behavior: "instant",
+					behavior: 'instant',
 					top: -1 * (previousTop.current as number),
-				});
+				})
 			}
 		}
-	}, [isFullScreen]);
+	}, [isFullScreen])
 
 	//recalculate column order when columns change or features are toggled on/off
 	useEffect(() => {
 		if (totalColumnCount !== columnOrder.length) {
-			table.setColumnOrder(getDefaultColumnOrderIds(table.options));
+			table.setColumnOrder(getDefaultColumnOrderIds(table.options))
 		}
-	}, [totalColumnCount]);
+	}, [totalColumnCount, columnOrder.length, table.options, table.setColumnOrder])
 
 	//if page index is out of bounds, set it to the last page
 	useEffect(() => {
-		if (!enablePagination || isLoading || showSkeletons) return;
-		const { pageIndex, pageSize } = pagination;
-		const firstVisibleRowIndex = pageIndex * pageSize;
+		if (!enablePagination || isLoading || showSkeletons) return
+		const { pageIndex, pageSize } = pagination
+		const firstVisibleRowIndex = pageIndex * pageSize
 		if (firstVisibleRowIndex >= totalRowCount) {
-			table.setPageIndex(Math.ceil(totalRowCount / pageSize) - 1);
+			table.setPageIndex(Math.ceil(totalRowCount / pageSize) - 1)
 		}
-	}, [totalRowCount]);
+	}, [totalRowCount, enablePagination, isLoading, showSkeletons, pagination, table.setPageIndex])
 
 	//turn off sort when global filter is looking for ranked results
-	const appliedSort = useRef<MRT_SortingState>(sorting);
+	const appliedSort = useRef<SRT_SortingState>(sorting)
 	useEffect(() => {
 		if (sorting.length) {
-			appliedSort.current = sorting;
+			appliedSort.current = sorting
 		}
-	}, [sorting]);
+	}, [sorting])
 
 	useEffect(() => {
-		if (!getCanRankRows(table)) return;
+		if (!getCanRankRows(table)) return
 		if (globalFilter) {
-			table.setSorting([]);
+			table.setSorting([])
 		} else {
-			table.setSorting(() => appliedSort.current || []);
+			table.setSorting(() => appliedSort.current || [])
 		}
-	}, [globalFilter]);
+	}, [globalFilter, table])
 
 	//fix pinned row top style when density changes
 	useEffect(() => {
 		if (enableRowPinning && getIsSomeRowsPinned()) {
 			setTimeout(() => {
-				rerender();
-			}, 150);
+				rerender()
+			}, 150)
 		}
-	}, [density]);
-};
+	}, [density])
+}

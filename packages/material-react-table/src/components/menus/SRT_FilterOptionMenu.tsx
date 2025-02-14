@@ -126,7 +126,7 @@ export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
 			columnFilterModeOptions,
 			globalFilterModeOptions,
 			localization,
-			srtTheme: { menuBackgroundColor },
+			shadcnTheme: { menuBackgroundColor },
 			renderColumnFilterModeMenuItems,
 			renderGlobalFilterModeMenuItems,
 		},
