@@ -1,46 +1,44 @@
-import type { DragEvent } from "react";
-import type { IconButtonProps } from "@mui/material/IconButton";
-import type { MRT_Row, MRT_RowData, MRT_TableInstance } from "../../types";
-import { parseFromValuesOrFunc } from "../../utils/utils";
-import { SRT_GrabHandleButton } from "../buttons/SRT_GrabHandleButton";
+import type { DragEvent } from 'react'
+import type { ButtonProps, SRT_Row, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
+import { parseFromValuesOrFunc } from '../../utils/utils'
+import { SRT_GrabHandleButton } from '../buttons/SRT_GrabHandleButton'
 
 // Duplicate of MRT_TableBodyRowGrabHandle with SRT_ prefix
-export interface SRT_TableBodyRowGrabHandleProps<TData extends MRT_RowData>
-	extends IconButtonProps {
-	row: MRT_Row<TData>;
-	rowRef: React.RefObject<HTMLTableRowElement | null>;
-	table: MRT_TableInstance<TData>;
+export interface SRT_TableBodyRowGrabHandleProps<TData extends SRT_RowData> extends ButtonProps {
+	row: SRT_Row<TData>
+	rowRef: React.RefObject<HTMLTableRowElement | null>
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_TableBodyRowGrabHandle = <TData extends MRT_RowData>({
+export const SRT_TableBodyRowGrabHandle = <TData extends SRT_RowData>({
 	row,
 	rowRef,
 	table,
 	...rest
 }: SRT_TableBodyRowGrabHandleProps<TData>) => {
 	const {
-		options: { muiRowDragHandleProps },
-	} = table;
+		options: { shadcnRowDragHandleProps },
+	} = table
 	const iconButtonProps = {
-		...parseFromValuesOrFunc(muiRowDragHandleProps, { row, table }),
+		...parseFromValuesOrFunc(shadcnRowDragHandleProps, { row, table }),
 		...rest,
-	};
+	}
 
 	const handleDragStart = (event: DragEvent<HTMLButtonElement>) => {
-		iconButtonProps.onDragStart?.(event);
+		iconButtonProps.onDragStart?.(event)
 		try {
-			event.dataTransfer.setDragImage(rowRef.current as HTMLElement, 0, 0);
+			event.dataTransfer.setDragImage(rowRef.current as HTMLElement, 0, 0)
 		} catch (error) {
-			console.error(error);
+			console.error(error)
 		}
-		table.setDraggingRow(row);
-	};
+		table.setDraggingRow(row)
+	}
 
 	const handleDragEnd = (event: DragEvent<HTMLButtonElement>) => {
-		iconButtonProps.onDragEnd?.(event);
-		table.setDraggingRow(null);
-		table.setHoveredRow(null);
-	};
+		iconButtonProps.onDragEnd?.(event)
+		table.setDraggingRow(null)
+		table.setHoveredRow(null)
+	}
 
 	return (
 		<SRT_GrabHandleButton
@@ -50,5 +48,5 @@ export const SRT_TableBodyRowGrabHandle = <TData extends MRT_RowData>({
 			onDragEnd={handleDragEnd}
 			table={table}
 		/>
-	);
-};
+	)
+}

@@ -2,7 +2,7 @@ import { SRT_TableFooterCell } from './SRT_TableFooterCell'
 import type {
 	SRT_ColumnVirtualizer,
 	SRT_Header,
-	MRT_HeaderGroup,
+	SRT_HeaderGroup,
 	SRT_RowData,
 	SRT_TableInstance,
 	SRT_VirtualItem,
@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils'
 
 export interface SRT_TableFooterRowProps<TData extends SRT_RowData> extends TableRowProps {
 	columnVirtualizer?: SRT_ColumnVirtualizer
-	footerGroup: MRT_HeaderGroup<TData>
+	footerGroup: SRT_HeaderGroup<TData>
 	table: SRT_TableInstance<TData>
 }
 
@@ -28,8 +28,8 @@ export const SRT_TableFooterRow = <TData extends SRT_RowData>({
 	const {
 		options: {
 			layoutMode,
-			mrtTheme: { baseBackgroundColor },
-			muiTableFooterRowProps,
+			srtTheme: { baseBackgroundColor },
+			shadcnTableFooterRowProps: muiTableFooterRowProps,
 		},
 	} = table
 

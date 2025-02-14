@@ -1,4 +1,4 @@
-<think>
+****<think>
 Okay, let's see. The user wants to continue migrating the table head components to use Shadcn UI and Tailwind CSS. They provided several files, including MRT_TableHead, MRT_TableHeadCell, and others. The goal is to replace Material UI components with Shadcn ones while maintaining functionality.
 
 First, I need to review the existing components and identify which Material UI components are being used. For example, in MRT_TableHead.tsx, they're using TableHead from MUI. The Shadcn table components have their own TableHead, so that needs to be replaced.

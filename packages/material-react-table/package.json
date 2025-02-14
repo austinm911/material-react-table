@@ -28,7 +28,11 @@
 	"main": "dist/index.js",
 	"module": "dist/index.esm.js",
 	"typings": "dist/index.d.ts",
-	"files": ["dist", "locales", "src"],
+	"files": [
+		"dist",
+		"locales",
+		"src"
+	],
 	"size-limit": [
 		{
 			"path": "dist/index.js",
@@ -119,6 +123,7 @@
 		"@radix-ui/react-popover": "^1.1.6",
 		"@radix-ui/react-progress": "^1.1.2",
 		"@radix-ui/react-radio-group": "^1.2.3",
+		"@radix-ui/react-scroll-area": "^1.2.3",
 		"@radix-ui/react-select": "^2.1.6",
 		"@radix-ui/react-separator": "^1.1.2",
 		"@radix-ui/react-slider": "^1.2.3",

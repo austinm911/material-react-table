@@ -107,7 +107,7 @@ export const getIsRowSelected = <TData extends SRT_RowData>({
 	)
 }
 
-export const getMRT_RowSelectionHandler =
+export const getSRT_RowSelectionHandler =
 	<TData extends SRT_RowData>({
 		row,
 		staticRowIndex = 0,
@@ -178,7 +178,9 @@ export const getMRT_RowSelectionHandler =
 
 		// if all sub rows were selected, unselect them
 		if (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected()) {
-			row.subRows?.forEach((r) => r.toggleSelected(false))
+			for (const r of row.subRows) {
+				r.toggleSelected(false)
+			}
 		}
 
 		if (enableRowPinning && rowPinningDisplayMode?.includes('select')) {

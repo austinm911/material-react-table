@@ -1,95 +1,96 @@
-import type { RefObject } from "react";
-import Collapse from "@mui/material/Collapse";
-import TableCell, { type TableCellProps } from "@mui/material/TableCell";
-import TableRow from "@mui/material/TableRow";
-import type {
-	MRT_Row,
-	MRT_RowData,
-	MRT_RowVirtualizer,
-	MRT_TableInstance,
-	MRT_VirtualItem,
-} from "../../types";
-import { parseFromValuesOrFunc } from "../../utils/utils";
+import type { RefObject } from 'react'
+import { Table, TableCell, TableRow } from '../ui/table'
+import type { SRT_Row, SRT_RowData, SRT_RowVirtualizer, SRT_TableInstance, SRT_VirtualItem } from '../../types-SRT'
+import { parseFromValuesOrFunc } from '../../utils/utils'
+import { cn } from '@/lib/utils'
 
 // Duplicate of MRT_TableDetailPanel with SRT_ prefix
-export interface SRT_TableDetailPanelProps<TData extends MRT_RowData>
-	extends TableCellProps {
-	parentRowRef: RefObject<HTMLTableRowElement | null>;
-	row: MRT_Row<TData>;
-	rowVirtualizer?: MRT_RowVirtualizer;
-	staticRowIndex: number;
-	table: MRT_TableInstance<TData>;
-	virtualRow?: MRT_VirtualItem;
+export interface SRT_TableDetailPanelProps<TData extends SRT_RowData> {
+	parentRowRef: RefObject<HTMLTableRowElement | null>
+	row: SRT_Row<TData>
+	rowVirtualizer?: SRT_RowVirtualizer
+	staticRowIndex: number
+	table: SRT_TableInstance<TData>
+	virtualRow?: SRT_VirtualItem
 }
 
-export const SRT_TableDetailPanel = <TData extends MRT_RowData>({
+export const SRT_TableDetailPanel = <TData extends SRT_RowData>({
 	parentRowRef,
 	row,
 	rowVirtualizer,
 	staticRowIndex,
 	table,
 	virtualRow,
-	...rest
 }: SRT_TableDetailPanelProps<TData>) => {
 	const {
 		getVisibleLeafColumns,
 		options: {
 			layoutMode,
-			mrtTheme: { baseBackgroundColor },
-			muiDetailPanelProps,
-			muiTableBodyRowProps,
+			srtTheme: { baseBackgroundColor },
+			shadcnDetailPanelProps,
+			shadcnTableBodyRowProps,
 			renderDetailPanel,
 		},
-	} = table;
-	const tableRowProps = parseFromValuesOrFunc(muiTableBodyRowProps, {
+	} = table
+
+	const tableRowProps = parseFromValuesOrFunc(shadcnTableBodyRowProps, {
 		isDetailPanel: true,
 		row,
 		staticRowIndex,
 		table,
-	});
-	const tableCellProps = {
-		...parseFromValuesOrFunc(muiDetailPanelProps, { row, table }),
-		...rest,
-	};
+	})
+	const tableCellProps = parseFromValuesOrFunc(shadcnDetailPanelProps, {
+		row,
+		table,
+	})
 
-	const DetailPanel =
-		!table.getState().isLoading && renderDetailPanel?.({ row, table });
+	const DetailPanel = !table.getState().isLoading && renderDetailPanel?.({ row, table })
 
 	return (
 		<TableRow
 			{...tableRowProps}
-			sx={(theme) => ({
-				display: layoutMode?.startsWith("grid") ? "flex" : undefined,
-				position: virtualRow ? "absolute" : undefined,
-				top: virtualRow
-					? `${parentRowRef.current?.getBoundingClientRect()?.height}px`
-					: undefined,
+			className={cn(
+				layoutMode?.startsWith('grid') ? 'flex' : '',
+				virtualRow ? 'absolute w-full' : '',
+				tableRowProps?.className,
+			)}
+			data-index={renderDetailPanel ? staticRowIndex * 2 + 1 : staticRowIndex}
+			ref={(node: HTMLTableRowElement) => {
+				if (node) {
+					rowVirtualizer?.measureElement?.(node)
+				}
+			}}
+			style={{
+				top: virtualRow ? `${parentRowRef.current?.getBoundingClientRect()?.height}px` : undefined,
 				transform: virtualRow ? `translateY(${virtualRow.start}px)` : undefined,
-				width: "100%",
-				...(parseFromValuesOrFunc(tableRowProps?.sx, theme) as any),
-			})}
+				...(tableRowProps?.style as any),
+			}}
 		>
 			<TableCell
 				colSpan={getVisibleLeafColumns().length}
 				{...tableCellProps}
-				sx={(theme) => ({
-					backgroundColor: virtualRow ? baseBackgroundColor : undefined,
-					borderBottom: !row.getIsExpanded() ? "none" : undefined,
-					display: layoutMode?.startsWith("grid") ? "flex" : undefined,
-					py: !!DetailPanel && row.getIsExpanded() ? "1rem" : 0,
-					transition: !virtualRow ? "all 150ms ease-in-out" : undefined,
-					width: "100%",
-					...(parseFromValuesOrFunc(tableCellProps?.sx, theme) as any),
-				})}
-			>
-				{virtualRow ? (
-					row.getIsExpanded() && DetailPanel
-				) : (
-					<Collapse in={row.getIsExpanded()} mountOnEnter unmountOnExit>
-						{DetailPanel}
-					</Collapse>
+				className={cn(
+					'w-full',
+					layoutMode?.startsWith('grid') ? 'flex' : '',
+					!!DetailPanel && row.getIsExpanded() ? 'py-4' : 'py-0',
+					virtualRow ? '' : 'transition-all duration-150 ease-in-out',
+					tableCellProps?.className,
 				)}
+				style={{
+					backgroundColor: virtualRow ? baseBackgroundColor : undefined,
+					borderBottom: !row.getIsExpanded() ? 'none' : undefined,
+					...(tableCellProps?.style as any),
+				}}
+			>
+				<div
+					className={cn(
+						'overflow-hidden transition-all duration-300',
+						row.getIsExpanded() ? 'max-h-[1000px]' : 'max-h-0',
+					)}
+				>
+					{DetailPanel}
+				</div>
 			</TableCell>
 		</TableRow>
-	);
-};
+	)
+}

@@ -27,8 +27,8 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
 		options: {
 			enableMultiRowSelection,
 			localization,
-			muiSelectAllCheckboxProps,
-			muiSelectCheckboxProps,
+			shadcnSelectAllCheckboxProps: muiSelectAllCheckboxProps,
+			shadcnSelectCheckboxProps: muiSelectCheckboxProps,
 			selectAllMode,
 		},
 	} = table

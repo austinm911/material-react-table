@@ -28,8 +28,8 @@ export const SRT_EditRowModal = <TData extends SRT_RowData>({ open, table, ...re
 		getState,
 		options: {
 			localization,
-			muiCreateRowModalProps,
-			muiEditRowDialogProps,
+			shadcnCreateRowModalProps: muiCreateRowModalProps,
+			shadcnEditRowDialogProps: muiEditRowDialogProps,
 			onCreatingRowCancel,
 			onEditingRowCancel,
 			renderCreateRowDialogContent,

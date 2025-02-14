@@ -1,37 +1,31 @@
-import { type MouseEvent, useState } from "react";
-import IconButton, { type IconButtonProps } from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import { SRT_EditActionButtons } from "./SRT_EditActionButtons";
-import type {
-	MRT_Cell,
-	MRT_Row,
-	MRT_RowData,
-	MRT_TableInstance,
-} from "../../types";
-import { getCommonTooltipProps } from "../../utils/style.utils";
-import { parseFromValuesOrFunc } from "../../utils/utils";
-import { SRT_RowActionMenu } from "../menus/SRT_RowActionMenu";
+import { type MouseEvent, useState } from 'react'
+import IconButton, { type IconButtonProps } from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
+import { SRT_EditActionButtons } from './SRT_EditActionButtons'
+import type { SRT_Cell, SRT_Row, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
+import { getCommonTooltipProps } from '../../utils/style.utils'
+import { parseFromValuesOrFunc } from '../../utils/utils'
+import { SRT_RowActionMenu } from '../menus/SRT_RowActionMenu'
 
 const commonIconButtonStyles = {
-	"&:hover": {
+	'&:hover': {
 		opacity: 1,
 	},
-	height: "2rem",
-	ml: "10px",
+	height: '2rem',
+	ml: '10px',
 	opacity: 0.5,
-	transition: "opacity 150ms",
-	width: "2rem",
-};
-
-export interface SRT_ToggleRowActionMenuButtonProps<TData extends MRT_RowData>
-	extends IconButtonProps {
-	cell: MRT_Cell<TData>;
-	row: MRT_Row<TData>;
-	staticRowIndex?: number;
-	table: MRT_TableInstance<TData>;
+	transition: 'opacity 150ms',
+	width: '2rem',
 }
 
-export const SRT_ToggleRowActionMenuButton = <TData extends MRT_RowData>({
+export interface SRT_ToggleRowActionMenuButtonProps<TData extends SRT_RowData> extends IconButtonProps {
+	cell: SRT_Cell<TData>
+	row: SRT_Row<TData>
+	staticRowIndex?: number
+	table: SRT_TableInstance<TData>
+}
+
+export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
 	cell,
 	row,
 	staticRowIndex,
@@ -50,30 +44,29 @@ export const SRT_ToggleRowActionMenuButton = <TData extends MRT_RowData>({
 			renderRowActions,
 		},
 		setEditingRow,
-	} = table;
+	} = table
 
-	const { creatingRow, editingRow } = getState();
+	const { creatingRow, editingRow } = getState()
 
-	const isCreating = creatingRow?.id === row.id;
-	const isEditing = editingRow?.id === row.id;
+	const isCreating = creatingRow?.id === row.id
+	const isEditing = editingRow?.id === row.id
 
 	const showEditActionButtons =
-		(isCreating && createDisplayMode === "row") ||
-		(isEditing && editDisplayMode === "row");
+		(isCreating && createDisplayMode === 'row') || (isEditing && editDisplayMode === 'row')
 
-	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
 
 	const handleOpenRowActionMenu = (event: MouseEvent<HTMLElement>) => {
-		event.stopPropagation();
-		event.preventDefault();
-		setAnchorEl(event.currentTarget);
-	};
+		event.stopPropagation()
+		event.preventDefault()
+		setAnchorEl(event.currentTarget)
+	}
 
 	const handleStartEditMode = (event: MouseEvent) => {
-		event.stopPropagation();
-		setEditingRow({ ...row });
-		setAnchorEl(null);
-	};
+		event.stopPropagation()
+		setEditingRow({ ...row })
+		setAnchorEl(null)
+	}
 
 	return (
 		<>
@@ -83,7 +76,7 @@ export const SRT_ToggleRowActionMenuButton = <TData extends MRT_RowData>({
 				<SRT_EditActionButtons row={row} table={table} />
 			) : !renderRowActionMenuItems &&
 				parseFromValuesOrFunc(enableEditing, row) &&
-				["modal", "row"].includes(editDisplayMode!) ? (
+				['modal', 'row'].includes(editDisplayMode!) ? (
 				<Tooltip placement="right" title={localization.edit}>
 					<IconButton
 						aria-label={localization.edit}
@@ -122,5 +115,5 @@ export const SRT_ToggleRowActionMenuButton = <TData extends MRT_RowData>({
 				</>
 			) : null}
 		</>
-	);
-};
+	)
+}

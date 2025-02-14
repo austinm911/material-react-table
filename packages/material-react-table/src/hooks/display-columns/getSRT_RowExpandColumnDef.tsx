@@ -1,15 +1,13 @@
 import type { ReactNode } from 'react'
-import Stack from '@mui/material/Stack'
-import Tooltip from '@mui/material/Tooltip'
-import { MRT_ExpandAllButton } from '../../components/buttons/MRT_ExpandAllButton'
-import { MRT_ExpandButton } from '../../components/buttons/MRT_ExpandButton'
-import type { MRT_ColumnDef, MRT_RowData, MRT_StatefulTableOptions } from '../../types'
-import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils'
-import { getCommonTooltipProps } from '../../utils/style.utils'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../../components/ui/tooltip'
+import { SRT_ExpandAllButton } from '../../components/buttons/SRT_ExpandAllButton'
+import { SRT_ExpandButton } from '../../components/buttons/SRT_ExpandButton'
+import type { SRT_ColumnDef, SRT_RowData, SRT_StatefulTableOptions } from '../../types-SRT'
+import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils.shadcn'
 
-export const getMRT_RowExpandColumnDef = <TData extends MRT_RowData>(
-	tableOptions: MRT_StatefulTableOptions<TData>,
-): MRT_ColumnDef<TData> => {
+export const getSRT_RowExpandColumnDef = <TData extends SRT_RowData>(
+	tableOptions: SRT_StatefulTableOptions<TData>,
+): SRT_ColumnDef<TData> => {
 	const {
 		defaultColumn,
 		enableExpandAll,
@@ -32,31 +30,31 @@ export const getMRT_RowExpandColumnDef = <TData extends MRT_RowData>(
 			const subRowsLength = row.subRows?.length
 			if (groupedColumnMode === 'remove' && row.groupingColumnId) {
 				return (
-					<Stack alignItems="center" flexDirection="row" gap="0.25rem">
-						<MRT_ExpandButton {...expandButtonProps} />
-						<Tooltip
-							{...getCommonTooltipProps('right')}
-							title={table.getColumn(row.groupingColumnId).columnDef.header}
-						>
-							<span>{row.groupingValue as ReactNode}</span>
+					<div className="flex items-center gap-1">
+						<SRT_ExpandButton {...expandButtonProps} />
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<span>{row.groupingValue as ReactNode}</span>
+							</TooltipTrigger>
+							<TooltipContent>{table.getColumn(row.groupingColumnId).columnDef.header}</TooltipContent>
 						</Tooltip>
 						{!!subRowsLength && <span>({subRowsLength})</span>}
-					</Stack>
-				)
-			} else {
-				return (
-					<>
-						<MRT_ExpandButton {...expandButtonProps} />
-						{column.columnDef.GroupedCell?.({ cell, column, row, table })}
-					</>
+					</div>
 				)
 			}
+
+			return (
+				<>
+					<SRT_ExpandButton {...expandButtonProps} />
+					{column.columnDef.GroupedCell?.({ cell, column, row, table })}
+				</>
+			)
 		},
 		Header: enableExpandAll
 			? ({ table }) => {
 					return (
 						<>
-							<MRT_ExpandAllButton table={table} />
+							<SRT_ExpandAllButton table={table} />
 							{groupedColumnMode === 'remove' &&
 								grouping
 									?.map((groupedColumnId) => table.getColumn(groupedColumnId).columnDef.header)
@@ -65,8 +63,8 @@ export const getMRT_RowExpandColumnDef = <TData extends MRT_RowData>(
 					)
 				}
 			: undefined,
-		muiTableBodyCellProps: alignProps,
-		muiTableHeadCellProps: alignProps,
+		shadcnTableBodyCellProps: alignProps,
+		shadcnTableHeadCellProps: alignProps,
 		...defaultDisplayColumnProps({
 			header: 'expand',
 			id: 'srt-row-expand',

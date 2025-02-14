@@ -1,6 +1,6 @@
-import { MRT_DefaultDisplayColumn } from '../useMRT_TableOptions'
-import type { MRT_ColumnDef, MRT_RowData, MRT_StatefulTableOptions } from '../../types'
-import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils'
+import { SRT_DefaultDisplayColumn } from '../useSRT_TableOptions'
+import type { SRT_ColumnDef, SRT_RowData, SRT_StatefulTableOptions } from '../../types-SRT'
+import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils.shadcn'
 
 const blankColProps = {
 	children: null,
@@ -11,9 +11,9 @@ const blankColProps = {
 	},
 }
 
-export const getMRT_RowSpacerColumnDef = <TData extends MRT_RowData>(
-	tableOptions: MRT_StatefulTableOptions<TData>,
-): MRT_ColumnDef<TData> => {
+export const getSRT_RowSpacerColumnDef = <TData extends SRT_RowData>(
+	tableOptions: SRT_StatefulTableOptions<TData>,
+): SRT_ColumnDef<TData> => {
 	return {
 		...defaultDisplayColumnProps({
 			id: 'srt-row-spacer',
@@ -21,9 +21,9 @@ export const getMRT_RowSpacerColumnDef = <TData extends MRT_RowData>(
 			tableOptions,
 		}),
 		grow: true,
-		...MRT_DefaultDisplayColumn,
-		muiTableBodyCellProps: blankColProps,
-		muiTableFooterCellProps: blankColProps,
-		muiTableHeadCellProps: blankColProps,
+		...SRT_DefaultDisplayColumn,
+		shadcnTableBodyCellProps: blankColProps,
+		shadcnTableFooterCellProps: blankColProps,
+		shadcnTableHeadCellProps: blankColProps,
 	}
 }

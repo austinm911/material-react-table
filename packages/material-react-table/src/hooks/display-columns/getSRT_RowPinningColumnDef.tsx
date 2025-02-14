@@ -1,12 +1,12 @@
-import { MRT_TableBodyRowPinButton } from '../../components/body/MRT_TableBodyRowPinButton'
-import type { MRT_ColumnDef, MRT_RowData, MRT_StatefulTableOptions } from '../../types'
-import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils'
+import { SRT_TableBodyRowPinButton } from '../../components/body/SRT_TableBodyRowPinButton'
+import type { SRT_ColumnDef, SRT_RowData, SRT_StatefulTableOptions } from '../../types-SRT'
+import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils.shadcn'
 
-export const getMRT_RowPinningColumnDef = <TData extends MRT_RowData>(
-	tableOptions: MRT_StatefulTableOptions<TData>,
-): MRT_ColumnDef<TData> => {
+export const getSRT_RowPinningColumnDef = <TData extends SRT_RowData>(
+	tableOptions: SRT_StatefulTableOptions<TData>,
+): SRT_ColumnDef<TData> => {
 	return {
-		Cell: ({ row, table }) => <MRT_TableBodyRowPinButton row={row} table={table} />,
+		Cell: ({ row, table }) => <SRT_TableBodyRowPinButton row={row} table={table} />,
 		grow: false,
 		...defaultDisplayColumnProps({
 			header: 'pin',

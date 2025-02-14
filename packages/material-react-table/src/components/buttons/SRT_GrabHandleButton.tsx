@@ -1,23 +1,17 @@
-import type { DragEventHandler } from "react";
-import { Button } from "../ui/button";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "../ui/tooltip";
-import type { MRT_RowData, MRT_TableInstance } from "../../types";
-import { cn } from "@/lib/utils";
+import type { DragEventHandler } from 'react'
+import { Button } from '../ui/button'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip'
+import type { SRT_RowData, SRT_TableInstance, ButtonProps } from '../../types-SRT'
+import { cn } from '@/lib/utils'
 
-export interface SRT_GrabHandleButtonProps<TData extends MRT_RowData>
-	extends React.ComponentProps<"button"> {
-	location?: "column" | "row";
-	onDragEnd: DragEventHandler<HTMLButtonElement>;
-	onDragStart: DragEventHandler<HTMLButtonElement>;
-	table: MRT_TableInstance<TData>;
+export interface SRT_GrabHandleButtonProps<TData extends SRT_RowData> extends ButtonProps {
+	location?: 'column' | 'row'
+	onDragEnd: DragEventHandler<HTMLButtonElement>
+	onDragStart: DragEventHandler<HTMLButtonElement>
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_GrabHandleButton = <TData extends MRT_RowData>({
+export const SRT_GrabHandleButton = <TData extends SRT_RowData>({
 	className,
 	location,
 	table,
@@ -29,7 +23,7 @@ export const SRT_GrabHandleButton = <TData extends MRT_RowData>({
 			icons: { DragHandleIcon },
 			localization,
 		},
-	} = table;
+	} = table
 
 	return (
 		<TooltipProvider>
@@ -42,20 +36,18 @@ export const SRT_GrabHandleButton = <TData extends MRT_RowData>({
 						size="icon"
 						{...rest}
 						onClick={(e) => {
-							e.stopPropagation();
-							rest?.onClick?.(e);
+							e.stopPropagation()
+							rest?.onClick?.(e)
 						}}
 						className={cn(
 							// Base styles
-							"m-0 -mx-1 p-0.5 transition-all duration-150",
+							'm-0 -mx-1 p-0.5 transition-all duration-150',
 							// Cursor styles
-							"cursor-grab active:cursor-grabbing",
+							'cursor-grab active:cursor-grabbing',
 							// Hover styles
-							"hover:bg-transparent",
+							'hover:bg-transparent',
 							// Opacity based on location
-							location === "row"
-								? "opacity-100"
-								: "opacity-50 hover:opacity-100",
+							location === 'row' ? 'opacity-100' : 'opacity-50 hover:opacity-100',
 							className,
 						)}
 					>
@@ -67,5 +59,5 @@ export const SRT_GrabHandleButton = <TData extends MRT_RowData>({
 				</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>
-	);
-};
+	)
+}

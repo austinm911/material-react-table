@@ -1,18 +1,13 @@
-import IconButton, { type IconButtonProps } from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import type { MRT_RowData, MRT_TableInstance } from "../../types";
-import { getCommonTooltipProps } from "../../utils/style.utils";
-import { parseFromValuesOrFunc } from "../../utils/utils";
+import { Button } from '../ui/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
+import type { ButtonProps, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
+import { parseFromValuesOrFunc } from '../../utils/utils'
 
-export interface SRT_ExpandAllButtonProps<TData extends MRT_RowData>
-	extends IconButtonProps {
-	table: MRT_TableInstance<TData>;
+export interface SRT_ExpandAllButtonProps<TData extends SRT_RowData> extends ButtonProps {
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_ExpandAllButton = <TData extends MRT_RowData>({
-	table,
-	...rest
-}: SRT_ExpandAllButtonProps<TData>) => {
+export const SRT_ExpandAllButton = <TData extends SRT_RowData>({ table, ...rest }: SRT_ExpandAllButtonProps<TData>) => {
 	const {
 		getCanSomeRowsExpand,
 		getIsAllRowsExpanded,
@@ -21,54 +16,43 @@ export const SRT_ExpandAllButton = <TData extends MRT_RowData>({
 		options: {
 			icons: { KeyboardDoubleArrowDownIcon },
 			localization,
-			muiExpandAllButtonProps,
+			shadcnExpandAllButtonProps,
 			renderDetailPanel,
 		},
 		toggleAllRowsExpanded,
-	} = table;
-	const { density, isLoading } = getState();
+	} = table
+	const { density, isLoading } = getState()
 
-	const iconButtonProps = {
-		...parseFromValuesOrFunc(muiExpandAllButtonProps, { table }),
+	const isAllRowsExpanded = getIsAllRowsExpanded()
+
+	// Merge props from various sources, giving precedence to `rest` props
+	const buttonProps = {
+		...parseFromValuesOrFunc(shadcnExpandAllButtonProps, { table }),
+		'aria-label': localization.expandAll,
+		disabled: isLoading || (!renderDetailPanel && !getCanSomeRowsExpand()),
+		onClick: () => toggleAllRowsExpanded(!isAllRowsExpanded),
+		// Cast to valid size option
+		size: density === 'compact' ? ('icon' as const) : ('sm' as const), // Adjust size based on density.
 		...rest,
-	};
-
-	const isAllRowsExpanded = getIsAllRowsExpanded();
+	}
 
 	return (
-		<Tooltip
-			{...getCommonTooltipProps()}
-			title={
-				iconButtonProps?.title ??
-				(isAllRowsExpanded ? localization.collapseAll : localization.expandAll)
-			}
-		>
-			<span>
-				<IconButton
-					aria-label={localization.expandAll}
-					disabled={
-						isLoading || (!renderDetailPanel && !getCanSomeRowsExpand())
-					}
-					onClick={() => toggleAllRowsExpanded(!isAllRowsExpanded)}
-					{...iconButtonProps}
-					sx={(theme) => ({
-						height: density === "compact" ? "1.75rem" : "2.25rem",
-						mt: density !== "compact" ? "-0.25rem" : undefined,
-						width: density === "compact" ? "1.75rem" : "2.25rem",
-						...(parseFromValuesOrFunc(iconButtonProps?.sx, theme) as any),
-					})}
-					title={undefined}
-				>
-					{iconButtonProps?.children ?? (
+		<Tooltip>
+			<TooltipTrigger asChild>
+				<Button {...buttonProps}>
+					{buttonProps?.children ?? (
 						<KeyboardDoubleArrowDownIcon
 							style={{
 								transform: `rotate(${isAllRowsExpanded ? -180 : getIsSomeRowsExpanded() ? -90 : 0}deg)`,
-								transition: "transform 150ms",
+								transition: 'transform 150ms',
 							}}
 						/>
 					)}
-				</IconButton>
-			</span>
+				</Button>
+			</TooltipTrigger>
+			<TooltipContent side="bottom">
+				{buttonProps?.title ?? (isAllRowsExpanded ? localization.collapseAll : localization.expandAll)}
+			</TooltipContent>
 		</Tooltip>
-	);
-};
+	)
+}

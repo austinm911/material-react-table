@@ -1,120 +1,117 @@
-import { useMemo } from "react";
-import Menu, { type MenuProps } from "@mui/material/Menu";
-import { SRT_ActionMenuItem } from "./SRT_ActionMenuItem";
+import { useMemo } from 'react'
+import Menu, { type MenuProps } from '@mui/material/Menu'
+import { SRT_ActionMenuItem } from './SRT_ActionMenuItem'
 import type {
-	MRT_FilterOption,
-	MRT_Header,
-	MRT_InternalFilterOption,
-	MRT_Localization,
-	MRT_RowData,
-	MRT_TableInstance,
-} from "../../types";
+	SRT_FilterOption,
+	SRT_Header,
+	SRT_InternalFilterOption,
+	SRT_Localization,
+	SRT_RowData,
+	SRT_TableInstance,
+} from '../../types-SRT'
 
-export const mrtFilterOptions = (
-	localization: MRT_Localization,
-): MRT_InternalFilterOption[] => [
+export const mrtFilterOptions = (localization: SRT_Localization): SRT_InternalFilterOption[] => [
 	{
 		divider: false,
 		label: localization.filterFuzzy,
-		option: "fuzzy",
-		symbol: "≈",
+		option: 'fuzzy',
+		symbol: '≈',
 	},
 	{
 		divider: false,
 		label: localization.filterContains,
-		option: "contains",
-		symbol: "*",
+		option: 'contains',
+		symbol: '*',
 	},
 	{
 		divider: false,
 		label: localization.filterStartsWith,
-		option: "startsWith",
-		symbol: "a",
+		option: 'startsWith',
+		symbol: 'a',
 	},
 	{
 		divider: true,
 		label: localization.filterEndsWith,
-		option: "endsWith",
-		symbol: "z",
+		option: 'endsWith',
+		symbol: 'z',
 	},
 	{
 		divider: false,
 		label: localization.filterEquals,
-		option: "equals",
-		symbol: "=",
+		option: 'equals',
+		symbol: '=',
 	},
 	{
 		divider: true,
 		label: localization.filterNotEquals,
-		option: "notEquals",
-		symbol: "≠",
+		option: 'notEquals',
+		symbol: '≠',
 	},
 	{
 		divider: false,
 		label: localization.filterBetween,
-		option: "between",
-		symbol: "⇿",
+		option: 'between',
+		symbol: '⇿',
 	},
 	{
 		divider: true,
 		label: localization.filterBetweenInclusive,
-		option: "betweenInclusive",
-		symbol: "⬌",
+		option: 'betweenInclusive',
+		symbol: '⬌',
 	},
 	{
 		divider: false,
 		label: localization.filterGreaterThan,
-		option: "greaterThan",
-		symbol: ">",
+		option: 'greaterThan',
+		symbol: '>',
 	},
 	{
 		divider: false,
 		label: localization.filterGreaterThanOrEqualTo,
-		option: "greaterThanOrEqualTo",
-		symbol: "≥",
+		option: 'greaterThanOrEqualTo',
+		symbol: '≥',
 	},
 	{
 		divider: false,
 		label: localization.filterLessThan,
-		option: "lessThan",
-		symbol: "<",
+		option: 'lessThan',
+		symbol: '<',
 	},
 	{
 		divider: true,
 		label: localization.filterLessThanOrEqualTo,
-		option: "lessThanOrEqualTo",
-		symbol: "≤",
+		option: 'lessThanOrEqualTo',
+		symbol: '≤',
 	},
 	{
 		divider: false,
 		label: localization.filterEmpty,
-		option: "empty",
-		symbol: "∅",
+		option: 'empty',
+		symbol: '∅',
 	},
 	{
 		divider: false,
 		label: localization.filterNotEmpty,
-		option: "notEmpty",
-		symbol: "!∅",
+		option: 'notEmpty',
+		symbol: '!∅',
 	},
-];
+]
 
-const rangeModes = ["between", "betweenInclusive", "inNumberRange"];
-const emptyModes = ["empty", "notEmpty"];
-const arrModes = ["arrIncludesSome", "arrIncludesAll", "arrIncludes"];
-const rangeVariants = ["range-slider", "date-range", "datetime-range", "range"];
+const rangeModes = ['between', 'betweenInclusive', 'inNumberRange']
+const emptyModes = ['empty', 'notEmpty']
+const arrModes = ['arrIncludesSome', 'arrIncludesAll', 'arrIncludes']
+const rangeVariants = ['range-slider', 'date-range', 'datetime-range', 'range']
 
-export interface SRT_FilterOptionMenuProps<TData extends MRT_RowData>
-	extends Partial<MenuProps> {
-	anchorEl: HTMLElement | null;
-	header?: MRT_Header<TData>;
-	onSelect?: () => void;
-	setAnchorEl: (anchorEl: HTMLElement | null) => void;
-	setFilterValue?: (filterValue: any) => void;
-	table: MRT_TableInstance<TData>;
+export interface SRT_FilterOptionMenuProps<TData extends SRT_RowData> extends Partial<MenuProps> {
+	anchorEl: HTMLElement | null
+	header?: SRT_Header<TData>
+	onSelect?: () => void
+	setAnchorEl: (anchorEl: HTMLElement | null) => void
+	setFilterValue?: (filterValue: any) => void
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_FilterOptionMenu = <TData extends MRT_RowData>({
+export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
 	anchorEl,
 	header,
 	onSelect,
@@ -129,26 +126,24 @@ export const SRT_FilterOptionMenu = <TData extends MRT_RowData>({
 			columnFilterModeOptions,
 			globalFilterModeOptions,
 			localization,
-			mrtTheme: { menuBackgroundColor },
+			srtTheme: { menuBackgroundColor },
 			renderColumnFilterModeMenuItems,
 			renderGlobalFilterModeMenuItems,
 		},
 		setColumnFilterFns,
 		setGlobalFilterFn,
-	} = table;
-	const { density, globalFilterFn } = getState();
-	const { column } = header ?? {};
-	const { columnDef } = column ?? {};
-	const currentFilterValue = column?.getFilterValue();
+	} = table
+	const { density, globalFilterFn } = getState()
+	const { column } = header ?? {}
+	const { columnDef } = column ?? {}
+	const currentFilterValue = column?.getFilterValue()
 
-	let allowedColumnFilterOptions =
-		columnDef?.columnFilterModeOptions ?? columnFilterModeOptions;
+	let allowedColumnFilterOptions = columnDef?.columnFilterModeOptions ?? columnFilterModeOptions
 
 	if (rangeVariants.includes(columnDef?.filterVariant as string)) {
-		allowedColumnFilterOptions = [
-			...rangeModes,
-			...(allowedColumnFilterOptions ?? []),
-		].filter((option) => rangeModes.includes(option));
+		allowedColumnFilterOptions = [...rangeModes, ...(allowedColumnFilterOptions ?? [])].filter((option) =>
+			rangeModes.includes(option),
+		)
 	}
 
 	const internalFilterOptions = useMemo(
@@ -157,97 +152,80 @@ export const SRT_FilterOptionMenu = <TData extends MRT_RowData>({
 				columnDef
 					? allowedColumnFilterOptions === undefined ||
 						allowedColumnFilterOptions?.includes(filterOption.option)
-					: (!globalFilterModeOptions ||
-							globalFilterModeOptions.includes(filterOption.option)) &&
-						["contains", "fuzzy", "startsWith"].includes(filterOption.option),
+					: (!globalFilterModeOptions || globalFilterModeOptions.includes(filterOption.option)) &&
+						['contains', 'fuzzy', 'startsWith'].includes(filterOption.option),
 			),
 		[],
-	);
+	)
 
-	const handleSelectFilterMode = (option: MRT_FilterOption) => {
-		const prevFilterMode = columnDef?._filterFn ?? "";
+	const handleSelectFilterMode = (option: SRT_FilterOption) => {
+		const prevFilterMode = columnDef?._filterFn ?? ''
 		if (!header || !column) {
 			// global filter mode
-			setGlobalFilterFn(option);
+			setGlobalFilterFn(option)
 		} else if (option !== prevFilterMode) {
 			// column filter mode
 			setColumnFilterFns((prev: { [key: string]: any }) => ({
 				...prev,
 				[header.id]: option,
-			}));
+			}))
 
 			// reset filter value and/or perform new filter render
 			if (emptyModes.includes(option)) {
 				// will now be empty/notEmpty filter mode
-				if (
-					currentFilterValue !== " " &&
-					!emptyModes.includes(prevFilterMode)
-				) {
-					column.setFilterValue(" ");
+				if (currentFilterValue !== ' ' && !emptyModes.includes(prevFilterMode)) {
+					column.setFilterValue(' ')
 				} else if (currentFilterValue) {
-					column.setFilterValue(currentFilterValue); // perform new filter render
+					column.setFilterValue(currentFilterValue) // perform new filter render
 				}
-			} else if (
-				columnDef?.filterVariant === "multi-select" ||
-				arrModes.includes(option as string)
-			) {
+			} else if (columnDef?.filterVariant === 'multi-select' || arrModes.includes(option as string)) {
 				// will now be array filter mode
-				if (
-					currentFilterValue instanceof String ||
-					(currentFilterValue as Array<any>)?.length
-				) {
-					column.setFilterValue([]);
-					setFilterValue?.([]);
+				if (currentFilterValue instanceof String || (currentFilterValue as Array<any>)?.length) {
+					column.setFilterValue([])
+					setFilterValue?.([])
 				} else if (currentFilterValue) {
-					column.setFilterValue(currentFilterValue); // perform new filter render
+					column.setFilterValue(currentFilterValue) // perform new filter render
 				}
-			} else if (
-				columnDef?.filterVariant?.includes("range") ||
-				rangeModes.includes(option as MRT_FilterOption)
-			) {
+			} else if (columnDef?.filterVariant?.includes('range') || rangeModes.includes(option as SRT_FilterOption)) {
 				// will now be range filter mode
 				if (
 					!Array.isArray(currentFilterValue) ||
-					(!(currentFilterValue as Array<any>)?.every((v) => v === "") &&
+					(!(currentFilterValue as Array<any>)?.every((v) => v === '') &&
 						!rangeModes.includes(prevFilterMode))
 				) {
-					column.setFilterValue(["", ""]);
-					setFilterValue?.("");
+					column.setFilterValue(['', ''])
+					setFilterValue?.('')
 				} else {
-					column.setFilterValue(currentFilterValue); // perform new filter render
+					column.setFilterValue(currentFilterValue) // perform new filter render
 				}
 			} else {
 				// will now be single value filter mode
 				if (Array.isArray(currentFilterValue)) {
-					column.setFilterValue("");
-					setFilterValue?.("");
-				} else if (
-					currentFilterValue === " " &&
-					emptyModes.includes(prevFilterMode)
-				) {
-					column.setFilterValue(undefined);
+					column.setFilterValue('')
+					setFilterValue?.('')
+				} else if (currentFilterValue === ' ' && emptyModes.includes(prevFilterMode)) {
+					column.setFilterValue(undefined)
 				} else {
-					column.setFilterValue(currentFilterValue); // perform new filter render
+					column.setFilterValue(currentFilterValue) // perform new filter render
 				}
 			}
 		}
-		setAnchorEl(null);
-		onSelect?.();
-	};
+		setAnchorEl(null)
+		onSelect?.()
+	}
 
-	const filterOption =
-		!!header && columnDef ? columnDef._filterFn : globalFilterFn;
+	const filterOption = !!header && columnDef ? columnDef._filterFn : globalFilterFn
 
 	return (
 		<Menu
 			MenuListProps={{
-				dense: density === "compact",
+				dense: density === 'compact',
 				sx: {
 					backgroundColor: menuBackgroundColor,
 				},
 			}}
 			anchorEl={anchorEl}
-			anchorOrigin={{ horizontal: "right", vertical: "center" }}
+			anchorOrigin={{ horizontal: 'right', vertical: 'center' }}
 			disableScrollLock
 			onClose={() => setAnchorEl(null)}
 			open={!!anchorEl}
@@ -271,20 +249,18 @@ export const SRT_FilterOptionMenu = <TData extends MRT_RowData>({
 						onSelectFilterMode: handleSelectFilterMode,
 						table,
 					})) ??
-				internalFilterOptions.map(
-					({ divider, label, option, symbol }, index) => (
-						<SRT_ActionMenuItem
-							divider={divider}
-							icon={symbol}
-							key={index}
-							label={label}
-							onClick={() => handleSelectFilterMode(option as MRT_FilterOption)}
-							selected={option === filterOption}
-							table={table}
-							value={option}
-						/>
-					),
-				)}
+				internalFilterOptions.map(({ divider, label, option, symbol }, index) => (
+					<SRT_ActionMenuItem
+						divider={divider}
+						icon={symbol}
+						key={index}
+						label={label}
+						onClick={() => handleSelectFilterMode(option as SRT_FilterOption)}
+						selected={option === filterOption}
+						table={table}
+						value={option}
+					/>
+				))}
 		</Menu>
-	);
-};
+	)
+}

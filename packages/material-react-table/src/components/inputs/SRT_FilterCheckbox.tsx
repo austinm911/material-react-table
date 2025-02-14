@@ -22,7 +22,7 @@ export const SRT_FilterCheckbox = <TData extends SRT_RowData>({
 }: SRT_FilterCheckboxProps<TData>) => {
 	const {
 		getState,
-		options: { localization, muiFilterCheckboxProps },
+		options: { localization, shadcnFilterCheckboxProps: muiFilterCheckboxProps },
 	} = table
 	const { density } = getState()
 	const { columnDef } = column

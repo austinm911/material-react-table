@@ -1,18 +1,21 @@
-import Box, { type BoxProps } from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import type { MRT_Column, MRT_RowData, MRT_TableInstance } from "../../types";
-import { parseFromValuesOrFunc } from "../../utils/utils";
+import { Tooltip } from '@/components/ui/tooltip'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import type { SRT_Column, SRT_RowData, SRT_TableInstance, ButtonProps } from '../../types-SRT'
 
-export interface SRT_ColumnPinningButtonsProps<TData extends MRT_RowData>
-	extends BoxProps {
-	column: MRT_Column<TData>;
-	table: MRT_TableInstance<TData>;
+export interface SRT_ColumnPinningButtonsProps<TData extends SRT_RowData> extends ButtonProps {
+	column: SRT_Column<TData>
+	table: SRT_TableInstance<TData>
+	className?: string
 }
 
-export const SRT_ColumnPinningButtons = <TData extends MRT_RowData>({
+/**
+ * Column pinning buttons component.
+ */
+export const SRT_ColumnPinningButtons = <TData extends SRT_RowData>({
 	column,
 	table,
+	className,
 	...rest
 }: SRT_ColumnPinningButtonsProps<TData>) => {
 	const {
@@ -20,49 +23,32 @@ export const SRT_ColumnPinningButtons = <TData extends MRT_RowData>({
 			icons: { PushPinIcon },
 			localization,
 		},
-	} = table;
+	} = table
 
-	const handlePinColumn = (pinDirection: "left" | "right" | false) => {
-		column.pin(pinDirection);
-	};
+	const handlePinColumn = (pinDirection: 'left' | 'right' | false) => {
+		column.pin(pinDirection)
+	}
+
+	const renderPinButton = (pinDirection: 'left' | 'right' | false, title: string, rotation?: number) => {
+		return (
+			<Tooltip key={pinDirection ? pinDirection : 'unpin'}>
+				<Button {...rest} variant="ghost" size="icon" onClick={() => handlePinColumn(pinDirection)}>
+					<PushPinIcon style={{ transform: `rotate(${rotation}deg)` }} />
+				</Button>
+			</Tooltip>
+		)
+	}
 
 	return (
-		<Box
-			{...rest}
-			sx={(theme) => ({
-				minWidth: "70px",
-				textAlign: "center",
-				...(parseFromValuesOrFunc(rest?.sx, theme) as any),
-			})}
-		>
+		<div className={cn('flex items-center justify-center gap-1', className)}>
 			{column.getIsPinned() ? (
-				<Tooltip title={localization.unpin}>
-					<IconButton onClick={() => handlePinColumn(false)} size="small">
-						<PushPinIcon />
-					</IconButton>
-				</Tooltip>
+				renderPinButton(false, localization.unpin)
 			) : (
 				<>
-					<Tooltip title={localization.pinToLeft}>
-						<IconButton onClick={() => handlePinColumn("left")} size="small">
-							<PushPinIcon
-								style={{
-									transform: "rotate(90deg)",
-								}}
-							/>
-						</IconButton>
-					</Tooltip>
-					<Tooltip title={localization.pinToRight}>
-						<IconButton onClick={() => handlePinColumn("right")} size="small">
-							<PushPinIcon
-								style={{
-									transform: "rotate(-90deg)",
-								}}
-							/>
-						</IconButton>
-					</Tooltip>
+					{renderPinButton('left', localization.pinToLeft, 90)}
+					{renderPinButton('right', localization.pinToRight, -90)}
 				</>
 			)}
-		</Box>
-	);
-};
+		</div>
+	)
+}

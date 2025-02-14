@@ -1,23 +1,21 @@
-import Box, { type BoxProps } from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import type { MRT_Row, MRT_RowData, MRT_TableInstance } from "../../types";
-import { parseFromValuesOrFunc } from "../../utils/utils";
+import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import type { SRT_Row, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
+import { parseFromValuesOrFunc } from '../../utils/utils'
 
-export interface SRT_EditActionButtonsProps<TData extends MRT_RowData>
-	extends BoxProps {
-	row: MRT_Row<TData>;
-	table: MRT_TableInstance<TData>;
-	variant?: "icon" | "text";
+export interface SRT_EditActionButtonsProps<TData extends SRT_RowData> {
+	row: SRT_Row<TData>
+	table: SRT_TableInstance<TData>
+	variant?: 'icon' | 'text'
+	className?: string
 }
 
-export const SRT_EditActionButtons = <TData extends MRT_RowData>({
+export const SRT_EditActionButtons = <TData extends SRT_RowData>({
 	row,
 	table,
-	variant = "icon",
-	...rest
+	variant = 'icon',
+	className,
 }: SRT_EditActionButtonsProps<TData>) => {
 	const {
 		getState,
@@ -32,98 +30,98 @@ export const SRT_EditActionButtons = <TData extends MRT_RowData>({
 		refs: { editInputRefs },
 		setCreatingRow,
 		setEditingRow,
-	} = table;
-	const { creatingRow, editingRow, isSaving } = getState();
+	} = table
+	const { creatingRow, editingRow, isSaving } = getState()
 
-	const isCreating = creatingRow?.id === row.id;
-	const isEditing = editingRow?.id === row.id;
+	const isCreating = creatingRow?.id === row.id
+	const isEditing = editingRow?.id === row.id
 
 	const handleCancel = () => {
 		if (isCreating) {
-			onCreatingRowCancel?.({ row, table });
-			setCreatingRow(null);
+			onCreatingRowCancel?.({ row, table })
+			setCreatingRow(null)
 		} else if (isEditing) {
-			onEditingRowCancel?.({ row, table });
-			setEditingRow(null);
+			onEditingRowCancel?.({ row, table })
+			setEditingRow(null)
 		}
-		row._valuesCache = {} as any; // reset values cache
-	};
+		row._valuesCache = {} as any // reset values cache
+	}
 
 	const handleSubmitRow = () => {
-		Object.values(editInputRefs.current ?? {})
-			.filter((inputRef) => row.id === inputRef?.name?.split("_")?.[0])
-			?.forEach((input) => {
-				if (
-					input.value !== undefined &&
-					Object.hasOwn(row?._valuesCache as object, input.name)
-				) {
+		for (const inputRef of Object.values(editInputRefs.current ?? {})) {
+			if (row.id === inputRef?.name?.split('_')?.[0]) {
+				if (inputRef.value !== undefined && Object.hasOwn(row?._valuesCache as object, inputRef.name)) {
 					// @ts-expect-error
-					row._valuesCache[input.name] = input.value;
+					row._valuesCache[inputRef.name] = inputRef.value
 				}
-			});
+			}
+		}
 		if (isCreating)
 			onCreatingRowSave?.({
 				exitCreatingMode: () => setCreatingRow(null),
 				row,
 				table,
 				values: row._valuesCache,
-			});
+			})
 		else if (isEditing) {
 			onEditingRowSave?.({
 				exitEditingMode: () => setEditingRow(null),
 				row,
 				table,
 				values: row?._valuesCache,
-			});
+			})
 		}
-	};
+	}
 
 	return (
-		<Box
+		<div
 			onClick={(e) => e.stopPropagation()}
-			sx={(theme) => ({
-				display: "flex",
-				gap: "0.75rem",
-				...(parseFromValuesOrFunc(rest?.sx, theme) as any),
-			})}
+			onKeyDown={(e) => {
+				if (e.key === 'Enter' || e.key === ' ') {
+					e.stopPropagation()
+				}
+			}}
+			className={`flex gap-3 ${className ?? ''}`}
 		>
-			{variant === "icon" ? (
+			{variant === 'icon' ? (
 				<>
-					<Tooltip title={localization.cancel}>
-						<IconButton aria-label={localization.cancel} onClick={handleCancel}>
-							<CancelIcon />
-						</IconButton>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Button variant="ghost" size="icon" aria-label={localization.cancel} onClick={handleCancel}>
+								<CancelIcon className="h-4 w-4" />
+							</Button>
+						</TooltipTrigger>
+						<TooltipContent>{localization.cancel}</TooltipContent>
 					</Tooltip>
-					{((isCreating && onCreatingRowSave) ||
-						(isEditing && onEditingRowSave)) && (
-						<Tooltip title={localization.save}>
-							<IconButton
-								aria-label={localization.save}
-								color="info"
-								disabled={isSaving}
-								onClick={handleSubmitRow}
-							>
-								{isSaving ? <CircularProgress size={18} /> : <SaveIcon />}
-							</IconButton>
+					{((isCreating && onCreatingRowSave) || (isEditing && onEditingRowSave)) && (
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<Button
+									variant="ghost"
+									size="icon"
+									aria-label={localization.save}
+									disabled={isSaving}
+									onClick={handleSubmitRow}
+									className="text-blue-600"
+								>
+									{isSaving ? <Progress className="h-4 w-4" /> : <SaveIcon className="h-4 w-4" />}
+								</Button>
+							</TooltipTrigger>
+							<TooltipContent>{localization.save}</TooltipContent>
 						</Tooltip>
 					)}
 				</>
 			) : (
 				<>
-					<Button onClick={handleCancel} sx={{ minWidth: "100px" }}>
+					<Button variant="outline" onClick={handleCancel} className="min-w-[100px]">
 						{localization.cancel}
 					</Button>
-					<Button
-						disabled={isSaving}
-						onClick={handleSubmitRow}
-						sx={{ minWidth: "100px" }}
-						variant="contained"
-					>
-						{isSaving && <CircularProgress color="inherit" size={18} />}
+					<Button disabled={isSaving} onClick={handleSubmitRow} className="min-w-[100px]">
+						{isSaving && <Progress className="h-4 w-4 mr-2" />}
 						{localization.save}
 					</Button>
 				</>
 			)}
-		</Box>
-	);
-};
+		</div>
+	)
+}

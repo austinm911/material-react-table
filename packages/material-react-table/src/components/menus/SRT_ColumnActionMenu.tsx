@@ -44,7 +44,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
 				VisibilityOffIcon,
 			},
 			localization,
-			mrtTheme: { menuBackgroundColor },
+			srtTheme: { menuBackgroundColor },
 			renderColumnActionsMenuItems,
 		},
 		refs: { filterInputRefs },

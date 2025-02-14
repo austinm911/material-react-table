@@ -1,19 +1,17 @@
-import { type MouseEvent, useState } from "react";
-import type { RowPinningPosition } from "@tanstack/react-table";
-import IconButton, { type IconButtonProps } from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import type { MRT_Row, MRT_RowData, MRT_TableInstance } from "../../types";
-import { getCommonTooltipProps } from "../../utils/style.utils";
-import { parseFromValuesOrFunc } from "../../utils/utils";
+import { type MouseEvent, useState } from 'react'
+import type { RowPinningPosition } from '@tanstack/react-table'
+import { Button } from '../ui/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
+import type { ButtonProps, SRT_Row, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
+import { cn } from '../../lib/utils'
 
-export interface SRT_RowPinButtonProps<TData extends MRT_RowData>
-	extends IconButtonProps {
-	pinningPosition: RowPinningPosition;
-	row: MRT_Row<TData>;
-	table: MRT_TableInstance<TData>;
+export interface SRT_RowPinButtonProps<TData extends SRT_RowData> extends ButtonProps {
+	pinningPosition: RowPinningPosition
+	row: SRT_Row<TData>
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_RowPinButton = <TData extends MRT_RowData>({
+export const SRT_RowPinButton = <TData extends SRT_RowData>({
 	pinningPosition,
 	row,
 	table,
@@ -25,55 +23,48 @@ export const SRT_RowPinButton = <TData extends MRT_RowData>({
 			localization,
 			rowPinningDisplayMode,
 		},
-	} = table;
+	} = table
 
-	const isPinned = row.getIsPinned();
-	const [tooltipOpened, setTooltipOpened] = useState(false);
+	const isPinned = row.getIsPinned()
+	const [tooltipOpened, setTooltipOpened] = useState(false)
 
 	const handleTogglePin = (event: MouseEvent<HTMLButtonElement>) => {
-		setTooltipOpened(false);
-		event.stopPropagation();
-		row.pin(isPinned ? false : pinningPosition);
-	};
+		setTooltipOpened(false)
+		event.stopPropagation()
+		row.pin(isPinned ? false : pinningPosition)
+	}
 
 	return (
-		<Tooltip
-			{...getCommonTooltipProps()}
-			open={tooltipOpened}
-			title={isPinned ? localization.unpin : localization.pin}
-		>
-			<IconButton
-				aria-label={localization.pin}
-				onBlur={() => setTooltipOpened(false)}
-				onClick={handleTogglePin}
-				onFocus={() => setTooltipOpened(true)}
-				onMouseEnter={() => setTooltipOpened(true)}
-				onMouseLeave={() => setTooltipOpened(false)}
-				size="small"
-				{...rest}
-				sx={(theme) => ({
-					height: "24px",
-					width: "24px",
-					...(parseFromValuesOrFunc(rest?.sx, theme) as any),
-				})}
-			>
-				{isPinned ? (
-					<CloseIcon />
-				) : (
-					<PushPinIcon
-						fontSize="small"
-						style={{
-							transform: `rotate(${
-								rowPinningDisplayMode === "sticky"
-									? 135
-									: pinningPosition === "top"
-										? 180
-										: 0
-							}deg)`,
-						}}
-					/>
-				)}
-			</IconButton>
+		<Tooltip open={tooltipOpened} onOpenChange={setTooltipOpened}>
+			<TooltipTrigger asChild>
+				<Button
+					aria-label={localization.pin}
+					onClick={handleTogglePin}
+					size="icon"
+					variant="ghost"
+					className={cn(
+						'h-6 w-6',
+						rest.className, //Pass other className
+					)}
+					{...rest}
+				>
+					{isPinned ? (
+						<CloseIcon className="h-4 w-4" />
+					) : (
+						<PushPinIcon
+							className={cn(
+								'h-4 w-4',
+								rowPinningDisplayMode === 'sticky'
+									? 'rotate-[135deg]'
+									: pinningPosition === 'top'
+										? 'rotate-180'
+										: 'rotate-0',
+							)}
+						/>
+					)}
+				</Button>
+			</TooltipTrigger>
+			<TooltipContent>{isPinned ? localization.unpin : localization.pin}</TooltipContent>
 		</Tooltip>
-	);
-};
+	)
+}

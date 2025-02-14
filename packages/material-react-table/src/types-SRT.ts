@@ -40,8 +40,13 @@ import type { Slider } from './components/ui/slider'
 import type { Card } from './components/ui/card'
 import type { Input } from './components/ui/input'
 import type { Select } from './components/ui/select'
+import type { Alert } from './components/ui/alert'
 import type { RadioGroup, RadioGroupItem } from './components/ui/radio-group'
 import type { Dialog } from './components/ui/dialog'
+import type { DropdownMenuItem } from './components/ui/dropdown-menu'
+import type { Badge } from './components/ui/badge'
+import type { Pagination } from './components/ui/pagination'
+import type { Progress } from './components/ui/progress'
 import type {
 	Table as ShadcnTable,
 	TableBody,
@@ -52,27 +57,43 @@ import type {
 } from './components/ui/table'
 
 // Old MRT Types
-import type { AlertProps } from '@mui/material/Alert'
+// @Shadcn: Alert -> Alert component
+// import type { AlertProps } from '@mui/material/Alert'
+// @Shadcn: Command component could replace Autocomplete
 import type { AutocompleteProps } from '@mui/material/Autocomplete'
+// @Shadcn: No direct equivalent, can use div with className
 import type { BoxProps } from '@mui/material/Box'
-import type { ChipProps } from '@mui/material/Chip'
+// @Shadcn: Badge component could replace Chip
+// import type { ChipProps } from '@mui/material/Chip'
+// @Shadcn: Spinner component could replace CircularProgress
 import type { CircularProgressProps } from '@mui/material/CircularProgress'
-import type { LinearProgressProps } from '@mui/material/LinearProgress'
-import type { PaginationProps } from '@mui/material/Pagination'
+// @Shadcn: Progress component could replace LinearProgress
+// import type { LinearProgressProps } from '@mui/material/LinearProgress'
+// @Shadcn: Pagination component
+// import type { PaginationProps } from '@mui/material/Pagination'
+// @Shadcn: Card component could replace Paper
 import type { PaperProps } from '@mui/material/Paper'
+// @Shadcn: RadioGroup and RadioGroupItem components
 import type { RadioProps } from '@mui/material/Radio'
+// @Shadcn: Table component includes container functionality
 import type { TableContainerProps } from '@mui/material/TableContainer'
+// @Shadcn: Input component could replace TextField
 import type { TextFieldProps } from '@mui/material/TextField'
+// @Shadcn: No direct equivalent, can use CSS variables
 import type { Theme } from '@mui/material/styles'
+// @Shadcn: Calendar and DatePicker components
 import type { DatePickerProps, DateTimePickerProps, TimePickerProps } from '@mui/x-date-pickers'
-import type { MRT_AggregationFns } from './fns/aggregationFns'
-import type { MRT_FilterFns } from './fns/filterFns'
-import type { MRT_SortingFns } from './fns/sortingFns'
+import type { SRT_AggregationFns } from './fns/aggregationFns.shadcn'
+import type { SRT_FilterFns } from './fns/filterFns.shadcn'
+import type { SRT_SortingFns } from './fns/sortingFns.shadcn'
 import type { MRT_Icons } from './icons'
-import type { DropdownMenuItem } from './components/ui/dropdown-menu'
 
 // type DatePickerProps = React.ComponentProps<typeof DatePicker>;
+export type AlertProps = React.ComponentProps<typeof Alert>
+export type BadgeProps = React.ComponentProps<typeof Badge>
+export type ProgressProps = React.ComponentProps<typeof Progress>
 export type InputProps = React.ComponentProps<typeof Input>
+export type PaginationProps = React.ComponentProps<typeof Pagination>
 export type RadioItemProps = React.ComponentProps<typeof RadioGroupItem>
 export type RadioGroupProps = React.ComponentProps<typeof RadioGroup>
 export type CardProps = React.ComponentProps<typeof Card>
@@ -307,8 +328,8 @@ export type SRT_TableInstance<TData extends SRT_RowData> = Omit<
 	getColumn: (columnId: string) => SRT_Column<TData>
 	getExpandedRowModel: () => SRT_RowModel<TData>
 	getFlatHeaders: () => SRT_Header<TData>[]
-	getFooterGroups: () => MRT_HeaderGroup<TData>[]
-	getHeaderGroups: () => MRT_HeaderGroup<TData>[]
+	getFooterGroups: () => SRT_HeaderGroup<TData>[]
+	getHeaderGroups: () => SRT_HeaderGroup<TData>[]
 	getLeafHeaders: () => SRT_Header<TData>[]
 	getLeftLeafColumns: () => SRT_Column<TData>[]
 	getPaginationRowModel: () => SRT_RowModel<TData>
@@ -354,11 +375,11 @@ export type SRT_TableInstance<TData extends SRT_RowData> = Omit<
 
 export type SRT_DefinedTableOptions<TData extends SRT_RowData> = Omit<
 	SRT_TableOptions<TData>,
-	'icons' | 'localization' | 'mrtTheme'
+	'icons' | 'localization' | 'shadcnTheme'
 > & {
 	icons: MRT_Icons
 	localization: SRT_Localization
-	mrtTheme: Required<SRT_Theme>
+	srtTheme: Required<SRT_Theme>
 }
 
 export type SRT_StatefulTableOptions<TData extends SRT_RowData> = SRT_DefinedTableOptions<TData> & {
@@ -717,7 +738,7 @@ export type SRT_Header<TData extends SRT_RowData> = Omit<Header<TData, unknown>,
 	column: SRT_Column<TData>
 }
 
-export type MRT_HeaderGroup<TData extends SRT_RowData> = Omit<HeaderGroup<TData>, 'headers'> & {
+export type SRT_HeaderGroup<TData extends SRT_RowData> = Omit<HeaderGroup<TData>, 'headers'> & {
 	headers: SRT_Header<TData>[]
 }
 
@@ -739,15 +760,15 @@ export type SRT_Cell<TData extends SRT_RowData, TValue = unknown> = Omit<Cell<TD
 	row: SRT_Row<TData>
 }
 
-export type SRT_AggregationOption = string & keyof typeof MRT_AggregationFns
+export type SRT_AggregationOption = string & keyof typeof SRT_AggregationFns
 
 export type SRT_AggregationFn<TData extends SRT_RowData> = AggregationFn<TData> | SRT_AggregationOption
 
-export type SRT_SortingOption = LiteralUnion<string & keyof typeof MRT_SortingFns>
+export type SRT_SortingOption = LiteralUnion<string & keyof typeof SRT_SortingFns>
 
 export type SRT_SortingFn<TData extends SRT_RowData> = SRT_SortingOption | SortingFn<TData>
 
-export type SRT_FilterOption = LiteralUnion<string & keyof typeof MRT_FilterFns>
+export type SRT_FilterOption = LiteralUnion<string & keyof typeof SRT_FilterFns>
 
 export type SRT_FilterFn<TData extends SRT_RowData> = FilterFn<TData> | SRT_FilterOption
 
@@ -886,7 +907,8 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
 	 * @link https://www.material-react-table.com/docs/guides/memoize-components
 	 */
 	memoMode?: 'cells' | 'rows' | 'table-body'
-	mrtTheme?: ((theme: Theme) => Partial<SRT_Theme>) | Partial<SRT_Theme>
+	// TODO: fix
+	shadcnTheme?: ((theme: Theme) => Partial<SRT_Theme>) | Partial<SRT_Theme>
 	shadcnBottomToolbarProps?: ((props: { table: SRT_TableInstance<TData> }) => BoxProps) | BoxProps
 	shadcnCircularProgressProps?:
 		| ((props: {
@@ -897,15 +919,15 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
 		| ((props: {
 				column: SRT_Column<TData>
 				table: SRT_TableInstance<TData>
-		  }) => IconButtonProps)
-		| IconButtonProps
-	muiColumnDragHandleProps?:
+		  }) => ButtonProps)
+		| ButtonProps
+	shadcnColumnDragHandleProps?:
 		| ((props: {
 				column: SRT_Column<TData>
 				table: SRT_TableInstance<TData>
-		  }) => IconButtonProps)
-		| IconButtonProps
-	muiCopyButtonProps?:
+		  }) => ButtonProps)
+		| ButtonProps
+	shadcnCopyButtonProps?:
 		| ((props: {
 				cell: SRT_Cell<TData>
 				column: SRT_Column<TData>
@@ -913,25 +935,25 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
 				table: SRT_TableInstance<TData>
 		  }) => ButtonProps)
 		| ButtonProps
-	muiCreateRowModalProps?:
+	shadcnCreateRowModalProps?:
 		| ((props: {
 				row: SRT_Row<TData>
 				table: SRT_TableInstance<TData>
 		  }) => DialogProps)
 		| DialogProps
-	muiDetailPanelProps?:
+	shadcnDetailPanelProps?:
 		| ((props: {
 				row: SRT_Row<TData>
 				table: SRT_TableInstance<TData>
 		  }) => TableCellProps)
 		| TableCellProps
-	muiEditRowDialogProps?:
+	shadcnEditRowDialogProps?:
 		| ((props: {
 				row: SRT_Row<TData>
 				table: SRT_TableInstance<TData>
 		  }) => DialogProps)
 		| DialogProps
-	muiEditTextFieldProps?:
+	shadcnEditTextFieldProps?:
 		| ((props: {
 				cell: SRT_Cell<TData>
 				column: SRT_Column<TData>
@@ -939,67 +961,67 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
 				table: SRT_TableInstance<TData>
 		  }) => TextFieldProps)
 		| TextFieldProps
-	muiExpandAllButtonProps?: ((props: { table: SRT_TableInstance<TData> }) => IconButtonProps) | IconButtonProps
-	muiExpandButtonProps?:
+	shadcnExpandAllButtonProps?: ((props: { table: SRT_TableInstance<TData> }) => ButtonProps) | ButtonProps
+	shadcnExpandButtonProps?:
 		| ((props: {
 				row: SRT_Row<TData>
 				staticRowIndex?: number
 				table: SRT_TableInstance<TData>
-		  }) => IconButtonProps)
-		| IconButtonProps
-	muiFilterAutocompleteProps?:
+		  }) => ButtonProps)
+		| ButtonProps
+	shadcnFilterAutocompleteProps?:
 		| ((props: {
 				column: SRT_Column<TData>
 				table: SRT_TableInstance<TData>
 		  }) => AutocompleteProps<any, any, any, any>)
 		| AutocompleteProps<any, any, any, any>
-	muiFilterCheckboxProps?:
+	shadcnFilterCheckboxProps?:
 		| ((props: {
 				column: SRT_Column<TData>
 				table: SRT_TableInstance<TData>
 		  }) => CheckboxProps)
 		| CheckboxProps
-	muiFilterDatePickerProps?:
+	shadcnFilterDatePickerProps?:
 		| ((props: {
 				column: SRT_Column<TData>
 				rangeFilterIndex?: number
 				table: SRT_TableInstance<TData>
 		  }) => DatePickerProps<never>)
 		| DatePickerProps<never>
-	muiFilterDateTimePickerProps?:
+	shadcnFilterDateTimePickerProps?:
 		| ((props: {
 				column: SRT_Column<TData>
 				rangeFilterIndex?: number
 				table: SRT_TableInstance<TData>
 		  }) => DateTimePickerProps<never>)
 		| DateTimePickerProps<never>
-	muiFilterSliderProps?:
+	shadcnFilterSliderProps?:
 		| ((props: {
 				column: SRT_Column<TData>
 				table: SRT_TableInstance<TData>
 		  }) => SliderProps)
 		| SliderProps
-	muiFilterTextFieldProps?:
+	shadcnFilterTextFieldProps?:
 		| ((props: {
 				column: SRT_Column<TData>
 				rangeFilterIndex?: number
 				table: SRT_TableInstance<TData>
 		  }) => TextFieldProps)
 		| TextFieldProps
-	muiFilterTimePickerProps?:
+	shadcnFilterTimePickerProps?:
 		| ((props: {
 				column: SRT_Column<TData>
 				rangeFilterIndex?: number
 				table: SRT_TableInstance<TData>
 		  }) => TimePickerProps<never>)
 		| TimePickerProps<never>
-	muiLinearProgressProps?:
+	shadcnLinearProgressProps?:
 		| ((props: {
 				isTopToolbar: boolean
 				table: SRT_TableInstance<TData>
-		  }) => LinearProgressProps)
-		| LinearProgressProps
-	muiPaginationProps?:
+		  }) => ProgressProps)
+		| ProgressProps
+	shadcnPaginationProps?:
 		| ((props: { table: SRT_TableInstance<TData> }) => Partial<
 				PaginationProps & {
 					SelectProps?: Partial<SelectProps>
@@ -1016,22 +1038,22 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
 					showRowsPerPage?: boolean
 				}
 		  >
-	muiRowDragHandleProps?:
+	shadcnRowDragHandleProps?:
 		| ((props: {
 				row: SRT_Row<TData>
 				table: SRT_TableInstance<TData>
-		  }) => IconButtonProps)
-		| IconButtonProps
-	muiSearchTextFieldProps?: ((props: { table: SRT_TableInstance<TData> }) => TextFieldProps) | TextFieldProps
-	muiSelectAllCheckboxProps?: ((props: { table: SRT_TableInstance<TData> }) => CheckboxProps) | CheckboxProps
-	muiSelectCheckboxProps?:
+		  }) => ButtonProps)
+		| ButtonProps
+	shadcnSearchTextFieldProps?: ((props: { table: SRT_TableInstance<TData> }) => TextFieldProps) | TextFieldProps
+	shadcnSelectAllCheckboxProps?: ((props: { table: SRT_TableInstance<TData> }) => CheckboxProps) | CheckboxProps
+	shadcnSelectCheckboxProps?:
 		| ((props: {
 				row: SRT_Row<TData>
 				staticRowIndex?: number
 				table: SRT_TableInstance<TData>
 		  }) => CheckboxProps | RadioProps)
 		| (CheckboxProps | RadioProps)
-	muiSkeletonProps?:
+	shadcnSkeletonProps?:
 		| ((props: {
 				cell: SRT_Cell<TData>
 				column: SRT_Column<TData>
@@ -1039,7 +1061,7 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
 				table: SRT_TableInstance<TData>
 		  }) => SkeletonProps)
 		| SkeletonProps
-	muiTableBodyCellProps?:
+	shadcnTableBodyCellProps?:
 		| ((props: {
 				cell: SRT_Cell<TData>
 				column: SRT_Column<TData>
@@ -1065,31 +1087,31 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
 				table: SRT_TableInstance<TData>
 		  }) => TableCellProps)
 		| TableCellProps
-	muiTableFooterProps?: ((props: { table: SRT_TableInstance<TData> }) => TableFooterProps) | TableFooterProps
-	muiTableFooterRowProps?:
+	shadcnTableFooterProps?: ((props: { table: SRT_TableInstance<TData> }) => TableFooterProps) | TableFooterProps
+	shadcnTableFooterRowProps?:
 		| ((props: {
-				footerGroup: MRT_HeaderGroup<TData>
+				footerGroup: SRT_HeaderGroup<TData>
 				table: SRT_TableInstance<TData>
 		  }) => TableRowProps)
 		| TableRowProps
-	muiTableHeadCellProps?:
+	shadcnTableHeadCellProps?:
 		| ((props: {
 				column: SRT_Column<TData>
 				table: SRT_TableInstance<TData>
 		  }) => TableCellProps)
 		| TableCellProps
-	muiTableHeadProps?: ((props: { table: SRT_TableInstance<TData> }) => TableHeadProps) | TableHeadProps
-	muiTableHeadRowProps?:
+	shadcnTableHeadProps?: ((props: { table: SRT_TableInstance<TData> }) => TableHeadProps) | TableHeadProps
+	shadcnTableHeadRowProps?:
 		| ((props: {
-				headerGroup: MRT_HeaderGroup<TData>
+				headerGroup: SRT_HeaderGroup<TData>
 				table: SRT_TableInstance<TData>
 		  }) => TableRowProps)
 		| TableRowProps
-	muiTablePaperProps?: ((props: { table: SRT_TableInstance<TData> }) => PaperProps) | PaperProps
-	muiTableProps?: ((props: { table: SRT_TableInstance<TData> }) => TableProps) | TableProps
-	muiToolbarAlertBannerChipProps?: ((props: { table: SRT_TableInstance<TData> }) => ChipProps) | ChipProps
-	muiToolbarAlertBannerProps?: ((props: { table: SRT_TableInstance<TData> }) => AlertProps) | AlertProps
-	muiTopToolbarProps?: ((props: { table: SRT_TableInstance<TData> }) => BoxProps) | BoxProps
+	shadcnTablePaperProps?: ((props: { table: SRT_TableInstance<TData> }) => PaperProps) | PaperProps
+	shadcnTableProps?: ((props: { table: SRT_TableInstance<TData> }) => TableProps) | TableProps
+	shadcnToolbarAlertBannerChipProps?: ((props: { table: SRT_TableInstance<TData> }) => BadgeProps) | BadgeProps
+	shadcnToolbarAlertBannerProps?: ((props: { table: SRT_TableInstance<TData> }) => AlertProps) | AlertProps
+	shadcnTopToolbarProps?: ((props: { table: SRT_TableInstance<TData> }) => BoxProps) | BoxProps
 	onActionCellChange?: OnChangeFn<SRT_Cell<TData> | null>
 	onColumnFilterFnsChange?: OnChangeFn<{ [key: string]: SRT_FilterOption }>
 	onCreatingRowCancel?: (props: {
