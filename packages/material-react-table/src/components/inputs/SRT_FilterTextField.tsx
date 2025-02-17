@@ -1,23 +1,36 @@
+// TODO: FIX this component
+
 import { type ChangeEvent, type MouseEvent, useCallback, useEffect, useRef, useState } from 'react'
 import Autocomplete from '@mui/material/Autocomplete'
-import Box from '@mui/material/Box'
-import Checkbox from '@mui/material/Checkbox'
-import IconButton from '@mui/material/IconButton'
-import InputAdornment from '@mui/material/InputAdornment'
 import MenuItem from '@mui/material/MenuItem'
 import TextField, { type TextFieldProps } from '@mui/material/TextField'
-import Tooltip from '@mui/material/Tooltip'
-import { debounce } from '@mui/material/utils'
+import { Tooltip, TooltipTrigger, TooltipContent } from '../ui/tooltip'
+import { debounce } from '@/hooks/use-debounce'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { TimePicker } from '@mui/x-date-pickers/TimePicker'
-import type { DropdownOption, SRT_Header, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
+import type {
+	ButtonProps,
+	DropdownOption,
+	InputProps,
+	SelectProps,
+	SRT_Header,
+	SRT_RowData,
+	SRT_TableInstance,
+} from '../../types-SRT'
 import { getColumnFilterInfo, useDropdownOptions } from '../../utils/column.utils.shadcn'
 import { getValueAndLabel, parseFromValuesOrFunc } from '../../utils/utils'
 import { SRT_FilterOptionMenu } from '../menus/SRT_FilterOptionMenu'
 import { Badge } from '../ui/badge'
+import { Button } from '../ui/button'
+import { Label } from '../ui/label'
+import { InputAdornment } from '../ui/input-adornment'
+import { Checkbox } from '../ui/checkbox'
+import { Input } from '../ui/input'
+import { Select, SelectContent, SelectValue, SelectTrigger, SelectItem } from '../ui/select'
+import MultipleSelector from '../ui/multi-select'
 
-export interface SRT_FilterTextFieldProps<TData extends SRT_RowData> extends TextFieldProps<'standard'> {
+export interface SRT_FilterTextFieldProps<TData extends SRT_RowData> extends ButtonProps {
 	header: SRT_Header<TData>
 	rangeFilterIndex?: number
 	table: SRT_TableInstance<TData>
@@ -223,39 +236,47 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
 					visibility: (filterValue?.length ?? 0) > 0 ? 'visible' : 'hidden',
 				}}
 			>
-				<Tooltip placement="right" title={localization.clearFilter ?? ''}>
-					<span>
-						<IconButton
-							aria-label={localization.clearFilter}
-							disabled={!filterValue?.toString()?.length}
-							onClick={handleClear}
-							size="small"
-							sx={{
-								height: '2rem',
-								transform: 'scale(0.9)',
-								width: '2rem',
-							}}
-						>
-							<CloseIcon />
-						</IconButton>
-					</span>
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<span>
+							<Button
+								aria-label={localization.clearFilter}
+								disabled={!filterValue?.toString()?.length}
+								onClick={handleClear}
+								size="icon"
+								variant="ghost"
+								className="size-8"
+							>
+								<CloseIcon className="size-4" />
+							</Button>
+						</span>
+					</TooltipTrigger>
+					<TooltipContent sideOffset={4} side="right">
+						{localization.clearFilter ?? ''}
+					</TooltipContent>
 				</Tooltip>
 			</InputAdornment>
 		) : null
 
 	const startAdornment = showChangeModeButton ? (
-		<InputAdornment position="start">
-			<Tooltip title={localization.changeFilterMode}>
-				<span>
-					<IconButton
-						aria-label={localization.changeFilterMode}
-						onClick={handleFilterMenuOpen}
-						size="small"
-						sx={{ height: '1.75rem', width: '1.75rem' }}
-					>
-						<FilterListIcon />
-					</IconButton>
-				</span>
+		<InputAdornment startContent={filterChipLabel}>
+			<Tooltip>
+				<TooltipTrigger asChild>
+					<span>
+						<Button
+							aria-label={localization.changeFilterMode}
+							onClick={handleFilterMenuOpen}
+							size="icon"
+							variant="ghost"
+							className="size-8"
+						>
+							<FilterListIcon className="size-4" />
+						</Button>
+					</span>
+				</TooltipTrigger>
+				<TooltipContent sideOffset={4} side="right">
+					{localization.changeFilterMode ?? ''}
+				</TooltipContent>
 			</Tooltip>
 			{filterChipLabel && (
 				<Badge variant="outline" onClick={handleClearEmptyFilterChip} className="cursor-pointer">
@@ -265,10 +286,10 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
 		</InputAdornment>
 	) : null
 
-	const commonTextFieldProps: TextFieldProps<any> = {
+	const commonTextFieldProps: InputProps = {
 		fullWidth: true,
 		helperText: showChangeModeButton ? (
-			<label>
+			<Label>
 				{localization.filterMode.replace(
 					'{filterType}',
 					localization[
@@ -277,7 +298,7 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
 						}` as keyof typeof localization
 					],
 				)}
-			</label>
+			</Label>
 		) : null,
 		inputRef: (inputRef) => {
 			filterInputRefs.current![`${column.id}-${rangeFilterIndex ?? 0}`] = inputRef
@@ -442,9 +463,9 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
 							renderValue: isMultiSelectFilter
 								? (selected: any) =>
 										!Array.isArray(selected) || selected?.length === 0 ? (
-											<Box sx={{ opacity: 0.5 }}>{filterPlaceholder}</Box>
+											<div className="opacity-50">{filterPlaceholder}</div>
 										) : (
-											<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '2px' }}>
+											<div className="flex flex-wrap gap-[2px]">
 												{selected.map((value: string) => {
 													const selectedValue = dropdownOptions?.find(
 														(option) => getValueAndLabel(option).value === value,
@@ -455,7 +476,7 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
 														</Badge>
 													)
 												})}
-											</Box>
+											</div>
 										)
 								: undefined,
 							...commonTextFieldProps.slotProps?.select,
@@ -467,7 +488,7 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
 				>
 					{(isSelectFilter || isMultiSelectFilter) && [
 						<MenuItem disabled divider hidden key="p" value="">
-							<Box sx={{ opacity: 0.5 }}>{filterPlaceholder}</Box>
+							<div className="opacity-50">{filterPlaceholder}</div>
 						</MenuItem>,
 						...[
 							textFieldProps.children ??
@@ -489,7 +510,7 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
 													checked={((column.getFilterValue() ?? []) as string[]).includes(
 														value,
 													)}
-													sx={{ mr: '0.5rem' }}
+													className="mr-2"
 												/>
 											)}
 											{label}{' '}
@@ -509,5 +530,138 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
 				table={table}
 			/>
 		</>
+	)
+}
+
+/**
+ * FilterTextInput: A simple text input for filtering a column.
+ */
+function FilterTextInput({ value, onChange, placeholder, ref, ...rest }: InputProps) {
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+		onChange?.(e)
+	}
+
+	const handleClear = () => {
+		onChange?.({ target: { value: '' } } as ChangeEvent<HTMLInputElement>)
+	}
+
+	return (
+		<div className="flex items-center border border-gray-300 rounded px-2 py-1">
+			<Input
+				type="text"
+				value={value}
+				placeholder={placeholder}
+				onChange={handleChange}
+				ref={ref}
+				className="flex-grow outline-none"
+				{...rest}
+			/>
+			{value && (
+				<Button
+					onClick={handleClear}
+					aria-label="Clear filter"
+					className="ml-2 text-gray-500 hover:text-gray-700"
+				>
+					&#x2715;
+				</Button>
+			)}
+		</div>
+	)
+}
+
+/* -----------------------------------------------------------------------------
+   FilterSelectInput
+   A select element for simple select or multi-select filters.
+----------------------------------------------------------------------------- */
+function FilterSelectInput<TData extends SRT_RowData>({
+	value,
+	ref,
+	isMultiSelect,
+	options,
+	placeholder,
+	onChange,
+	...rest
+}: {
+	value: string | string[]
+	ref?: React.Ref<any>
+	isMultiSelect?: boolean
+	options: { value: string; label: string }[]
+	placeholder?: string
+	onChange: (value: string | string[]) => void
+}) {
+	if (isMultiSelect) {
+		return (
+			<MultipleSelector
+				value={Array.isArray(value) ? value.map((v) => ({ value: v, label: v })) : []}
+				defaultOptions={options}
+				onChange={(selected) => {
+					onChange(selected.map((option) => option.value))
+				}}
+				placeholder={placeholder}
+				ref={ref}
+				className="w-full"
+			/>
+		)
+	}
+
+	return (
+		<Select {...rest}>
+			<SelectTrigger>
+				<SelectValue placeholder={placeholder} />
+			</SelectTrigger>
+			<SelectContent>
+				{placeholder && <SelectItem value="">{placeholder}</SelectItem>}
+				{options.map((option) => (
+					<SelectItem key={option.value} value={option.value}>
+						{option.label}
+					</SelectItem>
+				))}
+			</SelectContent>
+		</Select>
+	)
+}
+
+/* -----------------------------------------------------------------------------
+   FilterDateInput
+   A date/time/datetime HTML5 input to handle date-based filtering.
+----------------------------------------------------------------------------- */
+function FilterDateInput(
+	{ value, onChange, placeholder, filterVariant, ref, ...rest }: InputProps & { filterVariant: string },
+
+	// {
+	// 	value: string
+	// 	onChange: (newVal: string) => void
+	// 	placeholder: string
+	// 	filterVariant: string
+	// 	inputRef?: (node: HTMLInputElement | null) => void
+	// }
+) {
+	let inputType = 'date'
+	if (filterVariant.startsWith('datetime')) {
+		inputType = 'datetime-local'
+	} else if (filterVariant.startsWith('time')) {
+		inputType = 'time'
+	}
+	return (
+		<div className="flex items-center border border-gray-300 rounded px-2 py-1">
+			<Input
+				type={inputType}
+				value={value}
+				placeholder={placeholder}
+				onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
+				ref={ref}
+				className="flex-grow outline-none"
+				{...rest}
+			/>
+			{value && (
+				<Button
+					onClick={() => onChange('')}
+					aria-label="Clear filter"
+					className="ml-2 text-gray-500 hover:text-gray-700"
+				>
+					&#x2715;
+				</Button>
+			)}
+		</div>
 	)
 }

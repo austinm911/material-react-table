@@ -30,7 +30,7 @@ export const SRT_TableBody = <TData extends SRT_RowData>({
 			layoutMode,
 			localization,
 			memoMode,
-			muiTableBodyProps,
+			shadcnTableBodyProps,
 			renderDetailPanel,
 			renderEmptyRowsFallback,
 			rowPinningDisplayMode,
@@ -40,7 +40,7 @@ export const SRT_TableBody = <TData extends SRT_RowData>({
 	const { columnFilters, globalFilter, isFullScreen, rowPinning } = getState()
 
 	const tableBodyProps = {
-		...parseFromValuesOrFunc(muiTableBodyProps, { table }),
+		...parseFromValuesOrFunc(shadcnTableBodyProps, { table }),
 		...rest,
 	}
 

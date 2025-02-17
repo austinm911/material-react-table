@@ -1,4 +1,104 @@
-# Material React Table V3
+# Shadcn React Table (WIP)
+
+This is a fork of [Material React Table](https://www.material-react-table.com/) that uses [Shadcn UI](https://ui.shadcn.com/) components.
+
+It is in progress, feel free to help!
+
+> **📢 Note:** Components are being migrated to `SRT_*` components and hooks/utilities to `*.shadcn.ts` files for now, in order to refer back to the original `MRT_*` components and hooks to check compatibility.
+
+## Migration
+
+We need to do the following:
+
+- [ ] Migrate MUI components to Shadcn / Tailwind equivalents. Note that migration efforts will vary: some components are very complex and require extensive rewriting, while others are simpler and mainly need final touchups.
+- [ ] Adjust the theming to ensure a consistent Shadcn/Tailwind look.
+- [ ] Confirm that props and overall functionality match those of Material/Mantine React Table.
+
+### Migration Status
+
+- ❌ - Not Started
+- 🚧 - In Progress; Needs more work (i.e. larger amount of prop migration, type errors, issues with other component dependencies, etc.)
+- 🟧 - Mostly Migrated; Needs final confirmation and minor adjustments
+- ✅ - Completed
+
+### Components
+
+#### MUI to Shadcn/Tailwind Equivalents
+
+- `Alert` ➡️ `Alert`
+- `Autocomplete` ➡️ `Command`
+- `Badge` ➡️ `Badge`
+- `Box` ➡️ `div`
+- `Button` ➡️ `Button`
+- `Checkbox` ➡️ `Checkbox`
+- `Chip` ➡️ `Badge`
+- `CircularProgress` ➡️ `Spinner`
+- `Dialog` ➡️ `Dialog`
+- `DatePicker/DateTimePicker/TimePicker` ➡️ `DatePicker`, `Popover`, `Calendar` (plus custom components for `DateTimePicker` and `TimePicker`)
+- `IconButton` ➡️ `Button` (with `variant="ghost"`)
+- `LinearProgress` ➡️ `Progress`
+- `Pagination` ➡️ `Pagination`
+- `Paper` ➡️ `Card`
+- `Radio` ➡️ `RadioGroup`, `RadioGroupItem`
+- `Select` ➡️ `Select`, `SelectTrigger`, `SelectValue`, `SelectContent`, `SelectItem`
+- `Skeleton` ➡️ (Custom implementation using Tailwind CSS)
+- `Slider` ➡️ `Slider`
+- `Table` ➡️ `Table` (Shadcn `Table` component)
+- `TableBody` ➡️ `TableBody`
+- `TableCell` ➡️ `TableCell`
+- `TableContainer` ➡️ `Table` (Shadcn `Table` component includes container)
+- `TableFooter` ➡️ `TableFooter`
+- `TableHead` ➡️ `TableHead`
+- `TableHeader` ➡️ `TableHeader`
+- `TableRow` ➡️ `TableRow`
+- `TextField` ➡️ `Input`
+
+MRT is made up of the following groups of components:
+
+#### Table Header
+
+| Component                           | Status |
+| ----------------------------------- | ------ |
+| SRT_TableHead                       | 🚧      |
+| SRT_TableHeadCell                   | 🚧      |
+| SRT_TableHeadCellColumnActionButton | 🟧      |
+| SRT_TableHeadCellFilterContainer    | 🟧      |
+| SRT_TableHeadCellFilterLabel        | 🟧      |
+| SRT_TableHeadCellGrabHandle         | 🟧      |
+| SRT_TableHeadCellResizeHandle       | 🟧      |
+| SRT_TableHeadCellSortLabel          | 🟧      |
+| SRT_TableHeadRow                    | 🟧      |
+
+#### Table Body
+
+| Component            | Status  |
+| -------------------- | ------- |
+| SRT_Table            | Unknown |
+| SRT_TableBody        | Unknown |
+| SRT_TableBodyRow     | Unknown |
+| SRT_TableEmptyRow    | Unknown |
+| SRT_FilterOptionMenu | Unknown |
+| SRT_FilterTextField  | Unknown |
+
+#### Table Footer
+
+| Component       | Status  |
+| --------------- | ------- |
+| SRT_TableFooter | Unknown |
+
+#### Inputs
+
+#### Menus
+
+#### Buttons
+
+#### Modals
+
+#### Toolbar
+
+### Hooks
+
+<hr/>
 
 View [Documentation](https://www.material-react-table.com/)
 
@@ -48,165 +148,7 @@ View [Documentation](https://www.material-react-table.com/)
 - View the [Docs Website](https://www.material-react-table.com/)
 - See all [Props, Options, APIs, Components, and Hooks](https://www.material-react-table.com/docs/api)
 
-### Quick Examples
-
-- [Basic Table](https://www.material-react-table.com/docs/examples/basic/) (See Default Features)
-- [Minimal Table](https://www.material-react-table.com/docs/examples/minimal/) (Turn off Features like Pagination, Sorting, Filtering, and Toolbars)
-- [Advanced Table](https://www.material-react-table.com/docs/examples/advanced/) (See some of the Advanced Features)
-- [Custom Headless Table](https://www.material-react-table.com/docs/examples/custom-headless/) (Build your own table markup)
-- [Dragging / Ordering Examples](https://www.material-react-table.com/docs/examples/column-ordering/) (Drag and Drop)
-- [Editing (CRUD) Examples](https://www.material-react-table.com/docs/examples/editing-crud/) (Create, Edit, and Delete Rows)
-- [Expanding / Grouping Examples](https://www.material-react-table.com/docs/examples/aggregation-and-grouping/) (Sum, Average, Count, etc.)
-- [Filtering Examples](https://www.material-react-table.com/docs/examples/filter-variants/) (Faceted Values, Switching Filters, etc.)
-- [Sticky Pinning Examples](https://www.material-react-table.com/docs/examples/sticky-header/) (Sticky Headers, Sticky Columns, Sticky Rows, etc.)
-- [Remote Data Fetching Examples](https://www.material-react-table.com/docs/examples/react-query/) (Server-side Pagination, Sorting, and Filtering)
-- [Virtualized Examples](https://www.material-react-table.com/docs/examples/virtualized/) (10,000 rows at once!)
-- [Infinite Scrolling](https://www.material-react-table.com/docs/examples/infinite-scrolling/) (Fetch data as you scroll)
-- [Localization (i18n)](https://www.material-react-table.com/docs/guides/localization#built-in-locale-examples) (Over a dozen languages built-in)
-
-View additional [storybook examples](https://www.material-react-table.dev/)
-
-## Features
-
-_All features can easily be enabled/disabled_
-
-_**Fully Fleshed out [Docs](https://www.material-react-table.com/docs/guides#guides) are available for all features**_
-
-- [x] 30-56kb gzipped - [Bundlephobia](https://bundlephobia.com/package/material-react-table)
-- [x] Advanced TypeScript Generics Support (TypeScript Optional)
-- [x] Aggregation and Grouping (Sum, Average, Count, etc.)
-- [x] Cell Actions (Right-click Context Menu)
-- [x] Click To Copy Cell Values
-- [x] Column Action Dropdown Menu
-- [x] Column Hiding
-- [x] Column Ordering via Drag'n'Drop
-- [x] Column Pinning (Freeze Columns)
-- [x] Column Resizing
-- [x] Customize Icons
-- [x] Customize Styling of internal Mui Components
-- [x] Data Editing and Creating (5 different editing modes)
-- [x] Density Toggle
-- [x] Detail Panels (Expansion)
-- [x] Faceted Value Generation for Filter Options
-- [x] Filtering (supports client-side and server-side)
-- [x] Filter Match Highlighting
-- [x] Full Screen Mode
-- [x] Global Filtering (Search across all columns, rank by best match)
-- [x] Header Groups & Footers
-- [x] Localization (i18n) support
-- [x] Manage your own state or let the table manage it internally for you
-- [x] Pagination (supports client-side and server-side)
-- [x] Row Actions (Your Custom Action Buttons)
-- [x] Row Numbers
-- [x] Row Ordering via Drag'n'Drop
-- [x] Row Pinning
-- [x] Row Selection (Checkboxes)
-- [x] SSR compatible
-- [x] Sorting (supports client-side and server-side)
-- [x] Theming (Respects your Material UI Theme)
-- [x] Toolbars (Add your own action buttons)
-- [x] Tree Data / Expanding Sub-rows
-- [x] Virtualization (@tanstack/react-virtual)
-
-## Getting Started
-
-### Installation
-
-View the full [Installation Docs](https://www.material-react-table.com/docs/getting-started/install)
-
-1. Ensure that you have React 18 or later installed
-
-2. Install Peer Dependencies (Material UI V6)
-
-```bash
-npm install @mui/material @mui/x-date-pickers @mui/icons-material @emotion/react @emotion/styled
-```
-
-3. Install material-react-table
-
-```bash
-npm install material-react-table
-```
-
-> _`@tanstack/react-table`, `@tanstack/react-virtual`, and `@tanstack/match-sorter-utils`_ are internal dependencies, so you do NOT need to install them yourself.
-
-### Usage
-
-> Read the full usage docs [here](https://www.material-react-table.com/docs/getting-started/usage/)
-
-```jsx
-import { useMemo, useState, useEffect } from 'react';
-import {
-  MaterialReactTable,
-  useMaterialReactTable,
-} from 'material-react-table';
-
-//data must be stable reference (useState, useMemo, useQuery, defined outside of component, etc.)
-const data = [
-  {
-    name: 'John',
-    age: 30,
-  },
-  {
-    name: 'Sara',
-    age: 25,
-  },
-];
-
-export default function App() {
-  const columns = useMemo(
-    () => [
-      {
-        accessorKey: 'name', //simple recommended way to define a column
-        header: 'Name',
-        muiTableHeadCellProps: { sx: { color: 'green' } }, //optional custom props
-        Cell: ({ cell }) => <span>{cell.getValue()}</span>, //optional custom cell render
-      },
-      {
-        accessorFn: (row) => row.age, //alternate way
-        id: 'age', //id required if you use accessorFn instead of accessorKey
-        header: 'Age',
-        Header: () => <i>Age</i>, //optional custom header render
-      },
-    ],
-    [],
-  );
-
-  //optionally, you can manage any/all of the table state yourself
-  const [rowSelection, setRowSelection] = useState({});
-
-  useEffect(() => {
-    //do something when the row selection changes
-  }, [rowSelection]);
-
-  const table = useMaterialReactTable({
-    columns,
-    data,
-    enableColumnOrdering: true, //enable some features
-    enableRowSelection: true,
-    enablePagination: false, //disable a default feature
-    onRowSelectionChange: setRowSelection, //hoist internal state to your own state (optional)
-    state: { rowSelection }, //manage your own state, pass it back to the table (optional)
-  });
-
-  const someEventHandler = () => {
-    //read the table state during an event from the table instance
-    console.log(table.getState().sorting);
-  };
-
-  return (
-    <MaterialReactTable table={table} /> //other more lightweight MRT sub components also available
-  );
-}
-```
-
-_Open in [Code Sandbox](https://codesandbox.io/s/simple-material-react-table-example-t5c3ji)_
-
 ## Contributors
-
-<a href="https://github.com/kevinvandy/material-react-table/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=kevinvandy/material-react-table" />
-</a>
 
 PRs are Welcome, but please discuss in [GitHub Discussions](https://github.com/KevinVandy/material-react-table/discussions) or the [Discord Server](https://discord.gg/5wqyRx6fnm) first if it is a large change!
 

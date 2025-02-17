@@ -1,7 +1,7 @@
 import { type MouseEvent, useState } from 'react'
 import type { SRT_Header, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
 import { parseFromValuesOrFunc } from '../../utils/utils'
-import { MRT_ColumnActionMenu } from '../menus/MRT_ColumnActionMenu'
+import { SRT_ColumnActionMenu } from '../menus/SRT_ColumnActionMenu'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip'
 import { Button } from '../ui/button'
 import { cn } from '@/lib/utils'
@@ -72,7 +72,7 @@ export const SRT_TableHeadCellColumnActionsButton = <TData extends SRT_RowData>(
 				</TooltipContent>
 			</Tooltip>
 			{anchorEl && (
-				<MRT_ColumnActionMenu anchorEl={anchorEl} header={header} setAnchorEl={setAnchorEl} table={table} />
+				<SRT_ColumnActionMenu anchorEl={anchorEl} header={header} setAnchorEl={setAnchorEl} table={table} />
 			)}
 		</TooltipProvider>
 	)

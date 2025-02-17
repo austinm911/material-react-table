@@ -1,24 +1,18 @@
-import type React from "react";
-import { cn } from "@/lib/utils";
-import { Badge } from "../ui/badge";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "../ui/tooltip";
-import { ChevronDown, ArrowDownUp } from "lucide-react";
-import type { MRT_Header, MRT_RowData, MRT_TableInstance } from "../../types";
-import { parseFromValuesOrFunc } from "../../utils/utils";
-import { Button } from "../ui/button";
+import type React from 'react'
+import { cn } from '@/lib/utils'
+import { Badge } from '../ui/badge'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip'
+import { ChevronDown, ArrowDownUp } from 'lucide-react'
+import type { SRT_Header, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
+import { parseFromValuesOrFunc } from '../../utils/utils'
+import { Button } from '../ui/button'
 
-export interface SRT_TableHeadCellSortLabelProps<TData extends MRT_RowData>
-	extends React.ComponentProps<"button"> {
-	header: MRT_Header<TData>;
-	table: MRT_TableInstance<TData>;
+export interface SRT_TableHeadCellSortLabelProps<TData extends SRT_RowData> extends React.ComponentProps<'button'> {
+	header: SRT_Header<TData>
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_TableHeadCellSortLabel = <TData extends MRT_RowData>({
+export const SRT_TableHeadCellSortLabel = <TData extends SRT_RowData>({
 	header,
 	table,
 	className,
@@ -27,27 +21,24 @@ export const SRT_TableHeadCellSortLabel = <TData extends MRT_RowData>({
 	const {
 		getState,
 		options: { localization },
-	} = table;
-	const { column } = header;
-	const { columnDef } = column;
-	const { isLoading, showSkeletons, sorting } = getState();
+	} = table
+	const { column } = header
+	const { columnDef } = column
+	const { isLoading, showSkeletons, sorting } = getState()
 
-	const isSorted = !!column.getIsSorted();
-	const sortDirection = column.getIsSorted();
+	const isSorted = !!column.getIsSorted()
+	const sortDirection = column.getIsSorted()
 
 	const sortTooltip =
 		isLoading || showSkeletons
-			? ""
+			? ''
 			: column.getIsSorted()
-				? column.getIsSorted() === "desc"
-					? localization.sortedByColumnDesc.replace(
-							"{column}",
-							columnDef.header,
-						)
-					: localization.sortedByColumnAsc.replace("{column}", columnDef.header)
-				: column.getNextSortingOrder() === "desc"
-					? localization.sortByColumnDesc.replace("{column}", columnDef.header)
-					: localization.sortByColumnAsc.replace("{column}", columnDef.header);
+				? column.getIsSorted() === 'desc'
+					? localization.sortedByColumnDesc.replace('{column}', columnDef.header)
+					: localization.sortedByColumnAsc.replace('{column}', columnDef.header)
+				: column.getNextSortingOrder() === 'desc'
+					? localization.sortByColumnDesc.replace('{column}', columnDef.header)
+					: localization.sortByColumnAsc.replace('{column}', columnDef.header)
 
 	return (
 		<TooltipProvider>
@@ -56,13 +47,13 @@ export const SRT_TableHeadCellSortLabel = <TData extends MRT_RowData>({
 					<Button
 						aria-label={sortTooltip}
 						className={cn(
-							"relative inline-flex h-6 w-6 items-center justify-center transition-opacity duration-150",
-							isSorted ? "opacity-100" : "opacity-30 hover:opacity-100",
+							'relative inline-flex h-6 w-6 items-center justify-center transition-opacity duration-150',
+							isSorted ? 'opacity-100' : 'opacity-30 hover:opacity-100',
 							className,
 						)}
 						onClick={(e) => {
-							e.stopPropagation();
-							header.column.getToggleSortingHandler()?.(e);
+							e.stopPropagation()
+							header.column.getToggleSortingHandler()?.(e)
 						}}
 						{...rest}
 					>
@@ -82,8 +73,8 @@ export const SRT_TableHeadCellSortLabel = <TData extends MRT_RowData>({
 						) : (
 							<ChevronDown
 								className={cn(
-									"size-4 transition-transform",
-									sortDirection === "desc" ? "rotate-0" : "rotate-180",
+									'size-4 transition-transform',
+									sortDirection === 'desc' ? 'rotate-0' : 'rotate-180',
 								)}
 								strokeWidth={3}
 							/>
@@ -93,5 +84,5 @@ export const SRT_TableHeadCellSortLabel = <TData extends MRT_RowData>({
 				<TooltipContent>{sortTooltip}</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>
-	);
-};
+	)
+}

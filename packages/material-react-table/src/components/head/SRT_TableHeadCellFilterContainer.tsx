@@ -1,19 +1,17 @@
-import Collapse, { type CollapseProps } from "@mui/material/Collapse";
-import type { MRT_Header, MRT_RowData, MRT_TableInstance } from "../../types";
-import { getColumnFilterInfo } from "../../utils/column.utils";
-import { MRT_FilterCheckbox } from "../inputs/MRT_FilterCheckbox";
-import { MRT_FilterRangeFields } from "../inputs/MRT_FilterRangeFields";
-import { MRT_FilterRangeSlider } from "../inputs/MRT_FilterRangeSlider";
-import { MRT_FilterTextField } from "../inputs/MRT_FilterTextField";
+import Collapse, { type CollapseProps } from '@mui/material/Collapse'
+import type { SRT_Header, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
+import { getColumnFilterInfo } from '../../utils/column.utils.shadcn'
+import { SRT_FilterCheckbox } from '../inputs/SRT_FilterCheckbox'
+import { SRT_FilterRangeFields } from '../inputs/SRT_FilterRangeFields'
+import { SRT_FilterRangeSlider } from '../inputs/SRT_FilterRangeSlider'
+import { SRT_FilterTextField } from '../inputs/SRT_FilterTextField'
 
-export interface SRT_TableHeadCellFilterContainerProps<
-	TData extends MRT_RowData,
-> extends CollapseProps {
-	header: MRT_Header<TData>;
-	table: MRT_TableInstance<TData>;
+export interface SRT_TableHeadCellFilterContainerProps<TData extends SRT_RowData> extends CollapseProps {
+	header: SRT_Header<TData>
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_TableHeadCellFilterContainer = <TData extends MRT_RowData>({
+export const SRT_TableHeadCellFilterContainer = <TData extends SRT_RowData>({
 	header,
 	table,
 	...rest
@@ -21,28 +19,23 @@ export const SRT_TableHeadCellFilterContainer = <TData extends MRT_RowData>({
 	const {
 		getState,
 		options: { columnFilterDisplayMode },
-	} = table;
-	const { showColumnFilters } = getState();
-	const { column } = header;
-	const { columnDef } = column;
-	const { isRangeFilter } = getColumnFilterInfo({ header, table });
+	} = table
+	const { showColumnFilters } = getState()
+	const { column } = header
+	const { columnDef } = column
+	const { isRangeFilter } = getColumnFilterInfo({ header, table })
 
 	return (
-		<Collapse
-			in={showColumnFilters || columnFilterDisplayMode === "popover"}
-			mountOnEnter
-			unmountOnExit
-			{...rest}
-		>
-			{columnDef.filterVariant === "checkbox" ? (
-				<MRT_FilterCheckbox column={column} table={table} />
-			) : columnDef.filterVariant === "range-slider" ? (
-				<MRT_FilterRangeSlider header={header} table={table} />
+		<Collapse in={showColumnFilters || columnFilterDisplayMode === 'popover'} mountOnEnter unmountOnExit {...rest}>
+			{columnDef.filterVariant === 'checkbox' ? (
+				<SRT_FilterCheckbox column={column} table={table} />
+			) : columnDef.filterVariant === 'range-slider' ? (
+				<SRT_FilterRangeSlider header={header} table={table} />
 			) : isRangeFilter ? (
-				<MRT_FilterRangeFields header={header} table={table} />
+				<SRT_FilterRangeFields header={header} table={table} />
 			) : (
-				<MRT_FilterTextField header={header} table={table} />
+				<SRT_FilterTextField header={header} table={table} />
 			)}
 		</Collapse>
-	);
-};
+	)
+}
