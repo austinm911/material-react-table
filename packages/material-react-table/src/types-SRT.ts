@@ -38,6 +38,7 @@ import type { Skeleton } from './components/ui/skeleton'
 import type { Checkbox } from './components/ui/checkbox'
 import type { Slider } from './components/ui/slider'
 import type { Card } from './components/ui/card'
+import type { CircularProgress } from './components/ui/circular-progress'
 import type { Input } from './components/ui/input'
 import type { Tooltip, TooltipContent, TooltipProvider } from './components/ui/tooltip'
 import type { Command } from './components/ui/command'
@@ -69,7 +70,7 @@ import type {
 // @Shadcn: Badge component could replace Chip
 // import type { ChipProps } from '@mui/material/Chip'
 // @Shadcn: Spinner component could replace CircularProgress
-import type { CircularProgressProps } from '@mui/material/CircularProgress'
+// import type { CircularProgressProps } from '@mui/material/CircularProgress'
 // @Shadcn: Progress component could replace LinearProgress
 // import type { LinearProgressProps } from '@mui/material/LinearProgress'
 // @Shadcn: Pagination component
@@ -94,6 +95,7 @@ import type { Popover } from './components/ui/popover'
 
 export type AlertProps = React.ComponentProps<typeof Alert>
 export type BadgeProps = React.ComponentProps<typeof Badge>
+export type CircularProgressProps = React.ComponentProps<typeof CircularProgress>
 export type ProgressProps = React.ComponentProps<typeof Progress>
 export type InputProps = React.ComponentProps<typeof Input>
 export type PaginationProps = React.ComponentProps<typeof Pagination>
@@ -604,7 +606,7 @@ export interface SRT_ColumnDef<TData extends SRT_RowData, TValue = unknown>
 				table: SRT_TableInstance<TData>
 		  }) => ButtonProps)
 		| ButtonProps
-	shadColumnDragHandleProps?:
+	shadcnColumnDragHandleProps?:
 		| ((props: {
 				column: SRT_Column<TData>
 				table: SRT_TableInstance<TData>

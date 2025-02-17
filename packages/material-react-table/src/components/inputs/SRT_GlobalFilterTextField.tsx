@@ -6,7 +6,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '../ui/tooltip'
 import type { InputProps, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { SRT_FilterOptionMenu } from '../menus/SRT_FilterOptionMenu'
-import { debounce } from '@mui/material'
+import { debounce } from '@/hooks/use-debounce'
 
 export interface SRT_GlobalFilterTextFieldProps<TData extends SRT_RowData> extends InputProps {
 	table: SRT_TableInstance<TData>
@@ -102,8 +102,8 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
 					onChange={handleChange}
 					ref={(inputRef) => {
 						searchInputRef.current = inputRef
-						if (textFieldProps?.inputRef) {
-							textFieldProps.inputRef = inputRef
+						if (textFieldProps?.ref) {
+							textFieldProps.ref = inputRef
 						}
 					}}
 					{...textFieldProps}

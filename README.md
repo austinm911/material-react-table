@@ -55,6 +55,15 @@ We need to do the following:
 
 MRT is made up of the following groups of components:
 
+#### Table / Table Container
+
+| Component               | Status |
+| ----------------------- | ------ |
+| SRT_Table               | 🟧      |
+| SRT_TableContainer      | 🟧      |
+| SRT_TableLoadingOverlay | 🚧      |
+| SRT_TablePaper          | 🟧      |
+
 #### Table Header
 
 | Component                           | Status |
@@ -82,9 +91,11 @@ MRT is made up of the following groups of components:
 
 #### Table Footer
 
-| Component       | Status  |
-| --------------- | ------- |
-| SRT_TableFooter | Unknown |
+| Component           | Status |
+| ------------------- | ------ |
+| SRT_TableFooter     | 🟧      |
+| SRT_TableFooterCell | 🟧      |
+| SRT_TableFooterRow  | 🟧      |
 
 #### Inputs
 
@@ -96,7 +107,17 @@ MRT is made up of the following groups of components:
 
 #### Toolbar
 
+| Component      | Status |
+| -------------- | ------ |
+| SRT_TopToolbar | 🚧      |
+
+
 ### Hooks
+
+| Hook                     | Status |
+| ------------------------ | ------ |
+| useSRT_TableInstance     | 🚧      |
+| useSRT_ColumnVirtualizer | 🟧      |
 
 <hr/>
 

@@ -1,6 +1,6 @@
-import { getCommonMRTCellStyles } from '../../utils/style.utils'
+import { getCommonSRTCellStyles } from '../../utils/style.utils.shadcn'
 import { parseFromValuesOrFunc } from '../../utils/utils'
-import { cellKeyboardShortcuts } from '../../utils/cell.utils'
+import { cellKeyboardShortcuts } from '../../utils/cell.utils.shadcn'
 import { TableCell } from '../ui/table'
 import { cn } from '@/lib/utils'
 import type { SRT_Header, SRT_RowData, SRT_TableInstance, TableCellProps } from '@/types-SRT'

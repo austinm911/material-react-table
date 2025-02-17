@@ -1,19 +1,15 @@
-import Box from "@mui/material/Box";
-import CircularProgress, {
-	type CircularProgressProps,
-} from "@mui/material/CircularProgress";
-import { alpha } from "@mui/material/styles";
-import type { MRT_RowData, MRT_TableInstance } from "../../types";
-import { parseFromValuesOrFunc } from "../../utils/utils";
+import type { SRT_RowData, SRT_TableInstance } from '../../types-SRT'
+import { parseFromValuesOrFunc } from '../../utils/utils'
+import { CircularProgress } from '../ui/circular-progress'
+import { cn } from '@/lib/utils'
 
 // Renamed interface to SRT_TableLoadingOverlayProps
-export interface SRT_TableLoadingOverlayProps<TData extends MRT_RowData>
-	extends CircularProgressProps {
-	table: MRT_TableInstance<TData>;
+export interface SRT_TableLoadingOverlayProps<TData extends SRT_RowData> {
+	table: SRT_TableInstance<TData>
 }
 
 // Renamed export to SRT_TableLoadingOverlay
-export const SRT_TableLoadingOverlay = <TData extends MRT_RowData>({
+export const SRT_TableLoadingOverlay = <TData extends SRT_RowData>({
 	table,
 	...rest
 }: SRT_TableLoadingOverlayProps<TData>) => {
@@ -21,40 +17,25 @@ export const SRT_TableLoadingOverlay = <TData extends MRT_RowData>({
 		options: {
 			id,
 			localization,
-			mrtTheme: { baseBackgroundColor },
-			muiCircularProgressProps,
+			shadcnTheme: { baseBackgroundColor },
+			shadcnCircularProgressProps,
 		},
-	} = table;
+	} = table
 
 	const circularProgressProps = {
-		...parseFromValuesOrFunc(muiCircularProgressProps, { table }),
+		...parseFromValuesOrFunc(shadcnCircularProgressProps, { table }),
 		...rest,
-	};
+	}
 
 	return (
-		<Box
-			sx={{
-				alignItems: "center",
-				backgroundColor: alpha(baseBackgroundColor, 0.5),
-				bottom: 0,
-				display: "flex",
-				justifyContent: "center",
-				left: 0,
-				maxHeight: "100vh",
-				position: "absolute",
-				right: 0,
-				top: 0,
-				width: "100%",
-				zIndex: 3,
-			}}
-		>
-			{circularProgressProps?.Component ?? (
-				<CircularProgress
-					aria-label={localization.noRecordsToDisplay}
-					id={`mrt-progress-${id}`}
-					{...circularProgressProps}
-				/>
+		<div
+			className={cn(
+				'absolute bottom-0 left-0 z-3 flex h-full w-full items-center justify-center bg-background/50',
 			)}
-		</Box>
-	);
-};
+			id={`srt-progress-${id}`}
+		>
+			{/* TODO: Add props */}
+			<CircularProgress {...circularProgressProps} />
+		</div>
+	)
+}

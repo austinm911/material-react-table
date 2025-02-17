@@ -1,21 +1,16 @@
-import { SRT_TableFooterRow } from "./SRT_TableFooterRow";
-import type {
-	MRT_ColumnVirtualizer,
-	MRT_RowData,
-	MRT_TableInstance,
-} from "../../types";
-import { parseFromValuesOrFunc } from "../../utils/utils";
-import type { TableFooterProps } from "@/types-SRT";
-import { TableFooter } from "../ui/table";
-import { cn } from "@/lib/utils";
+import { SRT_TableFooterRow } from './SRT_TableFooterRow'
+import type { SRT_ColumnVirtualizer, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
+import { parseFromValuesOrFunc } from '../../utils/utils'
+import type { TableFooterProps } from '@/types-SRT'
+import { TableFooter } from '../ui/table'
+import { cn } from '@/lib/utils'
 
-export interface SRT_TableFooterProps<TData extends MRT_RowData>
-	extends TableFooterProps {
-	columnVirtualizer?: MRT_ColumnVirtualizer;
-	table: MRT_TableInstance<TData>;
+export interface SRT_TableFooterProps<TData extends SRT_RowData> extends TableFooterProps {
+	columnVirtualizer?: SRT_ColumnVirtualizer
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_TableFooter = <TData extends MRT_RowData>({
+export const SRT_TableFooter = <TData extends SRT_RowData>({
 	columnVirtualizer,
 	table,
 	className,
@@ -25,38 +20,36 @@ export const SRT_TableFooter = <TData extends MRT_RowData>({
 		getState,
 		options: { enableStickyFooter, layoutMode },
 		refs: { tableFooterRef },
-	} = table;
-	const { isFullScreen } = getState();
+	} = table
+	const { isFullScreen } = getState()
 
-	const stickFooter =
-		(isFullScreen || enableStickyFooter) && enableStickyFooter !== false;
+	const stickFooter = (isFullScreen || enableStickyFooter) && enableStickyFooter !== false
 
-	const footerGroups = table.getFooterGroups();
+	const footerGroups = table.getFooterGroups()
 
 	// if no footer cells at all, skip footer
 	if (
 		!footerGroups.some((footerGroup) =>
 			footerGroup.headers?.some(
 				(header) =>
-					(typeof header.column.columnDef.footer === "string" &&
-						!!header.column.columnDef.footer) ||
+					(typeof header.column.columnDef.footer === 'string' && !!header.column.columnDef.footer) ||
 					header.column.columnDef.Footer,
 			),
 		)
 	) {
-		return null;
+		return null
 	}
 
 	return (
 		<TableFooter
 			{...rest}
 			ref={(ref: HTMLTableSectionElement) => {
-				tableFooterRef.current = ref;
+				tableFooterRef.current = ref
 			}}
 			className={cn(
-				"bg-muted/50 border-t font-medium [&>tr]:last:border-b-0",
-				stickFooter && "sticky bottom-0 z-10 opacity-95",
-				layoutMode?.startsWith("grid") && "grid",
+				'bg-muted/50 border-t font-medium [&>tr]:last:border-b-0',
+				stickFooter && 'sticky bottom-0 z-10 opacity-95',
+				layoutMode?.startsWith('grid') && 'grid',
 				className,
 			)}
 		>
@@ -69,5 +62,5 @@ export const SRT_TableFooter = <TData extends MRT_RowData>({
 				/>
 			))}
 		</TableFooter>
-	);
-};
+	)
+}

@@ -21,7 +21,7 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({ table }: SRT_TopTool
 			enableGlobalFilter,
 			enablePagination,
 			enableToolbarInternalActions,
-			muiTopToolbarProps,
+			shadcnTopToolbarProps,
 			positionGlobalFilter,
 			positionPagination,
 			positionToolbarAlertBanner,
@@ -36,7 +36,7 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({ table }: SRT_TopTool
 	const isMobile = useMediaQuery('(max-width:720px)')
 	const isTablet = useMediaQuery('(max-width:1024px)')
 
-	const toolbarProps = parseFromValuesOrFunc(muiTopToolbarProps, { table })
+	const toolbarProps = parseFromValuesOrFunc(shadcnTopToolbarProps, { table })
 
 	const stackAlertBanner = isMobile || !!renderTopToolbarCustomActions || (showGlobalFilter && isTablet)
 

@@ -1,6 +1,6 @@
 import type { DragEvent, RefObject } from 'react'
 import type { ButtonProps, SRT_Column, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
-import { reorderColumn } from '../../utils/column.utils'
+import { reorderColumn } from '../../utils/column.utils.shadcn'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { SRT_GrabHandleButton } from '../buttons/SRT_GrabHandleButton'
 
