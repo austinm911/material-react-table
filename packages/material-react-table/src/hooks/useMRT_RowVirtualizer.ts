@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { type Range, useVirtualizer } from '@tanstack/react-virtual';
 import {
   type MRT_Row,
@@ -36,7 +36,19 @@ export const useMRT_RowVirtualizer = <
     table,
   });
 
-  const rowCount = rows?.length ?? getRowModel().rows.length;
+  const realRows = rows ?? getRowModel().rows;
+  /**
+   * when filtering, should find the correct index in filtered rows
+   */
+  const draggingRowIndex = useMemo(
+    () =>
+      draggingRow?.id
+        ? realRows.findIndex((r) => r.id === draggingRow?.id)
+        : undefined,
+    [realRows, draggingRow?.id],
+  );
+
+  const rowCount = realRows.length;
 
   const normalRowHeight =
     density === 'compact' ? 37 : density === 'comfortable' ? 58 : 73;
@@ -58,9 +70,9 @@ export const useMRT_RowVirtualizer = <
     overscan: 4,
     rangeExtractor: useCallback(
       (range: Range) => {
-        return extraIndexRangeExtractor(range, draggingRow?.index ?? 0);
+        return extraIndexRangeExtractor(range, draggingRowIndex);
       },
-      [draggingRow],
+      [draggingRowIndex],
     ),
     ...rowVirtualizerProps,
   }) as unknown as MRT_RowVirtualizer<TScrollElement, TItemElement>;
