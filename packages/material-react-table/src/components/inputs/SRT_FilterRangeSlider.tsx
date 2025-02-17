@@ -1,22 +1,21 @@
 import { useEffect, useRef, useState } from 'react'
-import FormHelperText from '@mui/material/FormHelperText'
-import Slider, { type SliderProps } from '@mui/material/Slider'
-import Stack from '@mui/material/Stack'
-import type { MRT_Header, MRT_RowData, MRT_TableInstance } from '../../types'
+import { Slider } from '@/components/ui/slider'
+import { FormHelperText } from '@/components/ui/form-helper-text'
+import type { SRT_Header, SRT_RowData, SRT_TableInstance, SliderProps } from '../../types-SRT'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 
-export interface SRT_FilterRangeSliderProps<TData extends MRT_RowData> extends SliderProps {
-	header: MRT_Header<TData>
-	table: MRT_TableInstance<TData>
+export interface SRT_FilterRangeSliderProps<TData extends SRT_RowData> extends Omit<SliderProps, 'onChange' | 'value'> {
+	header: SRT_Header<TData>
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_FilterRangeSlider = <TData extends MRT_RowData>({
+export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
 	header,
 	table,
 	...rest
 }: SRT_FilterRangeSliderProps<TData>) => {
 	const {
-		options: { enableColumnFilterModes, localization, muiFilterSliderProps },
+		options: { enableColumnFilterModes, localization, shadcnFilterSliderProps },
 		refs: { filterInputRefs },
 	} = table
 	const { column } = header
@@ -27,8 +26,11 @@ export const SRT_FilterRangeSlider = <TData extends MRT_RowData>({
 	const showChangeModeButton = enableColumnFilterModes && columnDef.enableColumnFilterModes !== false
 
 	const sliderProps = {
-		...parseFromValuesOrFunc(muiFilterSliderProps, { column, table }),
-		...parseFromValuesOrFunc(columnDef.muiFilterSliderProps, { column, table }),
+		...parseFromValuesOrFunc(shadcnFilterSliderProps, { column, table }),
+		...parseFromValuesOrFunc(columnDef.shadcnFilterSliderProps, {
+			column,
+			table,
+		}),
 		...rest,
 	}
 
@@ -43,7 +45,7 @@ export const SRT_FilterRangeSlider = <TData extends MRT_RowData>({
 	if (min === null) min = 0
 	if (max === null) max = 1
 
-	const [filterValues, setFilterValues] = useState([min, max])
+	const [filterValues, setFilterValues] = useState<[number, number]>([min, max])
 	const columnFilterValue = column.getFilterValue()
 
 	const isMounted = useRef(false)
@@ -60,67 +62,36 @@ export const SRT_FilterRangeSlider = <TData extends MRT_RowData>({
 			if (columnFilterValue === undefined) {
 				setFilterValues([min, max])
 			} else if (Array.isArray(columnFilterValue)) {
-				setFilterValues(columnFilterValue)
+				setFilterValues(columnFilterValue as [number, number])
 			}
 		}
 		isMounted.current = true
 	}, [columnFilterValue, min, max])
 
 	return (
-		<Stack>
+		<div>
 			<Slider
-				disableSwap
+				className="data-[orientation=horizontal]:mt-2"
+				defaultValue={[min, max]}
 				max={max}
 				min={min}
-				onChange={(_event, values) => {
+				onKeyDown={handleKeyDown}
+				onValueChange={(values) => {
 					setFilterValues(values as [number, number])
 				}}
-				onChangeCommitted={(_event, value) => {
-					if (Array.isArray(value)) {
-						if (value[0] <= min && value[1] >= max) {
-							//if the user has selected the entire range, remove the filter
-							column.setFilterValue(undefined)
-						} else {
-							column.setFilterValue(value as [number, number])
-						}
+				onValueCommit={(value) => {
+					if (value[0] <= min && value[1] >= max) {
+						//if the user has selected the entire range, remove the filter
+						column.setFilterValue(undefined)
+					} else {
+						column.setFilterValue(value as [number, number])
 					}
 				}}
-				onKeyDown={handleKeyDown}
 				value={filterValues}
-				valueLabelDisplay="auto"
 				{...sliderProps}
-				slotProps={{
-					input: {
-						ref: (node) => {
-							if (node) {
-								filterInputRefs.current![`${column.id}-0`] = node
-								// @ts-expect-error
-								if (sliderProps?.slotProps?.input?.ref) {
-									//@ts-expect-error
-									sliderProps.slotProps.input.ref = node
-								}
-							}
-						},
-					},
-				}}
-				sx={(theme) => ({
-					m: 'auto',
-					minWidth: `${column.getSize() - 50}px`,
-					mt: !showChangeModeButton ? '10px' : '6px',
-					px: '4px',
-					width: 'calc(100% - 8px)',
-					...(parseFromValuesOrFunc(sliderProps?.sx, theme) as any),
-				})}
 			/>
 			{showChangeModeButton ? (
-				<FormHelperText
-					sx={{
-						fontSize: '0.75rem',
-						lineHeight: '0.8rem',
-						m: '-3px -6px',
-						whiteSpace: 'nowrap',
-					}}
-				>
+				<FormHelperText className="-mt-1">
 					{localization.filterMode.replace(
 						'{filterType}',
 						localization[
@@ -131,6 +102,6 @@ export const SRT_FilterRangeSlider = <TData extends MRT_RowData>({
 					)}
 				</FormHelperText>
 			) : null}
-		</Stack>
+		</div>
 	)
 }

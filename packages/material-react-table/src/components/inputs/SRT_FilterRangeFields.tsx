@@ -1,37 +1,37 @@
-import Box, { type BoxProps } from "@mui/material/Box";
-import { MRT_FilterTextField } from "./MRT_FilterTextField";
-import type { MRT_Header, MRT_RowData, MRT_TableInstance } from "../../types";
-import { parseFromValuesOrFunc } from "../../utils/utils";
+import type { HTMLAttributes } from 'react'
+import { SRT_FilterTextField } from './SRT_FilterTextField'
+import type { SRT_Header, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
+import { parseFromValuesOrFunc } from '../../utils/utils'
+import { cn } from '@/lib/utils'
 
-export interface SRT_FilterRangeFieldsProps<TData extends MRT_RowData>
-	extends BoxProps {
-	header: MRT_Header<TData>;
-	table: MRT_TableInstance<TData>;
+export interface SRT_FilterRangeFieldsProps<TData extends SRT_RowData> extends HTMLAttributes<HTMLDivElement> {
+	header: SRT_Header<TData>
+	table: SRT_TableInstance<TData>
+	className?: string
 }
 
-export const SRT_FilterRangeFields = <TData extends MRT_RowData>({
+export const SRT_FilterRangeFields = <TData extends SRT_RowData>({
 	header,
 	table,
+	className,
 	...rest
 }: SRT_FilterRangeFieldsProps<TData>) => {
 	return (
-		<Box
+		<div
 			{...rest}
-			sx={(theme) => ({
-				display: "grid",
-				gap: "1rem",
-				gridTemplateColumns: "1fr 1fr",
-				...(parseFromValuesOrFunc(rest?.sx, theme) as any),
-			})}
+			className={cn('grid gap-1rem grid-cols-2', className)}
+			style={{
+				...(parseFromValuesOrFunc(rest?.style, {}) as any),
+			}}
 		>
 			{[0, 1].map((rangeFilterIndex) => (
-				<MRT_FilterTextField
+				<SRT_FilterTextField
 					header={header}
 					key={rangeFilterIndex}
 					rangeFilterIndex={rangeFilterIndex}
 					table={table}
 				/>
 			))}
-		</Box>
-	);
-};
+		</div>
+	)
+}

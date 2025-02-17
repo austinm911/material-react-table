@@ -39,6 +39,9 @@ import type { Checkbox } from './components/ui/checkbox'
 import type { Slider } from './components/ui/slider'
 import type { Card } from './components/ui/card'
 import type { Input } from './components/ui/input'
+import type { Tooltip, TooltipContent, TooltipProvider } from './components/ui/tooltip'
+import type { Command } from './components/ui/command'
+import type { Calendar } from './components/ui/calendar'
 import type { Select } from './components/ui/select'
 import type { Alert } from './components/ui/alert'
 import type { RadioGroup, RadioGroupItem } from './components/ui/radio-group'
@@ -60,9 +63,9 @@ import type {
 // @Shadcn: Alert -> Alert component
 // import type { AlertProps } from '@mui/material/Alert'
 // @Shadcn: Command component could replace Autocomplete
-import type { AutocompleteProps } from '@mui/material/Autocomplete'
+// import type { AutocompleteProps } from '@mui/material/Autocomplete'
 // @Shadcn: No direct equivalent, can use div with className
-import type { BoxProps } from '@mui/material/Box'
+// import type { BoxProps } from '@mui/material/Box'
 // @Shadcn: Badge component could replace Chip
 // import type { ChipProps } from '@mui/material/Chip'
 // @Shadcn: Spinner component could replace CircularProgress
@@ -72,24 +75,23 @@ import type { CircularProgressProps } from '@mui/material/CircularProgress'
 // @Shadcn: Pagination component
 // import type { PaginationProps } from '@mui/material/Pagination'
 // @Shadcn: Card component could replace Paper
-import type { PaperProps } from '@mui/material/Paper'
+// import type { PaperProps } from '@mui/material/Paper'
 // @Shadcn: RadioGroup and RadioGroupItem components
 import type { RadioProps } from '@mui/material/Radio'
 // @Shadcn: Table component includes container functionality
-import type { TableContainerProps } from '@mui/material/TableContainer'
+// import type { TableContainerProps } from '@mui/material/TableContainer'
 // @Shadcn: Input component could replace TextField
-import type { TextFieldProps } from '@mui/material/TextField'
+// import type { TextFieldProps } from '@mui/material/TextField'
 // @Shadcn: No direct equivalent, can use CSS variables
 import type { Theme } from '@mui/material/styles'
 // @Shadcn: Calendar and DatePicker components
-import type { DatePickerProps, DateTimePickerProps, TimePickerProps } from '@mui/x-date-pickers'
+// import type { DatePickerProps, DateTimePickerProps, TimePickerProps } from '@mui/x-date-pickers'
 import type { SRT_AggregationFns } from './fns/aggregationFns.shadcn'
 import type { SRT_FilterFns } from './fns/filterFns.shadcn'
 import type { SRT_SortingFns } from './fns/sortingFns.shadcn'
 import type { MRT_Icons } from './icons'
-import type { Tooltip, TooltipContent, TooltipProvider } from './components/ui/tooltip'
+import type { Popover } from './components/ui/popover'
 
-// type DatePickerProps = React.ComponentProps<typeof DatePicker>;
 export type AlertProps = React.ComponentProps<typeof Alert>
 export type BadgeProps = React.ComponentProps<typeof Badge>
 export type ProgressProps = React.ComponentProps<typeof Progress>
@@ -98,9 +100,22 @@ export type PaginationProps = React.ComponentProps<typeof Pagination>
 export type RadioItemProps = React.ComponentProps<typeof RadioGroupItem>
 export type RadioGroupProps = React.ComponentProps<typeof RadioGroup>
 export type CardProps = React.ComponentProps<typeof Card>
+export type AutocompleteProps = React.ComponentProps<typeof Command>
 export type ButtonProps = React.ComponentProps<typeof Button>
 export type CheckboxProps = React.ComponentProps<typeof Checkbox>
 export type DropdownMenuItemProps = React.ComponentProps<typeof DropdownMenuItem>
+
+export type DatePickerProps = Omit<React.ComponentProps<typeof Popover>, 'children'> & {
+	calendarProps?: React.ComponentProps<typeof Calendar>
+}
+
+export type DateTimePickerProps = Omit<React.ComponentProps<typeof Calendar>, 'children'> & {
+	calendarProps?: React.ComponentProps<typeof Calendar>
+}
+export type TimePickerProps = Omit<React.ComponentProps<typeof Calendar>, 'children'> & {
+	calendarProps?: React.ComponentProps<typeof Calendar>
+}
+
 export type SelectProps = React.ComponentProps<typeof Select>
 export type DialogProps = React.ComponentProps<typeof Dialog>
 export type SkeletonProps = React.ComponentProps<typeof Skeleton>
@@ -609,14 +624,14 @@ export interface SRT_ColumnDef<TData extends SRT_RowData, TValue = unknown>
 				column: SRT_Column<TData>
 				row: SRT_Row<TData>
 				table: SRT_TableInstance<TData>
-		  }) => TextFieldProps)
-		| TextFieldProps
+		  }) => InputProps)
+		| InputProps
 	shadcnFilterAutocompleteProps?:
 		| ((props: {
 				column: SRT_Column<TData>
 				table: SRT_TableInstance<TData>
-		  }) => AutocompleteProps<any, any, any, any>)
-		| AutocompleteProps<any, any, any, any>
+		  }) => AutocompleteProps)
+		| AutocompleteProps
 	shadcnFilterCheckboxProps?:
 		| ((props: {
 				column: SRT_Column<TData>
@@ -628,15 +643,15 @@ export interface SRT_ColumnDef<TData extends SRT_RowData, TValue = unknown>
 				column: SRT_Column<TData>
 				rangeFilterIndex?: number
 				table: SRT_TableInstance<TData>
-		  }) => DatePickerProps<never>)
-		| DatePickerProps<never>
+		  }) => DatePickerProps)
+		| DatePickerProps
 	shadcnFilterDateTimePickerProps?:
 		| ((props: {
 				column: SRT_Column<TData>
 				rangeFilterIndex?: number
 				table: SRT_TableInstance<TData>
-		  }) => DateTimePickerProps<never>)
-		| DateTimePickerProps<never>
+		  }) => DateTimePickerProps)
+		| DateTimePickerProps
 	shadcnFilterSliderProps?:
 		| ((props: {
 				column: SRT_Column<TData>
@@ -648,15 +663,15 @@ export interface SRT_ColumnDef<TData extends SRT_RowData, TValue = unknown>
 				column: SRT_Column<TData>
 				rangeFilterIndex?: number
 				table: SRT_TableInstance<TData>
-		  }) => TextFieldProps)
-		| TextFieldProps
+		  }) => InputProps)
+		| InputProps
 	shadcnFilterTimePickerProps?:
 		| ((props: {
 				column: SRT_Column<TData>
 				rangeFilterIndex?: number
 				table: SRT_TableInstance<TData>
-		  }) => TimePickerProps<never>)
-		| TimePickerProps<never>
+		  }) => TimePickerProps)
+		| TimePickerProps
 	shadcnTableBodyCellProps?:
 		| ((props: {
 				cell: SRT_Cell<TData, TValue>
@@ -913,7 +928,9 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
 	memoMode?: 'cells' | 'rows' | 'table-body'
 	// TODO: fix
 	shadcnTheme?: ((theme: Theme) => Partial<SRT_Theme>) | Partial<SRT_Theme>
-	shadcnBottomToolbarProps?: ((props: { table: SRT_TableInstance<TData> }) => BoxProps) | BoxProps
+	shadcnBottomToolbarProps?:
+		| ((props: { table: SRT_TableInstance<TData> }) => React.ComponentProps<'div'>)
+		| React.ComponentProps<'div'>
 	shadcnCircularProgressProps?:
 		| ((props: {
 				table: SRT_TableInstance<TData>
@@ -963,8 +980,8 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
 				column: SRT_Column<TData>
 				row: SRT_Row<TData>
 				table: SRT_TableInstance<TData>
-		  }) => TextFieldProps)
-		| TextFieldProps
+		  }) => InputProps)
+		| InputProps
 	shadcnExpandAllButtonProps?: ((props: { table: SRT_TableInstance<TData> }) => ButtonProps) | ButtonProps
 	shadcnExpandButtonProps?:
 		| ((props: {
@@ -977,8 +994,8 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
 		| ((props: {
 				column: SRT_Column<TData>
 				table: SRT_TableInstance<TData>
-		  }) => AutocompleteProps<any, any, any, any>)
-		| AutocompleteProps<any, any, any, any>
+		  }) => AutocompleteProps)
+		| AutocompleteProps
 	shadcnFilterCheckboxProps?:
 		| ((props: {
 				column: SRT_Column<TData>
@@ -990,15 +1007,15 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
 				column: SRT_Column<TData>
 				rangeFilterIndex?: number
 				table: SRT_TableInstance<TData>
-		  }) => DatePickerProps<never>)
-		| DatePickerProps<never>
+		  }) => DatePickerProps)
+		| DatePickerProps
 	shadcnFilterDateTimePickerProps?:
 		| ((props: {
 				column: SRT_Column<TData>
 				rangeFilterIndex?: number
 				table: SRT_TableInstance<TData>
-		  }) => DateTimePickerProps<never>)
-		| DateTimePickerProps<never>
+		  }) => DateTimePickerProps)
+		| DateTimePickerProps
 	shadcnFilterSliderProps?:
 		| ((props: {
 				column: SRT_Column<TData>
@@ -1010,15 +1027,15 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
 				column: SRT_Column<TData>
 				rangeFilterIndex?: number
 				table: SRT_TableInstance<TData>
-		  }) => TextFieldProps)
-		| TextFieldProps
+		  }) => InputProps)
+		| InputProps
 	shadcnFilterTimePickerProps?:
 		| ((props: {
 				column: SRT_Column<TData>
 				rangeFilterIndex?: number
 				table: SRT_TableInstance<TData>
-		  }) => TimePickerProps<never>)
-		| TimePickerProps<never>
+		  }) => TimePickerProps)
+		| TimePickerProps
 	shadcnLinearProgressProps?:
 		| ((props: {
 				isTopToolbar: boolean
@@ -1048,7 +1065,7 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
 				table: SRT_TableInstance<TData>
 		  }) => ButtonProps)
 		| ButtonProps
-	shadcnSearchTextFieldProps?: ((props: { table: SRT_TableInstance<TData> }) => TextFieldProps) | TextFieldProps
+	shadcnSearchTextFieldProps?: ((props: { table: SRT_TableInstance<TData> }) => InputProps) | InputProps
 	shadcnSelectAllCheckboxProps?: ((props: { table: SRT_TableInstance<TData> }) => CheckboxProps) | CheckboxProps
 	shadcnSelectCheckboxProps?:
 		| ((props: {
@@ -1082,9 +1099,7 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
 				table: SRT_TableInstance<TData>
 		  }) => TableRowProps)
 		| TableRowProps
-	shadcnTableContainerProps?:
-		| ((props: { table: SRT_TableInstance<TData> }) => TableContainerProps)
-		| TableContainerProps
+	shadcnTableContainerProps?: ((props: { table: SRT_TableInstance<TData> }) => TableProps) | TableProps
 	shadcnTableFooterCellProps?:
 		| ((props: {
 				column: SRT_Column<TData>
@@ -1111,11 +1126,13 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
 				table: SRT_TableInstance<TData>
 		  }) => TableRowProps)
 		| TableRowProps
-	shadcnTablePaperProps?: ((props: { table: SRT_TableInstance<TData> }) => PaperProps) | PaperProps
+	shadcnTablePaperProps?: ((props: { table: SRT_TableInstance<TData> }) => CardProps) | CardProps
 	shadcnTableProps?: ((props: { table: SRT_TableInstance<TData> }) => TableProps) | TableProps
 	shadcnToolbarAlertBannerChipProps?: ((props: { table: SRT_TableInstance<TData> }) => BadgeProps) | BadgeProps
 	shadcnToolbarAlertBannerProps?: ((props: { table: SRT_TableInstance<TData> }) => AlertProps) | AlertProps
-	shadcnTopToolbarProps?: ((props: { table: SRT_TableInstance<TData> }) => BoxProps) | BoxProps
+	shadcnTopToolbarProps?:
+		| ((props: { table: SRT_TableInstance<TData> }) => React.ComponentProps<'div'>)
+		| React.ComponentProps<'div'>
 	onActionCellChange?: OnChangeFn<SRT_Cell<TData> | null>
 	onColumnFilterFnsChange?: OnChangeFn<{ [key: string]: SRT_FilterOption }>
 	onCreatingRowCancel?: (props: {

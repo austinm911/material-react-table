@@ -1,119 +1,111 @@
-import {
-	type ChangeEvent,
-	type FocusEvent,
-	type KeyboardEvent,
-	useState,
-	useRef,
-	useEffect,
-} from "react";
-import { Input } from "../../components/ui/input";
+import { type ChangeEvent, type FocusEvent, type KeyboardEvent, useState, useRef, useEffect } from 'react'
+import { Input } from '../../components/ui/input'
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "../../components/ui/dropdown-menu";
-import type { MRT_Cell, MRT_RowData, MRT_TableInstance } from "../../types";
-import { getValueAndLabel, parseFromValuesOrFunc } from "../../utils/utils";
-import type { InputProps } from "@/types-SRT";
+} from '../../components/ui/dropdown-menu'
+import type { SRT_Cell, SRT_RowData, SRT_TableInstance, InputProps } from '../../types-SRT'
+import { getValueAndLabel, parseFromValuesOrFunc } from '../../utils/utils'
+import { cn } from '@/lib/utils'
 
-export interface SRT_EditCellTextFieldProps<TData extends MRT_RowData>
-	extends InputProps {
-	cell: MRT_Cell<TData>;
-	table: MRT_TableInstance<TData>;
+export interface SRT_EditCellTextFieldProps<TData extends SRT_RowData> extends InputProps {
+	cell: SRT_Cell<TData>
+	table: SRT_TableInstance<TData>
+	className?: string
 }
 
-export const SRT_EditCellTextField = <TData extends MRT_RowData>({
+export const SRT_EditCellTextField = <TData extends SRT_RowData>({
 	cell,
 	table,
+	className,
 }: SRT_EditCellTextFieldProps<TData>) => {
 	const {
 		getState,
-		options: { createDisplayMode, editDisplayMode, muiEditTextFieldProps },
+		options: { createDisplayMode, editDisplayMode, shadcnEditTextFieldProps },
 		refs: { editInputRefs },
 		setCreatingRow,
 		setEditingCell,
 		setEditingRow,
-	} = table;
-	const { column, row } = cell;
-	const { columnDef } = column;
-	const { creatingRow, editingRow } = getState();
-	const { editSelectOptions, editVariant } = columnDef;
+	} = table
+	const { column, row } = cell
+	const { columnDef } = column
+	const { creatingRow, editingRow } = getState()
+	const { editSelectOptions, editVariant } = columnDef
 
-	const isCreating = creatingRow?.id === row.id;
-	const isEditing = editingRow?.id === row.id;
+	const isCreating = creatingRow?.id === row.id
+	const isEditing = editingRow?.id === row.id
 
-	const [value, setValue] = useState<string | null>(
-		() => cell.getValue<string>() ?? null,
-	);
-	const [completesComposition, setCompletesComposition] = useState(true);
-	const [open, setOpen] = useState(false);
-	const inputRef = useRef<HTMLInputElement>(null);
+	const [value, setValue] = useState<string | null>(() => cell.getValue<string>() ?? null)
+	const [completesComposition, setCompletesComposition] = useState(true)
+	const [open, setOpen] = useState(false)
+	const inputRef = useRef<HTMLInputElement>(null)
 
 	useEffect(() => {
 		if (inputRef.current && isEditing) {
-			inputRef.current.focus();
+			inputRef.current.focus()
 		}
-	}, [isEditing]);
+	}, [isEditing])
 
 	const textFieldProps = {
-		...parseFromValuesOrFunc(muiEditTextFieldProps, {
+		...parseFromValuesOrFunc(shadcnEditTextFieldProps, {
 			cell,
 			column,
 			row,
 			table,
 		}),
-		...parseFromValuesOrFunc(columnDef.muiEditTextFieldProps, {
+		...parseFromValuesOrFunc(columnDef.shadcnEditTextFieldProps, {
 			cell,
 			column,
 			row,
 			table,
 		}),
-	};
+	}
 
 	const selectOptions = parseFromValuesOrFunc(editSelectOptions, {
 		cell,
 		column,
 		row,
 		table,
-	});
+	})
 
-	const isSelectEdit = editVariant === "select" || textFieldProps?.select;
+	const isSelectEdit = editVariant === 'select' || textFieldProps?.select
 
 	const saveInputValueToRowCache = (newValue: string | null) => {
 		//@ts-expect-error
-		row._valuesCache[column.id] = newValue;
+		row._valuesCache[column.id] = newValue
 		if (isCreating) {
-			setCreatingRow(row);
+			setCreatingRow(row)
 		} else if (isEditing) {
-			setEditingRow(row);
+			setEditingRow(row)
 		}
-	};
+	}
 
 	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-		textFieldProps.onChange?.(event);
-		setValue(event.target.value);
+		textFieldProps.onChange?.(event)
+		setValue(event.target.value)
 		if (isSelectEdit) {
-			saveInputValueToRowCache(event.target.value);
+			saveInputValueToRowCache(event.target.value)
 		}
-	};
+	}
 
 	const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
-		textFieldProps.onBlur?.(event);
-		saveInputValueToRowCache(value);
-		setEditingCell(null);
-		setOpen(false);
-	};
+		textFieldProps.onBlur?.(event)
+		saveInputValueToRowCache(value)
+		setEditingCell(null)
+		setOpen(false)
+	}
 
 	const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-		textFieldProps.onKeyDown?.(event);
-		if (event.key === "Enter" && !event.shiftKey && completesComposition) {
-			inputRef.current?.blur();
+		textFieldProps.onKeyDown?.(event)
+		if (event.key === 'Enter' && !event.shiftKey && completesComposition) {
+			inputRef.current?.blur()
 		}
-	};
+	}
 
 	if (columnDef.Edit) {
-		return <>{columnDef.Edit?.({ cell, column, row, table })}</>;
+		return <>{columnDef.Edit?.({ cell, column, row, table })}</>
 	}
 
 	if (isSelectEdit) {
@@ -123,23 +115,19 @@ export const SRT_EditCellTextField = <TData extends MRT_RowData>({
 					<Input
 						ref={inputRef}
 						aria-label={columnDef.header}
-						className="cursor-default"
-						disabled={
-							parseFromValuesOrFunc(columnDef.enableEditing, row) === false
-						}
+						className={cn('cursor-default', className)}
+						disabled={parseFromValuesOrFunc(columnDef.enableEditing, row) === false}
 						placeholder={
-							!["custom", "modal"].includes(
-								(isCreating ? createDisplayMode : editDisplayMode) as string,
-							)
+							!['custom', 'modal'].includes((isCreating ? createDisplayMode : editDisplayMode) as string)
 								? columnDef.header
 								: undefined
 						}
-						value={value ?? ""}
+						value={value ?? ''}
 						onBlur={handleBlur}
 						onChange={handleChange}
 						onClick={(e) => {
-							e.stopPropagation();
-							textFieldProps?.onClick?.(e);
+							e.stopPropagation()
+							textFieldProps?.onClick?.(e)
 						}}
 						onKeyDown={handleKeyDown}
 						onCompositionStart={() => setCompletesComposition(false)}
@@ -149,49 +137,48 @@ export const SRT_EditCellTextField = <TData extends MRT_RowData>({
 				</DropdownMenuTrigger>
 				<DropdownMenuContent className="p-2">
 					{selectOptions?.map((option) => {
-						const { label, value: optionValue } = getValueAndLabel(option);
+						const { label, value: optionValue } = getValueAndLabel(option)
 						return (
 							<DropdownMenuItem
 								key={optionValue}
 								onSelect={() => {
-									setValue(optionValue);
-									saveInputValueToRowCache(optionValue);
-									setOpen(false);
-									inputRef.current?.blur();
+									setValue(optionValue)
+									saveInputValueToRowCache(optionValue)
+									setOpen(false)
+									inputRef.current?.blur()
 								}}
 							>
 								{label}
 							</DropdownMenuItem>
-						);
+						)
 					})}
 				</DropdownMenuContent>
 			</DropdownMenu>
-		);
+		)
 	}
 
 	return (
 		<Input
 			ref={inputRef}
 			aria-label={columnDef.header}
+			className={cn(className)}
 			disabled={parseFromValuesOrFunc(columnDef.enableEditing, row) === false}
 			placeholder={
-				!["custom", "modal"].includes(
-					(isCreating ? createDisplayMode : editDisplayMode) as string,
-				)
+				!['custom', 'modal'].includes((isCreating ? createDisplayMode : editDisplayMode) as string)
 					? columnDef.header
 					: undefined
 			}
-			value={value ?? ""}
+			value={value ?? ''}
 			onBlur={handleBlur}
 			onChange={handleChange}
 			onClick={(e) => {
-				e.stopPropagation();
-				textFieldProps?.onClick?.(e);
+				e.stopPropagation()
+				textFieldProps?.onClick?.(e)
 			}}
 			onKeyDown={handleKeyDown}
 			onCompositionStart={() => setCompletesComposition(false)}
 			onCompositionEnd={() => setCompletesComposition(true)}
 			{...textFieldProps}
 		/>
-	);
-};
+	)
+}
