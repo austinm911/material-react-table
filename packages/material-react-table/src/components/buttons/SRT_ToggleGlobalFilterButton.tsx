@@ -1,13 +1,12 @@
-import IconButton, { type IconButtonProps } from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import type { MRT_RowData, MRT_TableInstance } from "../../types";
+import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import type { SRT_RowData, SRT_TableInstance, ButtonProps } from '@/types-SRT'
 
-export interface SRT_ToggleGlobalFilterButtonProps<TData extends MRT_RowData>
-	extends IconButtonProps {
-	table: MRT_TableInstance<TData>;
+export interface SRT_ToggleGlobalFilterButtonProps<TData extends SRT_RowData> extends ButtonProps {
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_ToggleGlobalFilterButton = <TData extends MRT_RowData>({
+export const SRT_ToggleGlobalFilterButton = <TData extends SRT_RowData>({
 	table,
 	...rest
 }: SRT_ToggleGlobalFilterButtonProps<TData>) => {
@@ -19,25 +18,30 @@ export const SRT_ToggleGlobalFilterButton = <TData extends MRT_RowData>({
 		},
 		refs: { searchInputRef },
 		setShowGlobalFilter,
-	} = table;
-	const { globalFilter, showGlobalFilter } = getState();
+	} = table
+	const { globalFilter, showGlobalFilter } = getState()
 
 	const handleToggleSearch = () => {
-		setShowGlobalFilter(!showGlobalFilter);
-		queueMicrotask(() => searchInputRef.current?.focus());
-	};
+		setShowGlobalFilter(!showGlobalFilter)
+		queueMicrotask(() => searchInputRef.current?.focus())
+	}
 
 	return (
-		<Tooltip title={rest?.title ?? localization.showHideSearch}>
-			<IconButton
-				aria-label={rest?.title ?? localization.showHideSearch}
-				disabled={!!globalFilter}
-				onClick={handleToggleSearch}
-				{...rest}
-				title={undefined}
-			>
-				{showGlobalFilter ? <SearchOffIcon /> : <SearchIcon />}
-			</IconButton>
+		<Tooltip>
+			<TooltipTrigger asChild>
+				<Button
+					aria-label={rest?.title ?? localization.showHideSearch}
+					disabled={!!globalFilter}
+					onClick={handleToggleSearch}
+					size="icon"
+					variant="ghost"
+					{...rest}
+					title={undefined} // title is now handled by TooltipContent
+				>
+					{showGlobalFilter ? <SearchOffIcon /> : <SearchIcon />}
+				</Button>
+			</TooltipTrigger>
+			<TooltipContent>{rest?.title ?? localization.showHideSearch}</TooltipContent>
 		</Tooltip>
-	);
-};
+	)
+}

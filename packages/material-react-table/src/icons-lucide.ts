@@ -2,34 +2,35 @@
 import {
 	ArrowDown as ArrowDownwardIcon,
 	ArrowRight as ArrowRightIcon,
+	Columns3Icon as ViewColumnIcon,
 	// CancelIcon, //There is no direct equivalent in Lucide, but XCircle could be used. Consider if you need it.
 	ChevronLeft as ChevronLeftIcon,
 	ChevronRight as ChevronRightIcon,
 	// ClearAll as ClearAllIcon,
 	X as CloseIcon,
 	Copy as ContentCopy,
-	LayoutTemplate as DensityLargeIcon, //Check if this is the right semantic equivalent
-	LayoutList as DensityMediumIcon, //Check if this is the right semantic equivalent
-	Minus as DensitySmallIcon, //Check if this is the right semantic equivalent
+	Rows2Icon as DensityLargeIcon, //Check if this is the right semantic equivalent
+	Rows3Icon as DensityMediumIcon, //Check if this is the right semantic equivalent
+	Rows4Icon as DensitySmallIcon, //Check if this is the right semantic equivalent
 	GripVertical as DragHandleIcon,
 	// DynamicFeedIcon, // No direct equivalent. Consider what this icon represents and choose an appropriate Lucide icon.
 	Edit as EditIcon,
 	ChevronDown as ExpandMoreIcon,
 	Filter as FilterAltIcon,
-	Filter as FilterListIcon, //same as FilterAltIcon
-	FilterX as FilterListOffIcon,
+	ListFilterIcon as FilterListIcon,
+	FilterXIcon as FilterListOffIcon,
 	ChevronsLeft as FirstPageIcon,
 	Maximize as FullscreenIcon,
 	Minimize as FullscreenExitIcon,
 	ChevronsDown as KeyboardDoubleArrowDownIcon, // vertically oriented
 	ChevronsRight as LastPageIcon,
-	MoreHorizontal as MoreHorizIcon,
+	MoreHorizontalIcon,
 	MoreVertical as MoreVertIcon,
 	Pin as PushPinIcon, //Check this
 	RotateCcw as RestartAltIcon,
 	Save as SaveIcon,
 	Search as SearchIcon,
-	SearchSlashIcon,
+	SearchSlashIcon as SearchOffIcon,
 	//SortIcon,  //If you need a generic sort icon, Lucide has ArrowDownAZ and ArrowUpAZ
 	// SyncAltIcon, // Lucide has a few sync-like icons: 'refresh-cw', 'refresh-ccw', 'rotate-cw', 'rotate-ccw'. Choose the best fit.
 	ColumnsIcon,
@@ -60,18 +61,18 @@ export const SRT_Default_Icons = {
 	FullscreenIcon,
 	KeyboardDoubleArrowDownIcon,
 	LastPageIcon,
-	MoreHorizIcon,
+	MoreHorizontalIcon,
 	MoreVertIcon,
 	PushPinIcon,
 	RestartAltIcon,
 	SaveIcon,
 	SearchIcon,
-	//SearchOffIcon,
-	SearchSlashIcon,
+	SearchOffIcon,
 	//SortIcon,
 	//SyncAltIcon,
 	ColumnsIcon,
 	VisibilityOffIcon,
+	ViewColumnIcon,
 } as const
 
 export type SRT_Icons = Record<keyof typeof SRT_Default_Icons, any>

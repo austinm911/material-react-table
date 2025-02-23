@@ -182,10 +182,15 @@ export const flipIconStyles = (theme: Theme) =>
 // Spread the different props into the provider and content
 export const getCommonTooltipProps = (
 	side?: TooltipContentProps['side'],
-): { provider: Partial<TooltipProviderProps>; content: Partial<TooltipContentProps> } => ({
+): {
+	provider: Partial<TooltipProviderProps>
+	tooltip: Partial<TooltipProps>
+	content: Partial<TooltipContentProps>
+} => ({
 	provider: {
 		delayDuration: 1000,
 	},
+	tooltip: {},
 	content: {
 		side,
 	},

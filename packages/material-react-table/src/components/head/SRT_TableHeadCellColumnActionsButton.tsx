@@ -2,7 +2,7 @@ import { type MouseEvent, useState } from 'react'
 import type { SRT_Header, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { SRT_ColumnActionMenu } from '../menus/SRT_ColumnActionMenu'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Button } from '../ui/button'
 import { cn } from '@/lib/utils'
 
@@ -22,7 +22,7 @@ export const SRT_TableHeadCellColumnActionsButton = <TData extends SRT_RowData>(
 		options: {
 			icons: { MoreVertIcon },
 			localization,
-			shadcnColumnActionsButtonProps: muiColumnActionsButtonProps,
+			shadcnColumnActionsButtonProps,
 		},
 	} = table
 	const { column } = header
@@ -37,7 +37,7 @@ export const SRT_TableHeadCellColumnActionsButton = <TData extends SRT_RowData>(
 	}
 
 	const buttonProps = {
-		...parseFromValuesOrFunc(muiColumnActionsButtonProps, {
+		...parseFromValuesOrFunc(shadcnColumnActionsButtonProps, {
 			column,
 			table,
 		}),

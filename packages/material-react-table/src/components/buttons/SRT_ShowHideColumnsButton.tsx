@@ -1,15 +1,14 @@
-import { type MouseEvent, useState } from "react";
-import IconButton, { type IconButtonProps } from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import type { MRT_RowData, MRT_TableInstance } from "../../types";
-import { SRT_ShowHideColumnsMenu } from "../menus/SRT_ShowHideColumnsMenu";
+import { type MouseEvent, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import type { ButtonProps, SRT_RowData, SRT_TableInstance } from '@/types-SRT'
+import { SRT_ShowHideColumnsMenu } from '../menus/SRT_ShowHideColumnsMenu'
 
-export interface SRT_ShowHideColumnsButtonProps<TData extends MRT_RowData>
-	extends IconButtonProps {
-	table: MRT_TableInstance<TData>;
+export interface SRT_ShowHideColumnsButtonProps<TData extends SRT_RowData> extends ButtonProps {
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_ShowHideColumnsButton = <TData extends MRT_RowData>({
+export const SRT_ShowHideColumnsButton = <TData extends SRT_RowData>({
 	table,
 	...rest
 }: SRT_ShowHideColumnsButtonProps<TData>) => {
@@ -18,33 +17,31 @@ export const SRT_ShowHideColumnsButton = <TData extends MRT_RowData>({
 			icons: { ViewColumnIcon },
 			localization,
 		},
-	} = table;
+	} = table
 
-	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
 
-	const handleClick = (event: MouseEvent<HTMLElement>) => {
-		setAnchorEl(event.currentTarget);
-	};
+	const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+		setAnchorEl(event.currentTarget)
+	}
 
 	return (
 		<>
-			<Tooltip title={rest?.title ?? localization.showHideColumns}>
-				<IconButton
-					aria-label={localization.showHideColumns}
-					onClick={handleClick}
-					{...rest}
-					title={undefined}
-				>
-					<ViewColumnIcon />
-				</IconButton>
+			<Tooltip>
+				<TooltipTrigger asChild>
+					<Button
+						variant="ghost"
+						size="icon"
+						aria-label={localization.showHideColumns}
+						onClick={handleClick}
+						{...rest}
+					>
+						<ViewColumnIcon className="size-4" />
+					</Button>
+				</TooltipTrigger>
+				<TooltipContent>{rest?.title ?? localization.showHideColumns}</TooltipContent>
 			</Tooltip>
-			{anchorEl && (
-				<SRT_ShowHideColumnsMenu
-					anchorEl={anchorEl}
-					setAnchorEl={setAnchorEl}
-					table={table}
-				/>
-			)}
+			{anchorEl && <SRT_ShowHideColumnsMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} table={table} />}
 		</>
-	);
-};
+	)
+}

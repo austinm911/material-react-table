@@ -30,6 +30,7 @@ We need to do the following:
 - `Badge` ➡️ `Badge`
 - `Box` ➡️ `div`
 - `Button` ➡️ `Button`
+- `Collapse` ➡️ `Collapsible`
 - `Checkbox` ➡️ `Checkbox`
 - `Chip` ➡️ `Badge`
 - `CircularProgress` ➡️ `Spinner`
@@ -99,25 +100,97 @@ MRT is made up of the following groups of components:
 
 #### Inputs
 
+| Component                 | Status |
+| ------------------------- | ------ |
+| SRT_EditCellTextField     |        |
+| SRT_FilterCheckbox        |        |
+| SRT_FilterRangeFields     |        |
+| SRT_FilterRangeSlider     |        |
+| SRT_FilterTextField       |        |
+| SRT_GlobalFilterTextField |        |
+| SRT_SelectCheckbox        |        |
+| SRT_EditActionButtons     |        |
+
 #### Menus
+
+| Component                    | Status |
+| ---------------------------- | ------ |
+| SRT_ActionMenuItem           |        |
+| SRT_CellActionMenu           |        |
+| SRT_ColumnActionMenu         |        |
+| SRT_FilterOptionMenu         |        |
+| SRT_RowActionMenu            |        |
+| SRT_ShowHideColumnsMenu      |        |
+| SRT_ShowHideColumnsMenultems |        |
 
 #### Buttons
 
+| Component                         | Status |
+| --------------------------------- | ------ |
+| SRT_ColumnPinningButtons          | 🟧      |
+| SRT_CopyButton                    | 🟧      |
+| SRT_EditActionButtons             | 🟧      |
+| SRT_ExpandAllButton.tsx           | 🟧      |
+| SRT_ExpandButton.tsx              | 🟧      |
+| SRT_GrabHandleButton.tsx          | 🟧      |
+| SRT_RowPinButton.tsx              | 🟧      |
+| SRT_ShowHideColumnsButton.tsx     | 🟧      |
+| SRT_ToggleDensePaddingButton.tsx  | 🟧      |
+| SRT_ToggleFiltersButton.tsx       | 🟧      |
+| SRT_ToggleFullScreenButton.tsx    | 🟧      |
+| SRT_ToggleGlobalFilterButton.tsx  | ✅      |
+| SRT_ToggleRowActionMenuButton.tsx | 🟧      |
+
 #### Modals
+
+| Component        | Status | **** |
+| ---------------- | ------ |
+| SRT_EditRowModal | 🟧      |
 
 #### Toolbar
 
-| Component      | Status |
-| -------------- | ------ |
-| SRT_TopToolbar | 🚧      |
-
+| Component                  | Status |
+| -------------------------- | ------ |
+| SRT_TopToolbar             | 🚧      |
+| SRT_BottomToolbar          | 🚧      |
+| SRT_LinearProgressBar      | 🟧      |
+| SRT_TablePagination        | 🚧      |
+| SRT_ToolbarAlertBanner     | 🟧      |
+| SRT_ToolbarDropZone        | 🟧      |
+| SRT_ToolbarInternalButtons | 🟧      |
 
 ### Hooks
 
 | Hook                     | Status |
 | ------------------------ | ------ |
-| useSRT_TableInstance     | 🚧      |
+| useShadcnReactTable      | ✅      |
 | useSRT_ColumnVirtualizer | 🟧      |
+| useSRT_Effects           | 🟧      |
+| useSRT_Rows              | ✅      |
+| useSRT_RowVirtualizer    | ✅      |
+| useSRT_TableInstance     | 🚧      |
+| useSRT_TableOptions      | 🟧      |
+
+### Functions
+
+| Function       | Status |
+| -------------- | ------ |
+| aggregationFns | ✅      |
+| filterFns      | ✅      |
+| sortingFns     | ✅      |
+
+### Utils
+
+| Function                      | Status |
+| ----------------------------- | ------ |
+| cell.utils.shadcn.ts          | ✅      |
+| column.utils.shadcn.ts        | 🟧      |
+| displayColumn.utils.shadcn.ts | 🟧      |
+| row.utils.shadcn.ts           | ✅      |
+| style.utils.shadcn.ts         | 🚧      |
+| tanstack.helpers.shadcn.ts    | ✅      |
+
+
 
 <hr/>
 

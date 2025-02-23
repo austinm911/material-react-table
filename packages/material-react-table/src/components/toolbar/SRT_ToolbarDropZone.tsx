@@ -1,18 +1,15 @@
-import { type DragEvent, useEffect } from "react";
-import Box, { type BoxProps } from "@mui/material/Box";
-import Fade from "@mui/material/Fade";
-import Typography from "@mui/material/Typography";
-import { alpha } from "@mui/material/styles";
-import type { MRT_RowData, MRT_TableInstance } from "../../types";
-import { parseFromValuesOrFunc } from "../../utils/utils";
+import { type DragEvent, useEffect } from 'react'
+import type { SRT_RowData, SRT_TableInstance } from '../../types-SRT'
+import { parseFromValuesOrFunc } from '../../utils/utils'
+import { cn } from '@/lib/utils'
 
-export interface SRT_ToolbarDropZoneProps<TData extends MRT_RowData>
-	extends BoxProps {
-	table: MRT_TableInstance<TData>;
+export interface SRT_ToolbarDropZoneProps<TData extends SRT_RowData> extends React.ComponentProps<'div'> {
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_ToolbarDropZone = <TData extends MRT_RowData>({
+export const SRT_ToolbarDropZone = <TData extends SRT_RowData>({
 	table,
+	className,
 	...rest
 }: SRT_ToolbarDropZoneProps<TData>) => {
 	const {
@@ -20,18 +17,17 @@ export const SRT_ToolbarDropZone = <TData extends MRT_RowData>({
 		options: { enableGrouping, localization },
 		setHoveredColumn,
 		setShowToolbarDropZone,
-	} = table;
+	} = table
 
-	const { draggingColumn, grouping, hoveredColumn, showToolbarDropZone } =
-		getState();
+	const { draggingColumn, grouping, hoveredColumn, showToolbarDropZone } = getState()
 
 	const handleDragEnter = (_event: DragEvent<HTMLDivElement>) => {
-		setHoveredColumn({ id: "drop-zone" });
-	};
+		setHoveredColumn({ id: 'drop-zone' })
+	}
 
 	const handleDragOver = (e: DragEvent) => {
-		e.preventDefault();
-	};
+		e.preventDefault()
+	}
 
 	useEffect(() => {
 		if (table.options.state?.showToolbarDropZone !== undefined) {
@@ -40,42 +36,30 @@ export const SRT_ToolbarDropZone = <TData extends MRT_RowData>({
 					!!draggingColumn &&
 					draggingColumn.columnDef.enableGrouping !== false &&
 					!grouping.includes(draggingColumn.id),
-			);
+			)
 		}
-	}, [enableGrouping, draggingColumn, grouping]);
+	}, [enableGrouping, draggingColumn, grouping])
+
+	if (!showToolbarDropZone) return null
 
 	return (
-		<Fade in={showToolbarDropZone}>
-			<Box
-				className="Mui-ToolbarDropZone"
-				onDragEnter={handleDragEnter}
-				onDragOver={handleDragOver}
-				{...rest}
-				sx={(theme) => ({
-					alignItems: "center",
-					backdropFilter: "blur(4px)",
-					backgroundColor: alpha(
-						theme.palette.info.main,
-						hoveredColumn?.id === "drop-zone" ? 0.2 : 0.1,
-					),
-					border: `dashed ${theme.palette.info.main} 2px`,
-					boxSizing: "border-box",
-					display: "flex",
-					height: "100%",
-					justifyContent: "center",
-					position: "absolute",
-					width: "100%",
-					zIndex: 4,
-					...(parseFromValuesOrFunc(rest?.sx, theme) as any),
-				})}
-			>
-				<Typography fontStyle="italic">
-					{localization.dropToGroupBy.replace(
-						"{column}",
-						draggingColumn?.columnDef?.header ?? "",
-					)}
-				</Typography>
-			</Box>
-		</Fade>
-	);
-};
+		<div
+			onDragEnter={handleDragEnter}
+			onDragOver={handleDragOver}
+			className={cn(
+				'absolute w-full h-full z-10',
+				'flex items-center justify-center',
+				'border-2 border-dashed border-info-500',
+				'backdrop-blur-sm',
+				'transition-all duration-300 ease-in-out',
+				hoveredColumn?.id === 'drop-zone' ? 'bg-info-500/20 opacity-100' : 'bg-info-500/10 opacity-90',
+				className,
+			)}
+			{...rest}
+		>
+			<p className="italic text-muted-foreground">
+				{localization.dropToGroupBy.replace('{column}', draggingColumn?.columnDef?.header ?? '')}
+			</p>
+		</div>
+	)
+}

@@ -1,5 +1,5 @@
-import { Button } from '../ui/button'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
+import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import type { ButtonProps, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 

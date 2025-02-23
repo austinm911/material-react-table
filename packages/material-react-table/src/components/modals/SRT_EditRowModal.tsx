@@ -1,6 +1,6 @@
+import { useCallback } from 'react'
 import {
 	Dialog,
-	DialogClose,
 	DialogContent,
 	DialogDescription,
 	DialogFooter,
@@ -8,14 +8,12 @@ import {
 	DialogOverlay,
 	DialogPortal,
 	DialogTitle,
-	DialogTrigger,
 } from '../ui/dialog'
-import Stack from '@mui/material/Stack'
-import type { SRT_Row, SRT_RowData, SRT_TableInstance, DialogProps } from '../../types-SRT'
+import type { DialogProps, SRT_Row, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { SRT_EditCellTextField } from '../inputs/SRT_EditCellTextField'
 import { SRT_EditActionButtons } from '../buttons/SRT_EditActionButtons'
-import { useCallback } from 'react'
+import { cn } from '@/lib/utils'
 
 export interface SRT_EditRowModalProps<TData extends SRT_RowData> extends Partial<DialogProps> {
 	open: boolean
@@ -74,7 +72,7 @@ export const SRT_EditRowModal = <TData extends SRT_RowData>({ open, table, ...re
 				setEditingRow(null)
 			}
 			row._valuesCache = {} as any //reset values cache // Specify a different type
-			dialogProps.onClose?.(event, reason)
+			dialogProps.onOpenChange?.(false)
 		},
 		[creatingRow, dialogProps, onCreatingRowCancel, onEditingRowCancel, row, setCreatingRow, setEditingRow, table],
 	)
@@ -101,17 +99,9 @@ export const SRT_EditRowModal = <TData extends SRT_RowData>({ open, table, ...re
 							<DialogDescription>Edit row data</DialogDescription>
 						</DialogHeader>
 						<form onSubmit={(e) => e.preventDefault()}>
-							<Stack
-								sx={{
-									gap: '32px',
-									paddingTop: '16px',
-									width: '100%',
-								}}
-							>
-								{internalEditComponents()}
-							</Stack>
+							<div className={cn('flex', 'flex-col', 'gap-8', 'py-4')}>{internalEditComponents()}</div>
 						</form>
-						<DialogFooter sx={{ p: '1.25rem' }}>
+						<DialogFooter className="p-5">
 							<SRT_EditActionButtons row={row} table={table} variant="text" />
 						</DialogFooter>
 					</>

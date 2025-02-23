@@ -59,6 +59,8 @@ import type {
 	TableHead,
 	TableRow,
 } from './components/ui/table'
+import type { Popover } from './components/ui/popover'
+import type { SRT_Icons } from './icons-lucide'
 
 // Old MRT Types
 // @Shadcn: Alert -> Alert component
@@ -78,7 +80,7 @@ import type {
 // @Shadcn: Card component could replace Paper
 // import type { PaperProps } from '@mui/material/Paper'
 // @Shadcn: RadioGroup and RadioGroupItem components
-import type { RadioProps } from '@mui/material/Radio'
+// import type { RadioProps } from '@mui/material/Radio'
 // @Shadcn: Table component includes container functionality
 // import type { TableContainerProps } from '@mui/material/TableContainer'
 // @Shadcn: Input component could replace TextField
@@ -90,8 +92,6 @@ import type { Theme } from '@mui/material/styles'
 import type { SRT_AggregationFns } from './fns/aggregationFns.shadcn'
 import type { SRT_FilterFns } from './fns/filterFns.shadcn'
 import type { SRT_SortingFns } from './fns/sortingFns.shadcn'
-import type { MRT_Icons } from './icons'
-import type { Popover } from './components/ui/popover'
 
 export type AlertProps = React.ComponentProps<typeof Alert>
 export type BadgeProps = React.ComponentProps<typeof Badge>
@@ -99,8 +99,6 @@ export type CircularProgressProps = React.ComponentProps<typeof CircularProgress
 export type ProgressProps = React.ComponentProps<typeof Progress>
 export type InputProps = React.ComponentProps<typeof Input>
 export type PaginationProps = React.ComponentProps<typeof Pagination>
-export type RadioItemProps = React.ComponentProps<typeof RadioGroupItem>
-export type RadioGroupProps = React.ComponentProps<typeof RadioGroup>
 export type CardProps = React.ComponentProps<typeof Card>
 export type AutocompleteProps = React.ComponentProps<typeof Command>
 export type ButtonProps = React.ComponentProps<typeof Button>
@@ -131,8 +129,11 @@ export type TableRowProps = React.ComponentProps<typeof TableRow>
 export type TooltipProviderProps = React.ComponentProps<typeof TooltipProvider>
 export type TooltipProps = React.ComponentProps<typeof Tooltip>
 export type TooltipContentProps = React.ComponentProps<typeof TooltipContent>
-
-export type { MRT_Icons }
+export type RadioProps = {
+	groupProps?: React.ComponentProps<typeof RadioGroup>
+	itemProps?: React.ComponentProps<typeof RadioGroupItem>
+}
+export type { SRT_Icons }
 
 export type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
 
@@ -398,7 +399,7 @@ export type SRT_DefinedTableOptions<TData extends SRT_RowData> = Omit<
 	SRT_TableOptions<TData>,
 	'icons' | 'localization' | 'shadcnTheme'
 > & {
-	icons: MRT_Icons
+	icons: SRT_Icons
 	localization: SRT_Localization
 	shadcnTheme: Required<SRT_Theme>
 }
@@ -907,7 +908,7 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
 	getRowId?: (originalRow: TData, index: number, parentRow: SRT_Row<TData>) => string
 	globalFilterFn?: SRT_FilterOption
 	globalFilterModeOptions?: SRT_FilterOption[] | null
-	icons?: Partial<MRT_Icons>
+	icons?: Partial<SRT_Icons>
 	id?: string
 	initialState?: Partial<SRT_TableState<TData>>
 	/**

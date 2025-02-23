@@ -1,19 +1,18 @@
-import Box, { type BoxProps } from "@mui/material/Box";
-import type { MRT_RowData, MRT_TableInstance } from "../../types";
-import { parseFromValuesOrFunc } from "../../utils/utils";
-import { MRT_ShowHideColumnsButton } from "../buttons/MRT_ShowHideColumnsButton";
-import { MRT_ToggleDensePaddingButton } from "../buttons/MRT_ToggleDensePaddingButton";
-import { MRT_ToggleFiltersButton } from "../buttons/MRT_ToggleFiltersButton";
-import { MRT_ToggleFullScreenButton } from "../buttons/MRT_ToggleFullScreenButton";
-import { MRT_ToggleGlobalFilterButton } from "../buttons/MRT_ToggleGlobalFilterButton";
+import type { SRT_RowData, SRT_TableInstance } from '../../types-SRT'
+import { cn } from '@/lib/utils'
+import { SRT_ShowHideColumnsButton } from '../buttons/SRT_ShowHideColumnsButton'
+import { SRT_ToggleDensePaddingButton } from '../buttons/SRT_ToggleDensePaddingButton'
+import { SRT_ToggleFiltersButton } from '../buttons/SRT_ToggleFiltersButton'
+import { SRT_ToggleFullScreenButton } from '../buttons/SRT_ToggleFullScreenButton'
+import { SRT_ToggleGlobalFilterButton } from '../buttons/SRT_ToggleGlobalFilterButton'
 
-export interface SRT_ToolbarInternalButtonsProps<TData extends MRT_RowData>
-	extends BoxProps {
-	table: MRT_TableInstance<TData>;
+export interface SRT_ToolbarInternalButtonsProps<TData extends SRT_RowData> extends React.ComponentProps<'div'> {
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_ToolbarInternalButtons = <TData extends MRT_RowData>({
+export const SRT_ToolbarInternalButtons = <TData extends SRT_RowData>({
 	table,
+	className,
 	...rest
 }: SRT_ToolbarInternalButtonsProps<TData>) => {
 	const {
@@ -30,43 +29,27 @@ export const SRT_ToolbarInternalButtons = <TData extends MRT_RowData>({
 			initialState,
 			renderToolbarInternalActions,
 		},
-	} = table;
+	} = table
 
 	return (
-		<Box
-			{...rest}
-			sx={(theme) => ({
-				alignItems: "center",
-				display: "flex",
-				zIndex: 3,
-				...(parseFromValuesOrFunc(rest?.sx, theme) as any),
-			})}
-		>
+		<div className={cn('flex items-center z-10', 'space-x-2', className)} {...rest}>
 			{renderToolbarInternalActions?.({
 				table,
 			}) ?? (
 				<>
-					{enableFilters &&
-						enableGlobalFilter &&
-						!initialState?.showGlobalFilter && (
-							<MRT_ToggleGlobalFilterButton table={table} />
-						)}
-					{enableFilters &&
-						enableColumnFilters &&
-						columnFilterDisplayMode !== "popover" && (
-							<MRT_ToggleFiltersButton table={table} />
-						)}
+					{enableFilters && enableGlobalFilter && !initialState?.showGlobalFilter && (
+						<SRT_ToggleGlobalFilterButton table={table} />
+					)}
+					{enableFilters && enableColumnFilters && columnFilterDisplayMode !== 'popover' && (
+						<SRT_ToggleFiltersButton table={table} />
+					)}
 					{(enableHiding || enableColumnOrdering || enableColumnPinning) && (
-						<MRT_ShowHideColumnsButton table={table} />
+						<SRT_ShowHideColumnsButton table={table} />
 					)}
-					{enableDensityToggle && (
-						<MRT_ToggleDensePaddingButton table={table} />
-					)}
-					{enableFullScreenToggle && (
-						<MRT_ToggleFullScreenButton table={table} />
-					)}
+					{enableDensityToggle && <SRT_ToggleDensePaddingButton table={table} />}
+					{enableFullScreenToggle && <SRT_ToggleFullScreenButton table={table} />}
 				</>
 			)}
-		</Box>
-	);
-};
+		</div>
+	)
+}

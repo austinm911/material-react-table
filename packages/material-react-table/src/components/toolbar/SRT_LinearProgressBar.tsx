@@ -1,55 +1,50 @@
-import Collapse from "@mui/material/Collapse";
-import LinearProgress, {
-	type LinearProgressProps,
-} from "@mui/material/LinearProgress";
-import type { MRT_RowData, MRT_TableInstance } from "../../types";
-import { parseFromValuesOrFunc } from "../../utils/utils";
+import type { SRT_RowData, SRT_TableInstance, ProgressProps } from '../../types-SRT'
+import { parseFromValuesOrFunc } from '../../utils/utils'
+import { Progress } from '../ui/progress'
+import { Collapsible, CollapsibleContent } from '../ui/collapsible'
 
-// Changed interface name to SRT_LinearProgressBarProps
-export interface SRT_LinearProgressBarProps<TData extends MRT_RowData>
-	extends LinearProgressProps {
-	isTopToolbar: boolean;
-	table: MRT_TableInstance<TData>;
+export interface SRT_LinearProgressBarProps<TData extends SRT_RowData> extends ProgressProps {
+	isTopToolbar: boolean
+	table: SRT_TableInstance<TData>
 }
 
-// Changed export name to SRT_LinearProgressBar
-export const SRT_LinearProgressBar = <TData extends MRT_RowData>({
+export const SRT_LinearProgressBar = <TData extends SRT_RowData>({
 	isTopToolbar,
 	table,
 	...rest
 }: SRT_LinearProgressBarProps<TData>) => {
 	const {
 		getState,
-		options: { muiLinearProgressProps },
-	} = table;
-	const { isSaving, showProgressBars } = getState();
+		options: { shadcnLinearProgressProps },
+	} = table
+	const { isSaving, showProgressBars } = getState()
 
 	const linearProgressProps = {
-		...parseFromValuesOrFunc(muiLinearProgressProps, {
-			isTopToolbar,
-			table,
-		}),
+		...parseFromValuesOrFunc(shadcnLinearProgressProps, { isTopToolbar, table }),
 		...rest,
-	};
+	}
+
+	if (showProgressBars === false || (!showProgressBars && !isSaving)) {
+		return null
+	}
 
 	return (
-		<Collapse
-			in={showProgressBars !== false && (showProgressBars || isSaving)}
-			mountOnEnter
-			sx={{
-				bottom: isTopToolbar ? 0 : undefined,
-				position: "absolute",
-				top: !isTopToolbar ? 0 : undefined,
-				width: "100%",
-			}}
-			unmountOnExit
-		>
-			<LinearProgress
-				aria-busy="true"
-				aria-label="Loading"
-				sx={{ position: "relative" }}
-				{...linearProgressProps}
-			/>
-		</Collapse>
-	);
-};
+		<Collapsible open>
+			<CollapsibleContent
+				style={{
+					bottom: isTopToolbar ? 0 : undefined,
+					position: 'absolute',
+					top: !isTopToolbar ? 0 : undefined,
+					width: '100%',
+				}}
+			>
+				<Progress
+					aria-busy="true"
+					aria-label="Loading"
+					style={{ position: 'relative' }}
+					{...linearProgressProps}
+				/>
+			</CollapsibleContent>
+		</Collapsible>
+	)
+}

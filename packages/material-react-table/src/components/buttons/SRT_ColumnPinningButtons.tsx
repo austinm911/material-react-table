@@ -1,4 +1,4 @@
-import { Tooltip } from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import type { SRT_Column, SRT_RowData, SRT_TableInstance, ButtonProps } from '../../types-SRT'
@@ -32,9 +32,12 @@ export const SRT_ColumnPinningButtons = <TData extends SRT_RowData>({
 	const renderPinButton = (pinDirection: 'left' | 'right' | false, title: string, rotation?: number) => {
 		return (
 			<Tooltip key={pinDirection ? pinDirection : 'unpin'}>
-				<Button {...rest} variant="ghost" size="icon" onClick={() => handlePinColumn(pinDirection)}>
-					<PushPinIcon style={{ transform: `rotate(${rotation}deg)` }} />
-				</Button>
+				<TooltipTrigger asChild>
+					<Button {...rest} variant="ghost" size="icon" onClick={() => handlePinColumn(pinDirection)}>
+						<PushPinIcon style={{ transform: `rotate(${rotation}deg)` }} />
+					</Button>
+				</TooltipTrigger>
+				<TooltipContent>{title}</TooltipContent>
 			</Tooltip>
 		)
 	}

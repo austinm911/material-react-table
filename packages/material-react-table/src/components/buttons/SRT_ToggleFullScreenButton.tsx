@@ -1,14 +1,13 @@
-import { useState } from "react";
-import IconButton, { type IconButtonProps } from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import type { MRT_RowData, MRT_TableInstance } from "../../types";
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import type { SRT_RowData, SRT_TableInstance, ButtonProps } from '@/types-SRT'
 
-export interface SRT_ToggleFullScreenButtonProps<TData extends MRT_RowData>
-	extends IconButtonProps {
-	table: MRT_TableInstance<TData>;
+export interface SRT_ToggleFullScreenButtonProps<TData extends SRT_RowData> extends ButtonProps {
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_ToggleFullScreenButton = <TData extends MRT_RowData>({
+export const SRT_ToggleFullScreenButton = <TData extends SRT_RowData>({
 	table,
 	...rest
 }: SRT_ToggleFullScreenButtonProps<TData>) => {
@@ -19,33 +18,30 @@ export const SRT_ToggleFullScreenButton = <TData extends MRT_RowData>({
 			localization,
 		},
 		setIsFullScreen,
-	} = table;
-	const { isFullScreen } = getState();
+	} = table
+	const { isFullScreen } = getState()
 
-	const [tooltipOpened, setTooltipOpened] = useState(false);
+	const [tooltipOpened, setTooltipOpened] = useState(false)
 
 	const handleToggleFullScreen = () => {
-		setTooltipOpened(false);
-		setIsFullScreen(!isFullScreen);
-	};
+		setTooltipOpened(false)
+		setIsFullScreen(!isFullScreen)
+	}
 
 	return (
-		<Tooltip
-			open={tooltipOpened}
-			title={rest?.title ?? localization.toggleFullScreen}
-		>
-			<IconButton
-				aria-label={localization.toggleFullScreen}
-				onBlur={() => setTooltipOpened(false)}
-				onClick={handleToggleFullScreen}
-				onFocus={() => setTooltipOpened(true)}
-				onMouseEnter={() => setTooltipOpened(true)}
-				onMouseLeave={() => setTooltipOpened(false)}
-				{...rest}
-				title={undefined}
-			>
-				{isFullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
-			</IconButton>
+		<Tooltip open={tooltipOpened} onOpenChange={setTooltipOpened}>
+			<TooltipTrigger asChild>
+				<Button
+					aria-label={localization.toggleFullScreen}
+					onClick={handleToggleFullScreen}
+					variant="ghost"
+					size="icon"
+					{...rest}
+				>
+					{isFullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
+				</Button>
+			</TooltipTrigger>
+			<TooltipContent>{rest?.title ?? localization.toggleFullScreen}</TooltipContent>
 		</Tooltip>
-	);
-};
+	)
+}

@@ -1,24 +1,12 @@
 import { type MouseEvent, useState } from 'react'
-import IconButton, { type IconButtonProps } from '@mui/material/IconButton'
-import Tooltip from '@mui/material/Tooltip'
+import { Button } from '../ui/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
+import type { SRT_Cell, SRT_Row, SRT_RowData, SRT_TableInstance, ButtonProps } from '../../types-SRT'
 import { SRT_EditActionButtons } from './SRT_EditActionButtons'
-import type { SRT_Cell, SRT_Row, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
-import { getCommonTooltipProps } from '../../utils/style.utils'
-import { parseFromValuesOrFunc } from '../../utils/utils'
 import { SRT_RowActionMenu } from '../menus/SRT_RowActionMenu'
+import { parseFromValuesOrFunc } from '../../utils/utils'
 
-const commonIconButtonStyles = {
-	'&:hover': {
-		opacity: 1,
-	},
-	height: '2rem',
-	ml: '10px',
-	opacity: 0.5,
-	transition: 'opacity 150ms',
-	width: '2rem',
-}
-
-export interface SRT_ToggleRowActionMenuButtonProps<TData extends SRT_RowData> extends IconButtonProps {
+export interface SRT_ToggleRowActionMenuButtonProps<TData extends SRT_RowData> extends ButtonProps {
 	cell: SRT_Cell<TData>
 	row: SRT_Row<TData>
 	staticRowIndex?: number
@@ -30,6 +18,7 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
 	row,
 	staticRowIndex,
 	table,
+	className,
 	...rest
 }: SRT_ToggleRowActionMenuButtonProps<TData>) => {
 	const {
@@ -38,7 +27,7 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
 			createDisplayMode,
 			editDisplayMode,
 			enableEditing,
-			icons: { EditIcon, MoreHorizIcon },
+			icons: { EditIcon, MoreHorizontalIcon },
 			localization,
 			renderRowActionMenuItems,
 			renderRowActions,
@@ -68,6 +57,9 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
 		setAnchorEl(null)
 	}
 
+	// Tailwind-inspired opacity and hover styles to mimic the original MUI behavior
+	const commonButtonClasses = 'opacity-50 hover:opacity-100 transition-opacity duration-150'
+
 	return (
 		<>
 			{renderRowActions && !showEditActionButtons ? (
@@ -76,16 +68,21 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
 				<SRT_EditActionButtons row={row} table={table} />
 			) : !renderRowActionMenuItems &&
 				parseFromValuesOrFunc(enableEditing, row) &&
-				['modal', 'row'].includes(editDisplayMode!) ? (
-				<Tooltip placement="right" title={localization.edit}>
-					<IconButton
-						aria-label={localization.edit}
-						onClick={handleStartEditMode}
-						sx={commonIconButtonStyles}
-						{...rest}
-					>
-						<EditIcon />
-					</IconButton>
+				['modal', 'row'].includes(editDisplayMode ?? '') ? (
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<Button
+							variant="ghost"
+							size="icon"
+							aria-label={localization.edit}
+							onClick={handleStartEditMode}
+							className={`${commonButtonClasses} ${className}`}
+							{...rest}
+						>
+							<EditIcon className="size-4" />
+						</Button>
+					</TooltipTrigger>
+					<TooltipContent>{localization.edit}</TooltipContent>
 				</Tooltip>
 			) : renderRowActionMenuItems?.({
 					row,
@@ -93,16 +90,20 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
 					table,
 				} as any)?.length ? (
 				<>
-					<Tooltip {...getCommonTooltipProps()} title={localization.rowActions}>
-						<IconButton
-							aria-label={localization.rowActions}
-							onClick={handleOpenRowActionMenu}
-							size="small"
-							sx={commonIconButtonStyles}
-							{...rest}
-						>
-							<MoreHorizIcon />
-						</IconButton>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Button
+								variant="ghost"
+								size="icon"
+								aria-label={localization.rowActions}
+								onClick={handleOpenRowActionMenu}
+								className={`${commonButtonClasses} ${className}`}
+								{...rest}
+							>
+								<MoreHorizontalIcon className="size-4" />
+							</Button>
+						</TooltipTrigger>
+						<TooltipContent>{localization.rowActions}</TooltipContent>
 					</Tooltip>
 					<SRT_RowActionMenu
 						anchorEl={anchorEl}

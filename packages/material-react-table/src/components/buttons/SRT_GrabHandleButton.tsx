@@ -1,6 +1,6 @@
 import type { DragEventHandler } from 'react'
-import { Button } from '../ui/button'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip'
+import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import type { SRT_RowData, SRT_TableInstance, ButtonProps } from '../../types-SRT'
 import { cn } from '@/lib/utils'
 

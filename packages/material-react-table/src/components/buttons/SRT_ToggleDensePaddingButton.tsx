@@ -1,13 +1,12 @@
-import IconButton, { type IconButtonProps } from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import type { MRT_RowData, MRT_TableInstance } from "../../types";
+import { Button } from '../ui/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
+import type { ButtonProps, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
 
-export interface SRT_ToggleDensePaddingButtonProps<TData extends MRT_RowData>
-	extends IconButtonProps {
-	table: MRT_TableInstance<TData>;
+export interface SRT_ToggleDensePaddingButtonProps<TData extends SRT_RowData> extends ButtonProps {
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_ToggleDensePaddingButton = <TData extends MRT_RowData>({
+export const SRT_ToggleDensePaddingButton = <TData extends SRT_RowData>({
 	table,
 	...rest
 }: SRT_ToggleDensePaddingButtonProps<TData>) => {
@@ -18,35 +17,34 @@ export const SRT_ToggleDensePaddingButton = <TData extends MRT_RowData>({
 			localization,
 		},
 		setDensity,
-	} = table;
-	const { density } = getState();
+	} = table
+	const { density } = getState()
 
 	const handleToggleDensePadding = () => {
-		const nextDensity =
-			density === "comfortable"
-				? "compact"
-				: density === "compact"
-					? "spacious"
-					: "comfortable";
-		setDensity(nextDensity);
-	};
+		const nextDensity = density === 'comfortable' ? 'compact' : density === 'compact' ? 'spacious' : 'comfortable'
+		setDensity(nextDensity)
+	}
 
 	return (
-		<Tooltip title={rest?.title ?? localization.toggleDensity}>
-			<IconButton
-				aria-label={localization.toggleDensity}
-				onClick={handleToggleDensePadding}
-				{...rest}
-				title={undefined}
-			>
-				{density === "compact" ? (
-					<DensitySmallIcon />
-				) : density === "comfortable" ? (
-					<DensityMediumIcon />
-				) : (
-					<DensityLargeIcon />
-				)}
-			</IconButton>
+		<Tooltip>
+			<TooltipTrigger asChild>
+				<Button
+					variant="ghost"
+					size="icon"
+					aria-label={localization.toggleDensity}
+					onClick={handleToggleDensePadding}
+					{...rest}
+				>
+					{density === 'compact' ? (
+						<DensitySmallIcon className="size-4" />
+					) : density === 'comfortable' ? (
+						<DensityMediumIcon className="size-4" />
+					) : (
+						<DensityLargeIcon className="size-4" />
+					)}
+				</Button>
+			</TooltipTrigger>
+			<TooltipContent>{rest?.title ?? localization.toggleDensity}</TooltipContent>
 		</Tooltip>
-	);
-};
+	)
+}

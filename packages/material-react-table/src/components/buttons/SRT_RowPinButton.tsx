@@ -1,9 +1,9 @@
 import { type MouseEvent, useState } from 'react'
 import type { RowPinningPosition } from '@tanstack/react-table'
-import { Button } from '../ui/button'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
-import type { ButtonProps, SRT_Row, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
-import { cn } from '../../lib/utils'
+import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import type { ButtonProps, SRT_Row, SRT_RowData, SRT_TableInstance } from '@/types-SRT'
+import { cn } from '@/lib/utils'
 
 export interface SRT_RowPinButtonProps<TData extends SRT_RowData> extends ButtonProps {
 	pinningPosition: RowPinningPosition

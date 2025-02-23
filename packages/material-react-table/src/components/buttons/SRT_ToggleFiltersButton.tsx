@@ -1,13 +1,12 @@
-import IconButton, { type IconButtonProps } from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import type { MRT_RowData, MRT_TableInstance } from "../../types";
+import { Button } from '../ui/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
+import type { SRT_RowData, SRT_TableInstance, ButtonProps } from '../../types-SRT'
 
-export interface SRT_ToggleFiltersButtonProps<TData extends MRT_RowData>
-	extends IconButtonProps {
-	table: MRT_TableInstance<TData>;
+export interface SRT_ToggleFiltersButtonProps<TData extends SRT_RowData> extends ButtonProps {
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_ToggleFiltersButton = <TData extends MRT_RowData>({
+export const SRT_ToggleFiltersButton = <TData extends SRT_RowData>({
 	table,
 	...rest
 }: SRT_ToggleFiltersButtonProps<TData>) => {
@@ -18,23 +17,30 @@ export const SRT_ToggleFiltersButton = <TData extends MRT_RowData>({
 			localization,
 		},
 		setShowColumnFilters,
-	} = table;
-	const { showColumnFilters } = getState();
+	} = table
+	const { showColumnFilters } = getState()
 
 	const handleToggleShowFilters = () => {
-		setShowColumnFilters(!showColumnFilters);
-	};
+		setShowColumnFilters(!showColumnFilters)
+	}
 
 	return (
-		<Tooltip title={rest?.title ?? localization.showHideFilters}>
-			<IconButton
-				aria-label={localization.showHideFilters}
-				onClick={handleToggleShowFilters}
-				{...rest}
-				title={undefined}
-			>
-				{showColumnFilters ? <FilterListOffIcon /> : <FilterListIcon />}
-			</IconButton>
+		<Tooltip>
+			<TooltipTrigger asChild>
+				<Button
+					variant="ghost"
+					size="icon"
+					aria-label={localization.showHideFilters}
+					onClick={handleToggleShowFilters}
+				>
+					{showColumnFilters ? (
+						<FilterListOffIcon className="size-4" />
+					) : (
+						<FilterListIcon className="size-4" />
+					)}
+				</Button>
+			</TooltipTrigger>
+			<TooltipContent>{rest?.title ?? localization.showHideFilters}</TooltipContent>
 		</Tooltip>
-	);
-};
+	)
+}

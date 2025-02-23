@@ -1,23 +1,20 @@
-import { Fragment, useMemo } from "react";
-import Alert, { type AlertProps } from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
-import Collapse from "@mui/material/Collapse";
-import Stack from "@mui/material/Stack";
-import type { MRT_RowData, MRT_TableInstance } from "../../types";
-import { getMRT_SelectAllHandler } from "../../utils/row.utils";
-import { parseFromValuesOrFunc } from "../../utils/utils";
-import { MRT_SelectCheckbox } from "../inputs/MRT_SelectCheckbox";
+import { Fragment, useMemo } from 'react'
+import { Alert, AlertTitle } from '../ui/alert'
+import { Button } from '../ui/button'
+import { Badge } from '../ui/badge'
+import { Collapsible, CollapsibleContent } from '../ui/collapsible'
+import type { AlertProps, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
+import { getSRT_SelectAllHandler } from '../../utils/row.utils.shadcn'
+import { parseFromValuesOrFunc } from '../../utils/utils'
+import { SRT_SelectCheckbox } from '../inputs/SRT_SelectCheckbox'
+import { cn } from '@/lib/utils'
 
-export interface SRT_ToolbarAlertBannerProps<TData extends MRT_RowData>
-	extends AlertProps {
-	stackAlertBanner?: boolean;
-	table: MRT_TableInstance<TData>;
+export interface SRT_ToolbarAlertBannerProps<TData extends SRT_RowData> extends AlertProps {
+	stackAlertBanner?: boolean
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_ToolbarAlertBanner = <TData extends MRT_RowData>({
+export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
 	stackAlertBanner,
 	table,
 	...rest
@@ -31,28 +28,28 @@ export const SRT_ToolbarAlertBanner = <TData extends MRT_RowData>({
 			enableSelectAll,
 			localization,
 			manualPagination,
-			muiToolbarAlertBannerChipProps,
-			muiToolbarAlertBannerProps,
+			shadcnToolbarAlertBannerChipProps,
+			shadcnToolbarAlertBannerProps,
 			positionToolbarAlertBanner,
 			renderToolbarAlertBannerContent,
 			rowCount,
 		},
 		refs: { tablePaperRef },
-	} = table;
-	const { density, grouping, rowSelection, showAlertBanner } = getState();
+	} = table
+	const { density, grouping, rowSelection, showAlertBanner } = getState()
 
 	const alertProps = {
-		...parseFromValuesOrFunc(muiToolbarAlertBannerProps, {
+		...parseFromValuesOrFunc(shadcnToolbarAlertBannerProps, {
 			table,
 		}),
 		...rest,
-	};
+	}
 
-	const chipProps = parseFromValuesOrFunc(muiToolbarAlertBannerChipProps, {
+	const chipProps = parseFromValuesOrFunc(shadcnToolbarAlertBannerChipProps, {
 		table,
-	});
+	})
 
-	const totalRowCount = rowCount ?? getCoreRowModel().rows.length;
+	const totalRowCount = rowCount ?? getCoreRowModel().rows.length
 
 	const selectedRowCount = useMemo(
 		() =>
@@ -60,112 +57,96 @@ export const SRT_ToolbarAlertBanner = <TData extends MRT_RowData>({
 				? Object.values(rowSelection).filter(Boolean).length
 				: getFilteredSelectedRowModel().rows.length,
 		[rowSelection, totalRowCount, manualPagination],
-	);
+	)
 	const selectedAlert =
 		selectedRowCount > 0 ? (
-			<Stack alignItems="center" direction="row" gap="16px">
+			<div className="flex items-center gap-4">
 				{localization.selectedCountOfRowCountRowsSelected
-					?.replace("{selectedCount}", selectedRowCount.toLocaleString())
-					?.replace("{rowCount}", totalRowCount.toString())}
+					?.replace('{selectedCount}', selectedRowCount.toLocaleString())
+					?.replace('{rowCount}', totalRowCount.toString())}
 				<Button
-					onClick={(event) =>
-						getMRT_SelectAllHandler({ table })(event, false, true)
-					}
-					size="small"
-					sx={{ p: "2px" }}
+					onClick={(event) => getSRT_SelectAllHandler({ table })(event, false, true)}
+					size="sm"
+					className="p-0.5"
 				>
 					{localization.clearSelection}
 				</Button>
-			</Stack>
-		) : null;
+			</div>
+		) : null
 
 	const groupedAlert =
 		grouping.length > 0 ? (
 			<span>
-				{localization.groupedBy}{" "}
+				{localization.groupedBy}{' '}
 				{grouping.map((columnId, index) => (
 					<Fragment key={`${index}-${columnId}`}>
-						{index > 0 ? localization.thenBy : ""}
-						<Chip
-							label={table.getColumn(columnId).columnDef.header}
-							onDelete={() => table.getColumn(columnId).toggleGrouping()}
+						{index > 0 ? localization.thenBy : ''}
+						<Badge
+							variant="secondary"
+							className="mr-1"
+							onClick={() => table.getColumn(columnId).toggleGrouping()}
 							{...chipProps}
-						/>
+						>
+							{table.getColumn(columnId).columnDef.header}
+						</Badge>
 					</Fragment>
 				))}
 			</span>
-		) : null;
+		) : null
 
 	return (
-		<Collapse
-			in={showAlertBanner || !!selectedAlert || !!groupedAlert}
-			timeout={stackAlertBanner ? 200 : 0}
+		<Collapsible
+			open={showAlertBanner || !!selectedAlert || !!groupedAlert}
+			className={cn('w-full', stackAlertBanner ? 'transition-all duration-200' : 'transition-none')}
 		>
-			<Alert
-				color="info"
-				icon={false}
-				{...alertProps}
-				sx={(theme) => ({
-					"& .MuiAlert-message": {
-						maxWidth: `calc(${
-							tablePaperRef.current?.clientWidth ?? 360
-						}px - 1rem)`,
-						width: "100%",
-					},
-					borderRadius: 0,
-					fontSize: "1rem",
-					left: 0,
-					mb: stackAlertBanner
-						? 0
-						: positionToolbarAlertBanner === "bottom"
-							? "-1rem"
-							: undefined,
-					p: 0,
-					position: "relative",
-					right: 0,
-					top: 0,
-					width: "100%",
-					zIndex: 2,
-					...(parseFromValuesOrFunc(alertProps?.sx, theme) as any),
-				})}
-			>
-				{renderToolbarAlertBannerContent?.({
-					groupedAlert,
-					selectedAlert,
-					table,
-				}) ?? (
-					<>
-						{alertProps?.title && <AlertTitle>{alertProps.title}</AlertTitle>}
-						<Stack
-							sx={{
-								p:
-									positionToolbarAlertBanner !== "head-overlay"
-										? "0.5rem 1rem"
-										: density === "spacious"
-											? "0.75rem 1.25rem"
-											: density === "comfortable"
-												? "0.5rem 0.75rem"
-												: "0.25rem 0.5rem",
-							}}
-						>
-							{alertProps?.children}
-							{alertProps?.children && (selectedAlert || groupedAlert) && (
-								<br />
-							)}
-							<Box sx={{ display: "flex" }}>
-								{enableRowSelection &&
-									enableSelectAll &&
-									positionToolbarAlertBanner === "head-overlay" && (
-										<MRT_SelectCheckbox table={table} />
-									)}{" "}
-								{selectedAlert}
-							</Box>
-							{selectedAlert && groupedAlert && <br />}
-							{groupedAlert}
-						</Stack>
-					</>
-				)}
-			</Alert>
-		</Collapse>
-	);
-};
+			<CollapsibleContent>
+				<Alert
+					variant="default"
+					{...alertProps}
+					className={cn(
+						'rounded-none text-base p-0 relative w-full z-10',
+						positionToolbarAlertBanner === 'bottom' && stackAlertBanner ? '-mb-4' : '',
+						alertProps.className,
+					)}
+					style={{
+						maxWidth: `calc(${tablePaperRef.current?.clientWidth ?? 360}px - 1rem)`,
+						...alertProps.style,
+					}}
+				>
+					{renderToolbarAlertBannerContent?.({
+						groupedAlert,
+						selectedAlert,
+						table,
+					}) ?? (
+						<>
+							{alertProps?.title && <AlertTitle>{alertProps.title}</AlertTitle>}
+							<div
+								className={cn(
+									'p-2 sm:p-4',
+									density === 'spacious'
+										? 'p-3 sm:p-5'
+										: density === 'comfortable'
+											? 'p-2 sm:p-3'
+											: 'p-1 sm:p-2',
+								)}
+							>
+								{alertProps?.children}
+								{alertProps?.children && (selectedAlert || groupedAlert) && <br />}
+								<div className="flex">
+									{enableRowSelection &&
+										enableSelectAll &&
+										positionToolbarAlertBanner === 'head-overlay' && (
+											<SRT_SelectCheckbox table={table} />
+										)}{' '}
+									{selectedAlert}
+								</div>
+								{selectedAlert && groupedAlert && <br />}
+								{groupedAlert}
+							</div>
+						</>
+					)}
+				</Alert>
+			</CollapsibleContent>
+		</Collapsible>
+	)
+}
