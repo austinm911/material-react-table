@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Slider } from '@/components/ui/slider'
 import { FormHelperText } from '@/components/ui/form-helper-text'
-import type { SRT_Header, SRT_RowData, SRT_TableInstance, SliderProps } from '../../types-SRT'
-import { parseFromValuesOrFunc } from '../../utils/utils'
+import type { SRT_Header, SRT_RowData, SRT_TableInstance, SliderProps } from '@/types-SRT'
+import { parseFromValuesOrFunc } from '@/utils/utils'
 
 export interface SRT_FilterRangeSliderProps<TData extends SRT_RowData> extends Omit<SliderProps, 'onChange' | 'value'> {
 	header: SRT_Header<TData>
@@ -16,7 +16,7 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
 }: SRT_FilterRangeSliderProps<TData>) => {
 	const {
 		options: { enableColumnFilterModes, localization, shadcnFilterSliderProps },
-		refs: { filterInputRefs },
+		refs: { filterInputRefs }, // TODO: ref?
 	} = table
 	const { column } = header
 	const { columnDef } = column

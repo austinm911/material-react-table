@@ -1,21 +1,20 @@
-import { useMemo, useState } from "react";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import Menu, { type MenuProps } from "@mui/material/Menu";
-import { SRT_ShowHideColumnsMenuItems } from "./SRT_ShowHideColumnsMenuItems";
-import type { MRT_Column, MRT_RowData, MRT_TableInstance } from "../../types";
-import { getDefaultColumnOrderIds } from "../../utils/displayColumn.utils";
+import { useMemo, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Separator } from '@/components/ui/separator'
+import { SRT_ShowHideColumnsMenuItems } from './SRT_ShowHideColumnsMenuItems'
+import type { SRT_Column, SRT_RowData, SRT_TableInstance, DropdownMenuProps } from '../../types-SRT'
+import { getDefaultColumnOrderIds } from '../../utils/displayColumn.utils.shadcn'
+import { cn } from '@/lib/utils'
 
-export interface SRT_ShowHideColumnsMenuProps<TData extends MRT_RowData>
-	extends Partial<MenuProps> {
-	anchorEl: HTMLElement | null;
-	isSubMenu?: boolean;
-	setAnchorEl: (anchorEl: HTMLElement | null) => void;
-	table: MRT_TableInstance<TData>;
+export interface SRT_ShowHideColumnsMenuProps<TData extends SRT_RowData> extends Partial<DropdownMenuProps> {
+	anchorEl: HTMLElement | null
+	isSubMenu?: boolean
+	setAnchorEl: (anchorEl: HTMLElement | null) => void
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_ShowHideColumnsMenu = <TData extends MRT_RowData>({
+export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
 	anchorEl,
 	setAnchorEl,
 	table,
@@ -37,32 +36,31 @@ export const SRT_ShowHideColumnsMenu = <TData extends MRT_RowData>({
 			enableColumnPinning,
 			enableHiding,
 			localization,
-			mrtTheme: { menuBackgroundColor },
+			shadcnTheme: { menuBackgroundColor },
 		},
-	} = table;
-	const { columnOrder, columnPinning, density } = getState();
+	} = table
+	const { columnOrder, columnPinning, density } = getState()
 
 	const handleToggleAllColumns = (value?: boolean) => {
-		getAllLeafColumns()
-			.filter((col) => col.columnDef.enableHiding !== false)
-			.forEach((col) => col.toggleVisibility(value));
-	};
+		for (const col of getAllLeafColumns()) {
+			if (col.columnDef.enableHiding !== false) {
+				col.toggleVisibility(value)
+			}
+		}
+	}
 
 	const allColumns = useMemo(() => {
-		const columns = getAllColumns();
-		if (
-			columnOrder.length > 0 &&
-			!columns.some((col) => col.columnDef.columnDefType === "group")
-		) {
+		const columns = getAllColumns()
+		if (columnOrder.length > 0 && !columns.some((col) => col.columnDef.columnDefType === 'group')) {
 			return [
 				...getLeftLeafColumns(),
 				...Array.from(new Set(columnOrder)).map((colId) =>
 					getCenterLeafColumns().find((col) => col?.id === colId),
 				),
 				...getRightLeafColumns(),
-			].filter(Boolean);
+			].filter(Boolean)
 		}
-		return columns;
+		return columns
 	}, [
 		columnOrder,
 		columnPinning,
@@ -70,96 +68,83 @@ export const SRT_ShowHideColumnsMenu = <TData extends MRT_RowData>({
 		getCenterLeafColumns(),
 		getLeftLeafColumns(),
 		getRightLeafColumns(),
-	]) as MRT_Column<TData>[];
+	]) as SRT_Column<TData>[]
 
-	const isNestedColumns = allColumns.some(
-		(col) => col.columnDef.columnDefType === "group",
-	);
+	const isNestedColumns = allColumns.some((col) => col.columnDef.columnDefType === 'group')
 
 	const hasColumnOrderChanged = useMemo(
 		() =>
 			columnOrder.length !== initialState.columnOrder.length ||
-			!columnOrder.every(
-				(column, index) => column === initialState.columnOrder[index],
-			),
+			!columnOrder.every((column, index) => column === initialState.columnOrder[index]),
 		[columnOrder, initialState.columnOrder],
-	);
+	)
 
-	const [hoveredColumn, setHoveredColumn] = useState<MRT_Column<TData> | null>(
-		null,
-	);
+	const [hoveredColumn, setHoveredColumn] = useState<SRT_Column<TData> | null>(null)
 
 	return (
-		<Menu
-			MenuListProps={{
-				dense: density === "compact",
-				sx: {
-					backgroundColor: menuBackgroundColor,
-				},
-			}}
-			anchorEl={anchorEl}
-			disableScrollLock
-			onClose={() => setAnchorEl(null)}
-			open={!!anchorEl}
-			{...rest}
-		>
-			<Box
-				sx={{
-					display: "flex",
-					justifyContent: "space-between",
-					p: "0.5rem",
-					pt: 0,
-				}}
+		<DropdownMenu open={!!anchorEl} onOpenChange={() => setAnchorEl(null)} {...rest}>
+			<DropdownMenuTrigger asChild>
+				<div onKeyDown={() => setAnchorEl(anchorEl)} />
+			</DropdownMenuTrigger>
+			<DropdownMenuContent
+				className={cn('flex flex-col gap-2 p-2', density === 'compact' ? 'py-1' : 'py-2')}
+				style={{ backgroundColor: menuBackgroundColor }}
 			>
-				{enableHiding && (
-					<Button
-						disabled={!getIsSomeColumnsVisible()}
-						onClick={() => handleToggleAllColumns(false)}
-					>
-						{localization.hideAll}
-					</Button>
-				)}
-				{enableColumnOrdering && (
-					<Button
-						onClick={() =>
-							table.setColumnOrder(
-								getDefaultColumnOrderIds(table.options, true),
-							)
-						}
-						disabled={!hasColumnOrderChanged}
-					>
-						{localization.resetOrder}
-					</Button>
-				)}
-				{enableColumnPinning && (
-					<Button
-						disabled={!getIsSomeColumnsPinned()}
-						onClick={() => table.resetColumnPinning(true)}
-					>
-						{localization.unpinAll}
-					</Button>
-				)}
-				{enableHiding && (
-					<Button
-						disabled={getIsAllColumnsVisible()}
-						onClick={() => handleToggleAllColumns(true)}
-					>
-						{localization.showAll}
-					</Button>
-				)}
-			</Box>
-			<Divider />
-			{allColumns.map((column, index) => (
-				<SRT_ShowHideColumnsMenuItems
-					allColumns={allColumns}
-					column={column}
-					hoveredColumn={hoveredColumn}
-					isNestedColumns={isNestedColumns}
-					key={`${index}-${column.id}`}
-					setHoveredColumn={setHoveredColumn}
-					table={table}
-				/>
-			))}
-		</Menu>
-	);
-};
+				<div className="flex justify-between gap-2">
+					{enableHiding && (
+						<Button
+							variant="outline"
+							size="sm"
+							disabled={!getIsSomeColumnsVisible()}
+							onClick={() => handleToggleAllColumns(false)}
+						>
+							{localization.hideAll}
+						</Button>
+					)}
+					{enableColumnOrdering && (
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => table.setColumnOrder(getDefaultColumnOrderIds(table.options, true))}
+							disabled={!hasColumnOrderChanged}
+						>
+							{localization.resetOrder}
+						</Button>
+					)}
+					{enableColumnPinning && (
+						<Button
+							variant="outline"
+							size="sm"
+							disabled={!getIsSomeColumnsPinned()}
+							onClick={() => table.resetColumnPinning(true)}
+						>
+							{localization.unpinAll}
+						</Button>
+					)}
+					{enableHiding && (
+						<Button
+							variant="outline"
+							size="sm"
+							disabled={getIsAllColumnsVisible()}
+							onClick={() => handleToggleAllColumns(true)}
+						>
+							{localization.showAll}
+						</Button>
+					)}
+				</div>
+				<Separator />
+				{allColumns.map((column, index) => (
+					<SRT_ShowHideColumnsMenuItems
+						allColumns={allColumns}
+						column={column}
+						hoveredColumn={hoveredColumn}
+						isNestedColumns={isNestedColumns}
+						key={`${index}-${column.id}`}
+						setHoveredColumn={setHoveredColumn}
+						table={table}
+					/>
+				))}
+			</DropdownMenuContent>
+		</DropdownMenu>
+	)
+}

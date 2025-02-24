@@ -1,34 +1,24 @@
-import {
-	type Dispatch,
-	type DragEvent,
-	type SetStateAction,
-	useRef,
-	useState,
-} from "react";
-import Box from "@mui/material/Box";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import MenuItem, { type MenuItemProps } from "@mui/material/MenuItem";
-import Switch from "@mui/material/Switch";
-import Tooltip from "@mui/material/Tooltip";
-import Typography from "@mui/material/Typography";
-import type { MRT_Column, MRT_RowData, MRT_TableInstance } from "../../types";
-import { reorderColumn } from "../../utils/column.utils";
-import { getCommonTooltipProps } from "../../utils/style.utils";
-import { parseFromValuesOrFunc } from "../../utils/utils";
-import { MRT_ColumnPinningButtons } from "../buttons/MRT_ColumnPinningButtons";
-import { MRT_GrabHandleButton } from "../buttons/MRT_GrabHandleButton";
+import { Checkbox } from '@/components/ui/checkbox'
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
+import { Label } from '@/components/ui/label'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { cn } from '@/lib/utils'
+import { type Dispatch, type DragEvent, type SetStateAction, useRef, useState } from 'react'
+import type { DropdownMenuItemProps, SRT_Column, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
+import { reorderColumn } from '../../utils/column.utils.shadcn'
+import { SRT_ColumnPinningButtons } from '../buttons/SRT_ColumnPinningButtons'
+import { SRT_GrabHandleButton } from '../buttons/SRT_GrabHandleButton'
 
-export interface SRT_ShowHideColumnsMenuItemsProps<TData extends MRT_RowData>
-	extends MenuItemProps {
-	allColumns: MRT_Column<TData>[];
-	column: MRT_Column<TData>;
-	hoveredColumn: MRT_Column<TData> | null;
-	isNestedColumns: boolean;
-	setHoveredColumn: Dispatch<SetStateAction<MRT_Column<TData> | null>>;
-	table: MRT_TableInstance<TData>;
+export interface SRT_ShowHideColumnsMenuItemsProps<TData extends SRT_RowData> extends DropdownMenuItemProps {
+	allColumns: SRT_Column<TData>[]
+	column: SRT_Column<TData>
+	hoveredColumn: SRT_Column<TData> | null
+	isNestedColumns: boolean
+	setHoveredColumn: Dispatch<SetStateAction<SRT_Column<TData> | null>>
+	table: SRT_TableInstance<TData>
 }
 
-export const SRT_ShowHideColumnsMenuItems = <TData extends MRT_RowData>({
+export const SRT_ShowHideColumnsMenuItems = <TData extends SRT_RowData>({
 	allColumns,
 	column,
 	hoveredColumn,
@@ -44,136 +34,120 @@ export const SRT_ShowHideColumnsMenuItems = <TData extends MRT_RowData>({
 			enableColumnPinning,
 			enableHiding,
 			localization,
-			mrtTheme: { draggingBorderColor },
+			shadcnTheme: { draggingBorderColor },
 		},
 		setColumnOrder,
-	} = table;
-	const { columnOrder } = getState();
-	const { columnDef } = column;
-	const { columnDefType } = columnDef;
+	} = table
+	const { columnOrder } = getState()
+	const { columnDef } = column
+	const { columnDefType } = columnDef
 
-	const switchChecked = column.getIsVisible();
+	const switchChecked = column.getIsVisible()
 
-	const handleToggleColumnHidden = (column: MRT_Column<TData>) => {
-		if (columnDefType === "group") {
-			column?.columns?.forEach?.((childColumn: MRT_Column<TData>) => {
-				childColumn.toggleVisibility(!switchChecked);
-			});
+	const handleToggleColumnHidden = (column: SRT_Column<TData>) => {
+		if (columnDefType === 'group') {
+			for (const childColumn of column.columns ?? []) {
+				childColumn.toggleVisibility(!switchChecked)
+			}
 		} else {
-			column.toggleVisibility();
+			column.toggleVisibility()
 		}
-	};
+	}
 
-	const menuItemRef = useRef<HTMLElement>(null);
+	const menuItemRef = useRef<HTMLDivElement>(null)
 
-	const [isDragging, setIsDragging] = useState(false);
+	const [isDragging, setIsDragging] = useState(false)
 
 	const handleDragStart = (e: DragEvent<HTMLButtonElement>) => {
-		setIsDragging(true);
+		setIsDragging(true)
 		try {
-			e.dataTransfer.setDragImage(menuItemRef.current as HTMLElement, 0, 0);
+			e.dataTransfer.setDragImage(menuItemRef.current as HTMLElement, 0, 0)
 		} catch (e) {
-			console.error(e);
+			console.error(e)
 		}
-	};
+	}
 
 	const handleDragEnd = (_e: DragEvent<HTMLButtonElement>) => {
-		setIsDragging(false);
-		setHoveredColumn(null);
+		setIsDragging(false)
+		setHoveredColumn(null)
 		if (hoveredColumn) {
-			setColumnOrder(reorderColumn(column, hoveredColumn, columnOrder));
+			setColumnOrder(reorderColumn(column, hoveredColumn, columnOrder))
 		}
-	};
+	}
 
-	const handleDragEnter = (_e: DragEvent) => {
+	const handleDragEnter = (_e: DragEvent<HTMLDivElement>) => {
 		if (!isDragging && columnDef.enableColumnOrdering !== false) {
-			setHoveredColumn(column);
+			setHoveredColumn(column)
 		}
-	};
+	}
 
 	if (!columnDef.header || columnDef.visibleInShowHideMenu === false) {
-		return null;
+		return null
 	}
 
 	return (
 		<>
-			<MenuItem
-				disableRipple
-				onDragEnter={handleDragEnter}
-				ref={menuItemRef as any}
+			<DropdownMenuItem
+				ref={menuItemRef}
 				{...rest}
-				sx={(theme) => ({
-					alignItems: "center",
-					justifyContent: "flex-start",
-					my: 0,
-					opacity: isDragging ? 0.5 : 1,
-					outline: isDragging
-						? `2px dashed ${theme.palette.grey[500]}`
+				className={cn('flex items-center justify-start py-2 px-2 hover:bg-accent/50 cursor-pointer', {
+					'opacity-50': isDragging,
+					'outline-2 outline-dashed': isDragging
+						? 'outline-gray-500'
 						: hoveredColumn?.id === column.id
-							? `2px dashed ${draggingBorderColor}`
-							: "none",
-					outlineOffset: "-2px",
-					pl: `${(column.depth + 0.5) * 2}rem`,
-					py: "6px",
-					...(parseFromValuesOrFunc(rest?.sx, theme) as any),
+							? draggingBorderColor
+							: 'outline-none',
 				})}
+				onDragEnter={handleDragEnter}
+				style={{
+					paddingLeft: `${(column.depth + 0.5) * 2}rem`,
+				}}
 			>
-				<Box
-					sx={{
-						display: "flex",
-						flexWrap: "nowrap",
-						gap: "8px",
-					}}
-				>
-					{columnDefType !== "group" &&
+				<div className="flex flex-nowrap items-center gap-2">
+					{columnDefType !== 'group' &&
 						enableColumnOrdering &&
 						!isNestedColumns &&
 						(columnDef.enableColumnOrdering !== false ? (
-							<MRT_GrabHandleButton
+							<SRT_GrabHandleButton
 								onDragEnd={handleDragEnd}
 								onDragStart={handleDragStart}
 								table={table}
 							/>
 						) : (
-							<Box sx={{ width: "28px" }} />
+							<div className="w-7" />
 						))}
 					{enableColumnPinning &&
 						(column.getCanPin() ? (
-							<MRT_ColumnPinningButtons column={column} table={table} />
+							<SRT_ColumnPinningButtons column={column} table={table} />
 						) : (
-							<Box sx={{ width: "70px" }} />
+							<div className="w-[70px]" />
 						))}
 					{enableHiding ? (
-						<FormControlLabel
-							checked={switchChecked}
-							componentsProps={{
-								typography: {
-									sx: {
-										mb: 0,
-										opacity: columnDefType !== "display" ? 1 : 0.5,
-									},
-								},
-							}}
-							control={
-								<Tooltip
-									{...getCommonTooltipProps()}
-									title={localization.toggleVisibility}
-								>
-									<Switch />
+						<div className="flex items-center space-x-2">
+							<TooltipProvider>
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<Checkbox
+											checked={switchChecked}
+											disabled={!column.getCanHide()}
+											onCheckedChange={() => handleToggleColumnHidden(column)}
+										/>
+									</TooltipTrigger>
+									<TooltipContent>{localization.toggleVisibility}</TooltipContent>
 								</Tooltip>
-							}
-							disabled={!column.getCanHide()}
-							label={columnDef.header}
-							onChange={() => handleToggleColumnHidden(column)}
-						/>
+							</TooltipProvider>
+							<Label
+								className={cn('text-sm', columnDefType !== 'display' ? 'opacity-100' : 'opacity-50')}
+							>
+								{columnDef.header}
+							</Label>
+						</div>
 					) : (
-						<Typography sx={{ alignSelf: "center" }}>
-							{columnDef.header}
-						</Typography>
+						<span className="self-center text-sm">{columnDef.header}</span>
 					)}
-				</Box>
-			</MenuItem>
-			{column.columns?.map((c: MRT_Column<TData>, i) => (
+				</div>
+			</DropdownMenuItem>
+			{column.columns?.map((c: SRT_Column<TData>, i) => (
 				<SRT_ShowHideColumnsMenuItems
 					allColumns={allColumns}
 					column={c}
@@ -185,5 +159,5 @@ export const SRT_ShowHideColumnsMenuItems = <TData extends MRT_RowData>({
 				/>
 			))}
 		</>
-	);
-};
+	)
+}

@@ -1,7 +1,7 @@
 import type { SRT_Column, SRT_RowData, SRT_TableInstance, CheckboxProps } from '@/types-SRT'
-import { Checkbox } from '../../components/ui/checkbox'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../../components/ui/tooltip'
-import { parseFromValuesOrFunc } from '../../utils/utils'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { parseFromValuesOrFunc } from '@/utils/utils'
 import { cn } from '@/lib/utils'
 
 export interface SRT_FilterCheckboxProps<TData extends SRT_RowData> extends CheckboxProps {
@@ -45,7 +45,7 @@ export const SRT_FilterCheckbox = <TData extends SRT_RowData>({
 	const handleChange = (checked: boolean | 'indeterminate') => {
 		const newValue = currentFilterValue === undefined ? 'true' : currentFilterValue === 'true' ? 'false' : undefined
 		column.setFilterValue(newValue)
-		onChange?.(checked)
+		onChange?.(checked as boolean)
 	}
 
 	const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {

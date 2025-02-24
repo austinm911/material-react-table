@@ -10,11 +10,7 @@ export interface SRT_TablePaperProps<TData extends SRT_RowData> extends CardProp
 	table: SRT_TableInstance<TData>
 }
 
-export const SRT_TablePaper = <TData extends SRT_RowData>({
-	table,
-	className,
-	...rest
-}: SRT_TablePaperProps<TData>) => {
+export function SRT_TablePaper<TData extends SRT_RowData>({ table, className, ...rest }: SRT_TablePaperProps<TData>) {
 	const {
 		getState,
 		options: {

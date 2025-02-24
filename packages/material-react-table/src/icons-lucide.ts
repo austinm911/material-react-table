@@ -3,7 +3,7 @@ import {
 	ArrowDown as ArrowDownwardIcon,
 	ArrowRight as ArrowRightIcon,
 	Columns3Icon as ViewColumnIcon,
-	// CancelIcon, //There is no direct equivalent in Lucide, but XCircle could be used. Consider if you need it.
+	XCircleIcon as CancelIcon,
 	ChevronLeft as ChevronLeftIcon,
 	ChevronRight as ChevronRightIcon,
 	// ClearAll as ClearAllIcon,
@@ -35,21 +35,26 @@ import {
 	// SyncAltIcon, // Lucide has a few sync-like icons: 'refresh-cw', 'refresh-ccw', 'rotate-cw', 'rotate-ccw'. Choose the best fit.
 	ColumnsIcon,
 	EyeOff as VisibilityOffIcon,
+	XIcon,
+	PanelBottomDashedIcon,
+	ArrowUpDownIcon,
 } from 'lucide-react'
 
 export const SRT_Default_Icons = {
 	ArrowDownwardIcon,
 	ArrowRightIcon,
-	//CancelIcon,
+	ArrowUpDownIcon,
+	CancelIcon,
 	ChevronLeftIcon,
 	ChevronRightIcon,
-	// ClearAllIcon,
+	XIcon,
 	CloseIcon,
 	ContentCopy,
 	DensityLargeIcon,
 	DensityMediumIcon,
 	DensitySmallIcon,
 	DragHandleIcon,
+	PanelBottomDashedIcon,
 	//DynamicFeedIcon,
 	EditIcon,
 	ExpandMoreIcon,

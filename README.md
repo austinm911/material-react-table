@@ -44,6 +44,7 @@ We need to do the following:
 - `Select` ➡️ `Select`, `SelectTrigger`, `SelectValue`, `SelectContent`, `SelectItem`
 - `Skeleton` ➡️ (Custom implementation using Tailwind CSS)
 - `Slider` ➡️ `Slider`
+- `Menu` ➡️ `DropdownMenu`, `DropdownMenuTrigger`, `DropdownMenuItem`
 - `Table` ➡️ `Table` (Shadcn `Table` component)
 - `TableBody` ➡️ `TableBody`
 - `TableCell` ➡️ `TableCell`
@@ -81,14 +82,12 @@ MRT is made up of the following groups of components:
 
 #### Table Body
 
-| Component            | Status  |
-| -------------------- | ------- |
-| SRT_Table            | Unknown |
-| SRT_TableBody        | Unknown |
-| SRT_TableBodyRow     | Unknown |
-| SRT_TableEmptyRow    | Unknown |
-| SRT_FilterOptionMenu | Unknown |
-| SRT_FilterTextField  | Unknown |
+| Component               | Status |
+| ----------------------- | ------ |
+| SRT_Table               | 🟧      |
+| SRT_TableContainer      | 🟧      |
+| SRT_TableLoadingOverlay | 🟧      |
+| SRT_TablePaper          | 🟧      |
 
 #### Table Footer
 
@@ -102,26 +101,26 @@ MRT is made up of the following groups of components:
 
 | Component                 | Status |
 | ------------------------- | ------ |
-| SRT_EditCellTextField     |        |
-| SRT_FilterCheckbox        |        |
-| SRT_FilterRangeFields     |        |
-| SRT_FilterRangeSlider     |        |
-| SRT_FilterTextField       |        |
-| SRT_GlobalFilterTextField |        |
-| SRT_SelectCheckbox        |        |
-| SRT_EditActionButtons     |        |
+| SRT_EditCellTextField     | 🟧      |
+| SRT_FilterCheckbox        | 🟧      |
+| SRT_FilterRangeFields     | ✅      |
+| SRT_FilterRangeSlider     | 🟧      |
+| SRT_FilterTextField       | 🚧      |
+| SRT_GlobalFilterTextField | 🟧      |
+| SRT_SelectCheckbox        | 🟧      |
+| SRT_EditActionButtons     | 🟧      |
 
 #### Menus
 
 | Component                    | Status |
 | ---------------------------- | ------ |
-| SRT_ActionMenuItem           |        |
-| SRT_CellActionMenu           |        |
-| SRT_ColumnActionMenu         |        |
-| SRT_FilterOptionMenu         |        |
-| SRT_RowActionMenu            |        |
-| SRT_ShowHideColumnsMenu      |        |
-| SRT_ShowHideColumnsMenultems |        |
+| SRT_ActionMenuItem           | ✅      |
+| SRT_CellActionMenu           | 🟧      |
+| SRT_ColumnActionMenu         | 🟧      |
+| SRT_FilterOptionMenu         | 🟧      |
+| SRT_RowActionMenu            | 🟧      |
+| SRT_ShowHideColumnsMenu      | 🟧      |
+| SRT_ShowHideColumnsMenultems | 🟧      |
 
 #### Buttons
 

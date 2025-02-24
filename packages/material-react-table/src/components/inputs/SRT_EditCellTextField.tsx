@@ -1,13 +1,8 @@
 import { type ChangeEvent, type FocusEvent, type KeyboardEvent, useState, useRef, useEffect } from 'react'
-import { Input } from '../../components/ui/input'
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from '../../components/ui/dropdown-menu'
-import type { SRT_Cell, SRT_RowData, SRT_TableInstance, InputProps } from '../../types-SRT'
-import { getValueAndLabel, parseFromValuesOrFunc } from '../../utils/utils'
+import { Input } from '@/components/ui/input'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import type { SRT_Cell, SRT_RowData, SRT_TableInstance, InputProps } from '@/types-SRT'
+import { getValueAndLabel, parseFromValuesOrFunc } from '@/utils/utils'
 import { cn } from '@/lib/utils'
 
 export interface SRT_EditCellTextFieldProps<TData extends SRT_RowData> extends InputProps {
@@ -100,7 +95,7 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
 	const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
 		textFieldProps.onKeyDown?.(event)
 		if (event.key === 'Enter' && !event.shiftKey && completesComposition) {
-			inputRef.current?.blur()
+			editInputRefs.current?.[column.id]?.blur()
 		}
 	}
 
@@ -145,7 +140,7 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
 									setValue(optionValue)
 									saveInputValueToRowCache(optionValue)
 									setOpen(false)
-									inputRef.current?.blur()
+									editInputRefs.current?.[column.id]?.blur()
 								}}
 							>
 								{label}

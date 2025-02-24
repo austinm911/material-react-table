@@ -47,7 +47,12 @@ import type { Select } from './components/ui/select'
 import type { Alert } from './components/ui/alert'
 import type { RadioGroup, RadioGroupItem } from './components/ui/radio-group'
 import type { Dialog } from './components/ui/dialog'
-import type { DropdownMenuItem } from './components/ui/dropdown-menu'
+import type {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from './components/ui/dropdown-menu'
 import type { Badge } from './components/ui/badge'
 import type { Pagination } from './components/ui/pagination'
 import type { Progress } from './components/ui/progress'
@@ -115,7 +120,15 @@ export type DateTimePickerProps = Omit<React.ComponentProps<typeof Calendar>, 'c
 export type TimePickerProps = Omit<React.ComponentProps<typeof Calendar>, 'children'> & {
 	calendarProps?: React.ComponentProps<typeof Calendar>
 }
-
+export type RadioProps = {
+	groupProps?: React.ComponentProps<typeof RadioGroup>
+	itemProps?: React.ComponentProps<typeof RadioGroupItem>
+}
+export type DropdownMenuProps = {
+	menuProps?: React.ComponentProps<typeof DropdownMenu>
+	triggerProps?: React.ComponentProps<typeof DropdownMenuTrigger>
+	contentProps?: React.ComponentProps<typeof DropdownMenuContent>
+}
 export type SelectProps = React.ComponentProps<typeof Select>
 export type DialogProps = React.ComponentProps<typeof Dialog>
 export type SkeletonProps = React.ComponentProps<typeof Skeleton>
@@ -129,10 +142,7 @@ export type TableRowProps = React.ComponentProps<typeof TableRow>
 export type TooltipProviderProps = React.ComponentProps<typeof TooltipProvider>
 export type TooltipProps = React.ComponentProps<typeof Tooltip>
 export type TooltipContentProps = React.ComponentProps<typeof TooltipContent>
-export type RadioProps = {
-	groupProps?: React.ComponentProps<typeof RadioGroup>
-	itemProps?: React.ComponentProps<typeof RadioGroupItem>
-}
+
 export type { SRT_Icons }
 
 export type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
@@ -937,8 +947,8 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
 	shadcnCircularProgressProps?:
 		| ((props: {
 				table: SRT_TableInstance<TData>
-		  }) => CircularProgressProps & { Component?: ReactNode })
-		| (CircularProgressProps & { Component?: ReactNode })
+		  }) => CircularProgressProps)
+		| CircularProgressProps
 	shadcnColumnActionsButtonProps?:
 		| ((props: {
 				column: SRT_Column<TData>

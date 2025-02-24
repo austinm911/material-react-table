@@ -1,14 +1,12 @@
-import type { SRT_RowData, SRT_TableInstance } from '../../types-SRT'
-import { parseFromValuesOrFunc } from '../../utils/utils'
-import { CircularProgress } from '../ui/circular-progress'
+import type { CircularProgressProps, SRT_RowData, SRT_TableInstance } from '@/types-SRT'
+import { parseFromValuesOrFunc } from '@/utils/utils'
+import { CircularProgress } from '@/components/ui/circular-progress'
 import { cn } from '@/lib/utils'
 
-// Renamed interface to SRT_TableLoadingOverlayProps
-export interface SRT_TableLoadingOverlayProps<TData extends SRT_RowData> {
+export interface SRT_TableLoadingOverlayProps<TData extends SRT_RowData> extends CircularProgressProps {
 	table: SRT_TableInstance<TData>
 }
 
-// Renamed export to SRT_TableLoadingOverlay
 export const SRT_TableLoadingOverlay = <TData extends SRT_RowData>({
 	table,
 	...rest
@@ -34,8 +32,7 @@ export const SRT_TableLoadingOverlay = <TData extends SRT_RowData>({
 			)}
 			id={`srt-progress-${id}`}
 		>
-			{/* TODO: Add props */}
-			<CircularProgress {...circularProgressProps} />
+			<CircularProgress aria-label={localization.noRecordsToDisplay} {...circularProgressProps} />
 		</div>
 	)
 }

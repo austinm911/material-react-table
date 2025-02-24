@@ -1,11 +1,11 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
-import { Table } from '../ui/table'
-import { SRT_Table } from './SRT_Table'
-import { SRT_TableLoadingOverlay } from './SRT_TableLoadingOverlay'
-import type { SRT_RowData, SRT_TableInstance, TableProps } from '../../types-SRT'
-import { parseFromValuesOrFunc } from '../../utils/utils'
-import { SRT_CellActionMenu } from '../menus/SRT_CellActionMenu'
-import { SRT_EditRowModal } from '../modals/SRT_EditRowModal'
+import { Table } from '@/components/ui/table'
+import { SRT_Table } from '@/components/table/SRT_Table'
+import { SRT_TableLoadingOverlay } from '@/components/table/SRT_TableLoadingOverlay'
+import type { SRT_RowData, SRT_TableInstance, TableProps } from '@/types-SRT'
+import { parseFromValuesOrFunc } from '@/utils/utils'
+import { SRT_CellActionMenu } from '@/components/menus/SRT_CellActionMenu'
+import { SRT_EditRowModal } from '@/components/modals/SRT_EditRowModal'
 import { cn } from '@/lib/utils'
 
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect

@@ -1,5 +1,10 @@
 import { useMemo } from 'react'
-import Menu, { type MenuProps } from '@mui/material/Menu'
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuTrigger,
+	DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu'
 import { SRT_ActionMenuItem } from './SRT_ActionMenuItem'
 import type {
 	SRT_FilterOption,
@@ -8,9 +13,10 @@ import type {
 	SRT_Localization,
 	SRT_RowData,
 	SRT_TableInstance,
-} from '../../types-SRT'
+	DropdownMenuProps,
+} from '@/types-SRT'
 
-export const mrtFilterOptions = (localization: SRT_Localization): SRT_InternalFilterOption[] => [
+export const srtFilterOptions = (localization: SRT_Localization): SRT_InternalFilterOption[] => [
 	{
 		divider: false,
 		label: localization.filterFuzzy,
@@ -102,7 +108,7 @@ const emptyModes = ['empty', 'notEmpty']
 const arrModes = ['arrIncludesSome', 'arrIncludesAll', 'arrIncludes']
 const rangeVariants = ['range-slider', 'date-range', 'datetime-range', 'range']
 
-export interface SRT_FilterOptionMenuProps<TData extends SRT_RowData> extends Partial<MenuProps> {
+export interface SRT_FilterOptionMenuProps<TData extends SRT_RowData> extends Partial<DropdownMenuProps> {
 	anchorEl: HTMLElement | null
 	header?: SRT_Header<TData>
 	onSelect?: () => void
@@ -148,7 +154,7 @@ export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
 
 	const internalFilterOptions = useMemo(
 		() =>
-			mrtFilterOptions(localization).filter((filterOption) =>
+			srtFilterOptions(localization).filter((filterOption) =>
 				columnDef
 					? allowedColumnFilterOptions === undefined ||
 						allowedColumnFilterOptions?.includes(filterOption.option)
@@ -216,51 +222,43 @@ export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
 
 	const filterOption = !!header && columnDef ? columnDef._filterFn : globalFilterFn
 
+	// Using DropdownMenu to replace MUI Menu
 	return (
-		<Menu
-			MenuListProps={{
-				dense: density === 'compact',
-				sx: {
-					backgroundColor: menuBackgroundColor,
-				},
-			}}
-			anchorEl={anchorEl}
-			anchorOrigin={{ horizontal: 'right', vertical: 'center' }}
-			disableScrollLock
-			onClose={() => setAnchorEl(null)}
-			open={!!anchorEl}
-			{...rest}
-		>
-			{(header && column && columnDef
-				? (columnDef.renderColumnFilterModeMenuItems?.({
-						column: column as any,
-						internalFilterOptions,
-						onSelectFilterMode: handleSelectFilterMode,
-						table,
-					}) ??
-					renderColumnFilterModeMenuItems?.({
-						column: column as any,
-						internalFilterOptions,
-						onSelectFilterMode: handleSelectFilterMode,
-						table,
-					}))
-				: renderGlobalFilterModeMenuItems?.({
-						internalFilterOptions,
-						onSelectFilterMode: handleSelectFilterMode,
-						table,
-					})) ??
-				internalFilterOptions.map(({ divider, label, option, symbol }, index) => (
-					<SRT_ActionMenuItem
-						divider={divider}
-						icon={symbol}
-						key={index}
-						label={label}
-						onClick={() => handleSelectFilterMode(option as SRT_FilterOption)}
-						selected={option === filterOption}
-						table={table}
-						value={option}
-					/>
-				))}
-		</Menu>
+		<DropdownMenu open={!!anchorEl} onOpenChange={() => setAnchorEl(null)}>
+			<DropdownMenuContent>
+				{(header && column && columnDef
+					? (columnDef.renderColumnFilterModeMenuItems?.({
+							column: column as any,
+							internalFilterOptions,
+							onSelectFilterMode: handleSelectFilterMode,
+							table,
+						}) ??
+						renderColumnFilterModeMenuItems?.({
+							column: column as any,
+							internalFilterOptions,
+							onSelectFilterMode: handleSelectFilterMode,
+							table,
+						}))
+					: renderGlobalFilterModeMenuItems?.({
+							internalFilterOptions,
+							onSelectFilterMode: handleSelectFilterMode,
+							table,
+						})) ??
+					internalFilterOptions.map(({ divider, label, option, symbol }, index) => (
+						<>
+							<SRT_ActionMenuItem
+								icon={symbol}
+								key={option}
+								label={label}
+								onClick={() => handleSelectFilterMode(option as SRT_FilterOption)}
+								selected={option === filterOption}
+								table={table}
+								value={option}
+							/>
+							{divider && <DropdownMenuSeparator />}
+						</>
+					))}
+			</DropdownMenuContent>
+		</DropdownMenu>
 	)
 }

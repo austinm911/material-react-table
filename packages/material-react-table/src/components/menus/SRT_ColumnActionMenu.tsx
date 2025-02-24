@@ -1,10 +1,10 @@
 import { type MouseEvent, useState } from 'react'
-import Menu, { type MenuProps } from '@mui/material/Menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { SRT_ActionMenuItem } from './SRT_ActionMenuItem'
 import { SRT_FilterOptionMenu } from './SRT_FilterOptionMenu'
-import type { SRT_Header, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
+import type { DropdownMenuProps, SRT_Header, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
 
-export interface SRT_ColumnActionMenuProps<TData extends SRT_RowData> extends Partial<MenuProps> {
+export interface SRT_ColumnActionMenuProps<TData extends SRT_RowData> extends Partial<DropdownMenuProps> {
 	anchorEl: HTMLElement | null
 	header: SRT_Header<TData>
 	setAnchorEl: (anchorEl: HTMLElement | null) => void
@@ -18,6 +18,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
 	table,
 	...rest
 }: SRT_ColumnActionMenuProps<TData>) => {
+	const { menuProps, triggerProps, contentProps } = rest
 	const {
 		getAllLeafColumns,
 		getState,
@@ -33,13 +34,13 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
 			enableSorting,
 			enableSortingRemoval,
 			icons: {
-				ClearAllIcon,
-				DynamicFeedIcon,
+				XIcon,
+				PanelBottomDashedIcon,
 				FilterListIcon,
 				FilterListOffIcon,
 				PushPinIcon,
 				RestartAltIcon,
-				SortIcon,
+				ArrowUpDownIcon,
 				ViewColumnIcon,
 				VisibilityOffIcon,
 			},
@@ -93,7 +94,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
 
 	const handleGroupByColumn = () => {
 		column.toggleGrouping()
-		setColumnOrder((old: any) => ['mrt-row-expand', ...old])
+		setColumnOrder((old: any) => ['srt-row-expand', ...old])
 		setAnchorEl(null)
 	}
 
@@ -115,9 +116,11 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
 	}
 
 	const handleShowAllColumns = () => {
-		getAllLeafColumns()
-			.filter((col) => col.columnDef.enableHiding !== false)
-			.forEach((col) => col.toggleVisibility(true))
+		for (const col of getAllLeafColumns()) {
+			if (col.columnDef.enableHiding !== false) {
+				col.toggleVisibility(true)
+			}
+		}
 		setAnchorEl(null)
 	}
 
@@ -142,7 +145,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
 					enableSortingRemoval !== false && (
 						<SRT_ActionMenuItem
 							disabled={column.getIsSorted() === false}
-							icon={<ClearAllIcon />}
+							icon={<XIcon />}
 							key={0}
 							label={localization.clearSort}
 							onClick={handleClearSort}
@@ -151,7 +154,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
 					),
 					<SRT_ActionMenuItem
 						disabled={column.getIsSorted() === 'asc'}
-						icon={<SortIcon style={{ transform: 'rotate(180deg) scaleX(-1)' }} />}
+						icon={<ArrowUpDownIcon style={{ transform: 'rotate(180deg) scaleX(-1)' }} />}
 						key={1}
 						label={localization.sortByColumnAsc?.replace('{column}', String(columnDef.header))}
 						onClick={handleSortAsc}
@@ -159,8 +162,8 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
 					/>,
 					<SRT_ActionMenuItem
 						disabled={column.getIsSorted() === 'desc'}
-						divider={enableColumnFilters || enableGrouping || enableHiding}
-						icon={<SortIcon />}
+						// 	divider={enableColumnFilters || enableGrouping || enableHiding}
+						icon={<ArrowUpDownIcon />}
 						key={2}
 						label={localization.sortByColumnDesc?.replace('{column}', String(columnDef.header))}
 						onClick={handleSortDesc}
@@ -184,7 +187,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
 					columnFilterDisplayMode === 'subheader' && (
 						<SRT_ActionMenuItem
 							disabled={showColumnFilters && !enableColumnFilterModes}
-							divider={enableGrouping || enableHiding}
+							// divider={enableGrouping || enableHiding}
 							icon={<FilterListIcon />}
 							key={4}
 							label={localization.filterByColumn?.replace('{column}', String(columnDef.header))}
@@ -208,8 +211,8 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
 		...(enableGrouping && column.getCanGroup()
 			? [
 					<SRT_ActionMenuItem
-						divider={enableColumnPinning}
-						icon={<DynamicFeedIcon />}
+						// /divider={enableColumnPinning}
+						icon={<PanelBottomDashedIcon />}
 						key={6}
 						label={localization[column.getIsGrouped() ? 'ungroupByColumn' : 'groupByColumn']?.replace(
 							'{column}',
@@ -240,7 +243,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
 					/>,
 					<SRT_ActionMenuItem
 						disabled={!column.getIsPinned()}
-						divider={enableHiding}
+						// divider={enableHiding}
 						icon={<PushPinIcon />}
 						key={9}
 						label={localization.unpin}
@@ -284,32 +287,33 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
 	].filter(Boolean)
 
 	return (
-		<Menu
-			MenuListProps={{
-				dense: density === 'compact',
-				sx: {
-					backgroundColor: menuBackgroundColor,
-				},
-			}}
-			anchorEl={anchorEl}
-			disableScrollLock
-			onClose={() => setAnchorEl(null)}
-			open={!!anchorEl}
-			{...rest}
-		>
-			{columnDef.renderColumnActionsMenuItems?.({
-				closeMenu: () => setAnchorEl(null),
-				column,
-				internalColumnMenuItems,
-				table,
-			}) ??
-				renderColumnActionsMenuItems?.({
+		<DropdownMenu open={!!anchorEl} onOpenChange={() => setAnchorEl(null)} {...menuProps}>
+			<DropdownMenuTrigger asChild {...triggerProps}>
+				<div
+					ref={(el) => {
+						if (el && anchorEl) setAnchorEl(el)
+					}}
+				/>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent
+				className={`${density === 'compact' ? 'py-1' : 'py-2'}`}
+				style={{ backgroundColor: menuBackgroundColor }}
+				{...contentProps}
+			>
+				{columnDef.renderColumnActionsMenuItems?.({
 					closeMenu: () => setAnchorEl(null),
 					column,
 					internalColumnMenuItems,
 					table,
 				}) ??
-				internalColumnMenuItems}
-		</Menu>
+					renderColumnActionsMenuItems?.({
+						closeMenu: () => setAnchorEl(null),
+						column,
+						internalColumnMenuItems,
+						table,
+					}) ??
+					internalColumnMenuItems}
+			</DropdownMenuContent>
+		</DropdownMenu>
 	)
 }

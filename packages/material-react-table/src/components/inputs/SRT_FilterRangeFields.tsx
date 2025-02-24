@@ -1,7 +1,7 @@
 import type { HTMLAttributes } from 'react'
 import { SRT_FilterTextField } from './SRT_FilterTextField'
-import type { SRT_Header, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
-import { parseFromValuesOrFunc } from '../../utils/utils'
+import type { SRT_Header, SRT_RowData, SRT_TableInstance } from '@/types-SRT'
+import { parseFromValuesOrFunc } from '@/utils/utils'
 import { cn } from '@/lib/utils'
 
 export interface SRT_FilterRangeFieldsProps<TData extends SRT_RowData> extends HTMLAttributes<HTMLDivElement> {

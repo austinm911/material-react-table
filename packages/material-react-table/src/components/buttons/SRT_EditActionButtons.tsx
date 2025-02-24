@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import type { SRT_Row, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
-import { parseFromValuesOrFunc } from '../../utils/utils'
+import type { SRT_Row, SRT_RowData, SRT_TableInstance } from '@/types-SRT'
+import { parseFromValuesOrFunc } from '@/utils/utils'
 
 export interface SRT_EditActionButtonsProps<TData extends SRT_RowData> {
 	row: SRT_Row<TData>
