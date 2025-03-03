@@ -1,6 +1,6 @@
 import { SRT_SelectCheckbox } from '../../components/inputs/SRT_SelectCheckbox'
 import type { SRT_ColumnDef, SRT_RowData, SRT_StatefulTableOptions } from '../../types-SRT'
-import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils.shadcn'
+import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils'
 
 export const getSRT_RowSelectColumnDef = <TData extends SRT_RowData>(
 	tableOptions: SRT_StatefulTableOptions<TData>,

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import type { SRT_Row, SRT_RowData, SRT_TableInstance } from '../types-SRT'
-import { getSRT_Rows } from '../utils/row.utils.shadcn'
+import { getSRT_Rows } from '../utils/row.utils'
 
 export const useSRT_Rows = <TData extends SRT_RowData>(table: SRT_TableInstance<TData>): SRT_Row<TData>[] => {
 	const {

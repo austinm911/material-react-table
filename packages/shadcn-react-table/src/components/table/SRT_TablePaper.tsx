@@ -16,7 +16,6 @@ export function SRT_TablePaper<TData extends SRT_RowData>({ table, className, ..
 		options: {
 			enableBottomToolbar,
 			enableTopToolbar,
-			shadcnTheme: { baseBackgroundColor },
 			shadcnTablePaperProps: muiTablePaperProps,
 			renderBottomToolbar,
 			renderTopToolbar,
@@ -46,7 +45,6 @@ export function SRT_TablePaper<TData extends SRT_RowData>({ table, className, ..
 				'overflow-hidden transition-all duration-100 ease-in-out',
 			)}
 			style={{
-				backgroundColor: baseBackgroundColor,
 				...cardProps?.style,
 			}}
 			{...cardProps}

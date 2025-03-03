@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useRef } from 'react'
 import type { SRT_RowData, SRT_SortingState, SRT_TableInstance } from '../types-SRT'
-import { getDefaultColumnOrderIds } from '../utils/displayColumn.utils.shadcn'
-import { getCanRankRows } from '../utils/row.utils.shadcn'
+import { getDefaultColumnOrderIds } from '../utils/displayColumn.utils'
+import { getCanRankRows } from '../utils/row.utils'
 
 export const useSRT_Effects = <TData extends SRT_RowData>(table: SRT_TableInstance<TData>) => {
 	const {

@@ -11,7 +11,7 @@ import { FilterSelectInput } from './filter-select-input'
 import { FilterAutocompleteInput } from './filter-autocomplete-input'
 import type { SRT_FilterTextFieldProps } from './types'
 import { debounce } from '../../../hooks/use-debounce'
-import { getColumnFilterInfo, useDropdownOptions } from '../../../utils/column.utils.shadcn'
+import { getColumnFilterInfo, useDropdownOptions } from '../../../utils/column.utils'
 import { getValueAndLabel, parseFromValuesOrFunc } from '../../../utils/utils'
 import type { DropdownOption, SRT_RowData } from '../../../types-SRT'
 

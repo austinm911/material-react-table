@@ -4,7 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/compon
 import { Separator } from '@/components/ui/separator'
 import { SRT_ShowHideColumnsMenuItems } from './SRT_ShowHideColumnsMenuItems'
 import type { SRT_Column, SRT_RowData, SRT_TableInstance, DropdownMenuProps } from '../../types-SRT'
-import { getDefaultColumnOrderIds } from '../../utils/displayColumn.utils.shadcn'
+import { getDefaultColumnOrderIds } from '../../utils/displayColumn.utils'
 import { cn } from '@/lib/utils'
 
 export interface SRT_ShowHideColumnsMenuProps<TData extends SRT_RowData> extends Partial<DropdownMenuProps> {

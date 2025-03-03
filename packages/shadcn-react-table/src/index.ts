@@ -13,7 +13,7 @@ export * from './fns/filterFns'
 export * from './fns/sortingFns'
 
 //hooks
-export * from './hooks/useMaterialReactTable'
+export * from './hooks/useShadcnReactTable'
 export * from './hooks/useSRT_ColumnVirtualizer'
 export * from './hooks/useSRT_Effects'
 export * from './hooks/useSRT_RowVirtualizer'

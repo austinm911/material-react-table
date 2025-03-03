@@ -4,7 +4,6 @@ import { SRT_ToolbarAlertBanner } from './SRT_ToolbarAlertBanner'
 import { SRT_ToolbarDropZone } from './SRT_ToolbarDropZone'
 import { SRT_ToolbarInternalButtons } from './SRT_ToolbarInternalButtons'
 import type { SRT_RowData, SRT_TableInstance } from '../../types-SRT'
-import { getCommonToolbarStyles } from '../../utils/style.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { SRT_GlobalFilterTextField } from '../inputs/SRT_GlobalFilterTextField'
 import { useMediaQuery } from '@/hooks/use-media-query'
@@ -55,8 +54,7 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({ table }: SRT_TopTool
 			ref={(ref: HTMLDivElement) => {
 				topToolbarRef.current = ref
 				if (toolbarProps?.ref) {
-					// @ts-expect-error
-					toolbarProps.ref.current = ref
+					toolbarProps.ref
 				}
 			}}
 			className={cn(

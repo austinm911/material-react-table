@@ -1,6 +1,6 @@
 import { SRT_DefaultDisplayColumn } from '../useSRT_TableOptions'
 import type { SRT_ColumnDef, SRT_RowData, SRT_StatefulTableOptions } from '../../types-SRT'
-import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils.shadcn'
+import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils'
 
 const blankColProps = {
 	children: null,

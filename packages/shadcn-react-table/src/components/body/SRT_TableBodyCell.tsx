@@ -5,8 +5,8 @@ import { cn } from '../../lib/utils'
 
 import { SRT_TableBodyCellValue } from './SRT_TableBodyCellValue'
 import type { SRT_Cell, SRT_RowData, SRT_TableInstance, TableCellProps } from '../../types-SRT'
-import { isCellEditable, cellKeyboardShortcuts, openEditingCell } from '../../utils/cell.utils.shadcn'
-import { getCommonSRTCellStyles } from '../../utils/style.utils.shadcn'
+import { isCellEditable, cellKeyboardShortcuts, openEditingCell } from '../../utils/cell.utils'
+import { getCommonSRTCellStyles } from '../../utils/style.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { SRT_CopyButton } from '../buttons/SRT_CopyButton'
 import { SRT_EditCellTextField } from '../inputs/SRT_EditCellTextField'
@@ -43,7 +43,6 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
 			enableGrouping,
 			enableKeyboardShortcuts,
 			layoutMode,
-			shadcnTheme: { draggingBorderColor },
 			shadcnSkeletonProps,
 			shadcnTableBodyCellProps,
 		},
@@ -102,11 +101,11 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
 		const showResizeBorder = isResizingColumn && columnResizeMode === 'onChange'
 
 		const borderStyle = showResizeBorder
-			? `2px solid ${draggingBorderColor} !important`
+			? '2px solid !important'
 			: isDraggingColumn || isDraggingRow
 				? '1px dashed gray !important'
 				: isHoveredColumn || isHoveredRow || isResizingColumn
-					? `2px dashed ${draggingBorderColor} !important`
+					? '2px dashed !important'
 					: undefined
 
 		if (showResizeBorder) {
@@ -234,7 +233,6 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
 				column,
 				table,
 				tableCellProps,
-				theme: {} as any,
 			}),
 			...draggingBorders,
 		}

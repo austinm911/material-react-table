@@ -17,7 +17,7 @@ import { SRT_SortingFns } from '../fns/sortingFns'
 import { SRT_Default_Icons } from '../icons-lucide'
 import { SRT_Localization_EN } from '../locales/en'
 import type { SRT_DefinedTableOptions, SRT_RowData, SRT_TableOptions } from '../types-SRT'
-import { getSRTTheme } from '../utils/style.utils.shadcn'
+import { getSRTTheme } from '../utils/style.utils'
 
 export const SRT_DefaultColumn = {
 	filterVariant: 'text',

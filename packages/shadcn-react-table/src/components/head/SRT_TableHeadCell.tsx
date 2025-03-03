@@ -1,18 +1,23 @@
 import { type DragEvent, useMemo } from 'react'
-import Box from '@mui/material/Box'
-import TableCell, { type TableCellProps } from '@mui/material/TableCell'
-import { useTheme } from '@mui/material/styles'
-import type { Theme } from '@mui/material/styles'
 import { SRT_TableHeadCellColumnActionsButton } from './SRT_TableHeadCellColumnActionsButton'
 import { SRT_TableHeadCellFilterContainer } from './SRT_TableHeadCellFilterContainer'
 import { SRT_TableHeadCellFilterLabel } from './SRT_TableHeadCellFilterLabel'
 import { SRT_TableHeadCellGrabHandle } from './SRT_TableHeadCellGrabHandle'
 import { SRT_TableHeadCellResizeHandle } from './SRT_TableHeadCellResizeHandle'
 import { SRT_TableHeadCellSortLabel } from './SRT_TableHeadCellSortLabel'
-import type { SRT_ColumnVirtualizer, SRT_Header, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
-import { getCommonSRTCellStyles } from '../../utils/style.utils.shadcn'
+import type {
+	SRT_Column,
+	SRT_ColumnVirtualizer,
+	SRT_Header,
+	SRT_RowData,
+	SRT_TableInstance,
+	TableCellProps,
+} from '../../types-SRT'
+import { getCommonSRTCellStyles } from '../../utils/style.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
-import { cellKeyboardShortcuts } from '../../utils/cell.utils.shadcn'
+import { cellKeyboardShortcuts } from '../../utils/cell.utils'
+import { TableCell } from '../ui/table'
+import { cn } from '@/lib/utils'
 
 export interface SRT_TableHeadCellProps<TData extends SRT_RowData> extends TableCellProps {
 	columnVirtualizer?: SRT_ColumnVirtualizer
@@ -28,7 +33,6 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
 	table,
 	...rest
 }: SRT_TableHeadCellProps<TData>) => {
-	const theme = useTheme()
 	const {
 		getState,
 		options: {
@@ -43,7 +47,6 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
 			enableGrouping,
 			enableMultiSort,
 			layoutMode,
-			shadcnTheme: { draggingBorderColor },
 			shadcnTableHeadCellProps,
 		},
 		refs: { tableHeadCellRefs },
@@ -90,11 +93,11 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
 			!header.subHeaders.length
 
 		const borderStyle = showResizeBorder
-			? `2px solid ${draggingBorderColor} !important`
+			? '2px solid !important'
 			: draggingColumn?.id === column.id
-				? `1px dashed ${theme.palette.grey[500]}`
+				? '1px dashed gray'
 				: hoveredColumn?.id === column.id
-					? `2px dashed ${draggingBorderColor}`
+					? '2px dashed'
 					: undefined
 
 		if (showResizeBorder) {
@@ -143,9 +146,11 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
 			table,
 		}) ?? columnDef.header
 
+	const textAlign = columnDefType === 'group' ? 'center' : 'left'
+	const isRtl = false // Replace with actual RTL detection if needed
+
 	return (
 		<TableCell
-			align={columnDefType === 'group' ? 'center' : theme.direction === 'rtl' ? 'right' : 'left'}
 			aria-sort={column.getIsSorted() ? (column.getIsSorted() === 'asc' ? 'ascending' : 'descending') : 'none'}
 			colSpan={header.colSpan}
 			data-can-sort={column.getCanSort() || undefined}
@@ -156,7 +161,10 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
 			onDragOver={handleDragOver}
 			ref={(node: HTMLTableCellElement) => {
 				if (node) {
-					tableHeadCellRefs.current![column.id] = node
+					tableHeadCellRefs.current = {
+						...tableHeadCellRefs.current,
+						[column.id]: node,
+					}
 					if (columnDefType !== 'group') {
 						columnVirtualizer?.measureElement?.(node)
 					}
@@ -165,52 +173,45 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
 			tabIndex={enableKeyboardShortcuts ? 0 : undefined}
 			{...tableCellProps}
 			onKeyDown={handleKeyDown}
-			sx={(theme: Theme) => ({
-				'& :hover': {
-					'.MuiButtonBase-root': {
-						opacity: 1,
-					},
-				},
-				flexDirection: layoutMode?.startsWith('grid') ? 'column' : undefined,
-				fontWeight: 'bold',
-				overflow: 'visible',
-				p:
-					density === 'compact'
-						? '0.5rem'
-						: density === 'comfortable'
-							? columnDefType === 'display'
-								? '0.75rem'
-								: '1rem'
-							: columnDefType === 'display'
-								? '1rem 1.25rem'
-								: '1.5rem',
-				pb: columnDefType === 'display' ? 0 : showColumnFilters || density === 'compact' ? '0.4rem' : '0.6rem',
-				pt:
-					columnDefType === 'group' || density === 'compact'
-						? '0.25rem'
-						: density === 'comfortable'
-							? '.75rem'
-							: '1.25rem',
-				userSelect: enableMultiSort && column.getCanSort() ? 'none' : undefined,
-				verticalAlign: 'top',
+			className={cn(
+				'overflow-visible font-bold',
+				density === 'compact'
+					? 'p-2'
+					: density === 'comfortable'
+						? columnDefType === 'display'
+							? 'p-3'
+							: 'p-4'
+						: columnDefType === 'display'
+							? 'px-5 py-4'
+							: 'p-6',
+				columnDefType === 'display' ? 'pb-0' : showColumnFilters || density === 'compact' ? 'pb-1.5' : 'pb-2.5',
+				columnDefType === 'group' || density === 'compact'
+					? 'pt-1'
+					: density === 'comfortable'
+						? 'pt-3'
+						: 'pt-5',
+				enableMultiSort && column.getCanSort() ? 'select-none' : '',
+				textAlign === 'center' ? 'text-center' : textAlign === 'right' ? 'text-right' : 'text-left',
+				tableCellProps.className,
+			)}
+			style={{
 				...getCommonSRTCellStyles({
 					column,
 					header,
 					table,
 					tableCellProps,
-					theme,
 				}),
 				...draggingBorders,
-			})}
+				...(layoutMode?.startsWith('grid') ? { flexDirection: 'column' } : {}),
+				...tableCellProps.style,
+			}}
 		>
 			{header.isPlaceholder
 				? null
 				: (tableCellProps.children ?? (
-						<Box
-							className="Mui-TableHeadCell-Content"
-							sx={{
-								alignItems: 'center',
-								display: 'flex',
+						<div
+							className="flex items-center w-full"
+							style={{
 								flexDirection: tableCellProps?.align === 'right' ? 'row-reverse' : 'row',
 								justifyContent:
 									columnDefType === 'group' || tableCellProps?.align === 'center'
@@ -219,27 +220,21 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
 											? 'space-between'
 											: 'flex-start',
 								position: 'relative',
-								width: '100%',
 							}}
 						>
-							<Box
-								className="Mui-TableHeadCell-Content-Labels"
-								onClick={column.getToggleSortingHandler()}
-								sx={{
-									alignItems: 'center',
+							<div
+								className="flex items-center"
+								onKeyDown={column.getToggleSortingHandler()}
+								style={{
 									cursor: column.getCanSort() && columnDefType !== 'group' ? 'pointer' : undefined,
-									display: 'flex',
 									flexDirection: tableCellProps?.align === 'right' ? 'row-reverse' : 'row',
 									overflow: columnDefType === 'data' ? 'hidden' : undefined,
-									pl: tableCellProps?.align === 'center' ? `${headerPL}rem` : undefined,
+									paddingLeft: tableCellProps?.align === 'center' ? `${headerPL}rem` : undefined,
 								}}
 							>
-								<Box
-									className="Mui-TableHeadCell-Content-Wrapper"
-									sx={{
-										'&:hover': {
-											textOverflow: 'clip',
-										},
+								<div
+									className="hover:text-clip"
+									style={{
 										minWidth: `${Math.min(columnDef.header?.length ?? 0, 4)}ch`,
 										overflow: columnDefType === 'data' ? 'hidden' : undefined,
 										textOverflow: 'ellipsis',
@@ -247,35 +242,30 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
 									}}
 								>
 									{HeaderElement}
-								</Box>
+								</div>
 								{column.getCanFilter() && (
 									<SRT_TableHeadCellFilterLabel header={header} table={table} />
 								)}
 								{column.getCanSort() && <SRT_TableHeadCellSortLabel header={header} table={table} />}
-							</Box>
+							</div>
 							{columnDefType !== 'group' && (
-								<Box
-									className="Mui-TableHeadCell-Content-Actions"
-									sx={{
-										whiteSpace: 'nowrap',
-									}}
-								>
+								<div className="whitespace-nowrap">
 									{showDragHandle && (
 										<SRT_TableHeadCellGrabHandle
 											column={column}
 											table={table}
 											tableHeadCellRef={{
-												current: tableHeadCellRefs.current?.[column.id]!,
+												current: tableHeadCellRefs.current?.[column.id] ?? null,
 											}}
 										/>
 									)}
 									{showColumnActions && (
 										<SRT_TableHeadCellColumnActionsButton header={header} table={table} />
 									)}
-								</Box>
+								</div>
 							)}
 							{column.getCanResize() && <SRT_TableHeadCellResizeHandle header={header} table={table} />}
-						</Box>
+						</div>
 					))}
 			{columnFilterDisplayMode === 'subheader' && column.getCanFilter() && (
 				<SRT_TableHeadCellFilterContainer header={header} table={table} />

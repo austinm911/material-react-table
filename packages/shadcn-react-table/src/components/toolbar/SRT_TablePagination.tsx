@@ -1,12 +1,18 @@
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu'
-import { Pagination } from '@/components/ui/pagination'
+import {
+	Pagination,
+	PaginationContent,
+	PaginationItem,
+	PaginationLink,
+	PaginationNext,
+	PaginationPrevious,
+} from '@/components/ui/pagination'
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
-import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
+import { useMediaQuery } from '../../hooks/use-media-query'
 import type { SRT_RowData, SRT_TableInstance, PaginationProps, SelectProps } from '../../types-SRT'
-import { flipIconStyles, getCommonTooltipProps } from '../../utils/style.utils.shadcn'
+import { flipIconStyles } from '../../utils/style.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 
 const defaultRowsPerPage = [5, 10, 15, 20, 25, 30, 50, 100]
@@ -18,6 +24,8 @@ export interface SRT_TablePaginationProps<TData extends SRT_RowData>
 			disabled?: boolean
 			rowsPerPageOptions?: { label: string; value: number }[] | number[]
 			showRowsPerPage?: boolean
+			showFirstButton?: boolean
+			showLastButton?: boolean
 		}
 	> {
 	position?: 'bottom' | 'top'
@@ -29,7 +37,6 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
 	table,
 	...rest
 }: SRT_TablePaginationProps<TData>) => {
-	const theme = useTheme()
 	const isMobile = useMediaQuery('(max-width: 720px)')
 
 	const {
@@ -74,11 +81,108 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
 	// Instead of mutating the SelectProps, use a local flag
 	const nativeSelect = isMobile && SelectProps?.native !== false
 
-	const tooltipProps = getCommonTooltipProps()
+	// Create a custom pagination component for 'pages' mode
+	const renderCustomPagination = () => {
+		// Generate page numbers
+		const pageNumbers = []
+		for (let i = 1; i <= numberOfPages; i++) {
+			pageNumbers.push(i)
+		}
+
+		return (
+			<Pagination className="mx-auto">
+				<PaginationContent>
+					{showFirstButton && (
+						<PaginationItem>
+							{!disableBack ? (
+								<PaginationLink
+									onClick={() => table.firstPage()}
+									aria-label={localization.goToFirstPage}
+								>
+									<FirstPageIcon className="h-4 w-4" />
+								</PaginationLink>
+							) : (
+								<span className="opacity-50 cursor-not-allowed">
+									<PaginationLink
+										aria-disabled="true"
+										aria-label={localization.goToFirstPage}
+										onClick={(e) => e.preventDefault()}
+									>
+										<FirstPageIcon className="h-4 w-4" />
+									</PaginationLink>
+								</span>
+							)}
+						</PaginationItem>
+					)}
+					<PaginationItem>
+						{!disableBack ? (
+							<PaginationPrevious
+								onClick={() => table.previousPage()}
+								aria-label={localization.goToPreviousPage}
+							/>
+						) : (
+							<span className="opacity-50 cursor-not-allowed">
+								<PaginationPrevious
+									aria-disabled="true"
+									aria-label={localization.goToPreviousPage}
+									onClick={(e) => e.preventDefault()}
+								/>
+							</span>
+						)}
+					</PaginationItem>
+
+					{pageNumbers.map((page) => (
+						<PaginationItem key={page}>
+							<PaginationLink
+								isActive={page === pageIndex + 1}
+								onClick={() => table.setPageIndex(page - 1)}
+								aria-label={`Page ${page}`}
+							>
+								{page}
+							</PaginationLink>
+						</PaginationItem>
+					))}
+
+					<PaginationItem>
+						{!disableNext ? (
+							<PaginationNext onClick={() => table.nextPage()} aria-label={localization.goToNextPage} />
+						) : (
+							<span className="opacity-50 cursor-not-allowed">
+								<PaginationNext
+									aria-disabled="true"
+									aria-label={localization.goToNextPage}
+									onClick={(e) => e.preventDefault()}
+								/>
+							</span>
+						)}
+					</PaginationItem>
+					{showLastButton && (
+						<PaginationItem>
+							{!disableNext ? (
+								<PaginationLink onClick={() => table.lastPage()} aria-label={localization.goToLastPage}>
+									<LastPageIcon className="h-4 w-4" />
+								</PaginationLink>
+							) : (
+								<span className="opacity-50 cursor-not-allowed">
+									<PaginationLink
+										aria-disabled="true"
+										aria-label={localization.goToLastPage}
+										onClick={(e) => e.preventDefault()}
+									>
+										<LastPageIcon className="h-4 w-4" />
+									</PaginationLink>
+								</span>
+							)}
+						</PaginationItem>
+					)}
+				</PaginationContent>
+			</Pagination>
+		)
+	}
 
 	return (
 		<div
-			className={`MuiTablePagination-root flex flex-wrap items-center gap-2 sm:justify-center md:justify-between relative px-2 py-3 z-[2] ${
+			className={`flex flex-wrap items-center gap-2 sm:justify-center md:justify-between relative px-2 py-3 z-[2] ${
 				position === 'top' && enableToolbarInternalActions ? 'mt-12' : ''
 			}`}
 		>
@@ -129,19 +233,7 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
 				</div>
 			)}
 			{paginationDisplayMode === 'pages' ? (
-				<Pagination
-					count={numberOfPages}
-					disabled={disabled}
-					currentPage={pageIndex + 1}
-					onPageChange={(newPage) => table.setPageIndex(newPage - 1)}
-					firstPageIcon={<FirstPageIcon {...flipIconStyles(theme)} />}
-					previousPageIcon={<ChevronLeftIcon {...flipIconStyles(theme)} />}
-					nextPageIcon={<ChevronRightIcon {...flipIconStyles(theme)} />}
-					lastPageIcon={<LastPageIcon {...flipIconStyles(theme)} />}
-					showFirstButton={showFirstButton}
-					showLastButton={showLastButton}
-					{...restPaginationProps}
-				/>
+				renderCustomPagination()
 			) : paginationDisplayMode === 'default' ? (
 				<>
 					<span style={{ margin: '0 4px', minWidth: '8ch', textAlign: 'center' }}>
@@ -161,11 +253,11 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
 											size="icon"
 											variant="outline"
 										>
-											<FirstPageIcon {...flipIconStyles(theme)} />
+											<FirstPageIcon className="h-4 w-4" />
 										</Button>
 									</span>
 								</TooltipTrigger>
-								<TooltipContent {...tooltipProps}>{localization.goToFirstPage}</TooltipContent>
+								<TooltipContent>{localization.goToFirstPage}</TooltipContent>
 							</Tooltip>
 						)}
 						<Tooltip>
@@ -178,11 +270,11 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
 										size="icon"
 										variant="outline"
 									>
-										<ChevronLeftIcon {...flipIconStyles(theme)} />
+										<ChevronLeftIcon className="h-4 w-4" />
 									</Button>
 								</span>
 							</TooltipTrigger>
-							<TooltipContent {...tooltipProps}>{localization.goToPreviousPage}</TooltipContent>
+							<TooltipContent>{localization.goToPreviousPage}</TooltipContent>
 						</Tooltip>
 						<Tooltip>
 							<TooltipTrigger asChild>
@@ -194,11 +286,11 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
 										size="icon"
 										variant="outline"
 									>
-										<ChevronRightIcon {...flipIconStyles(theme)} />
+										<ChevronRightIcon className="h-4 w-4" />
 									</Button>
 								</span>
 							</TooltipTrigger>
-							<TooltipContent {...tooltipProps}>{localization.goToNextPage}</TooltipContent>
+							<TooltipContent>{localization.goToNextPage}</TooltipContent>
 						</Tooltip>
 						{showLastButton && (
 							<Tooltip>
@@ -211,11 +303,11 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
 											size="icon"
 											variant="outline"
 										>
-											<LastPageIcon {...flipIconStyles(theme)} />
+											<LastPageIcon className="h-4 w-4" />
 										</Button>
 									</span>
 								</TooltipTrigger>
-								<TooltipContent {...tooltipProps}>{localization.goToLastPage}</TooltipContent>
+								<TooltipContent>{localization.goToLastPage}</TooltipContent>
 							</Tooltip>
 						)}
 					</div>

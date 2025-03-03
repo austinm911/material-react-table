@@ -1,4 +1,3 @@
-import type React from 'react'
 import { cn } from '@/lib/utils'
 import { TableRow } from '../ui/table'
 import type {
@@ -26,12 +25,7 @@ export const SRT_TableHeadRow = <TData extends SRT_RowData>({
 	...rest
 }: SRT_TableHeadRowProps<TData>) => {
 	const {
-		options: {
-			enableStickyHeader,
-			layoutMode,
-			shadcnTheme: { baseBackgroundColor },
-			shadcnTableHeadRowProps,
-		},
+		options: { enableStickyHeader, layoutMode, shadcnTableHeadRowProps },
 	} = table
 
 	const { virtualColumns, virtualPaddingLeft, virtualPaddingRight } = columnVirtualizer ?? {}
@@ -52,7 +46,6 @@ export const SRT_TableHeadRow = <TData extends SRT_RowData>({
 				enableStickyHeader && layoutMode === 'semantic' ? 'sticky top-0' : 'relative',
 			)}
 			style={{
-				backgroundColor: baseBackgroundColor,
 				...(resolvedProps.style || {}),
 			}}
 		>

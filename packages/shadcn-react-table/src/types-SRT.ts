@@ -129,7 +129,9 @@ export type DropdownMenuProps = {
 	triggerProps?: React.ComponentProps<typeof DropdownMenuTrigger>
 	contentProps?: React.ComponentProps<typeof DropdownMenuContent>
 }
-export type SelectProps = React.ComponentProps<typeof Select>
+export type SelectProps = React.ComponentProps<typeof Select> & {
+	native?: boolean
+}
 export type DialogProps = React.ComponentProps<typeof Dialog>
 export type SkeletonProps = React.ComponentProps<typeof Skeleton>
 export type SliderProps = React.ComponentProps<typeof Slider>

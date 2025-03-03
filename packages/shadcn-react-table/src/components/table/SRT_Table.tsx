@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useSRT_ColumnVirtualizer } from '@/hooks/useSRT_ColumnVirtualizer'
 import type { SRT_RowData, SRT_TableInstance, TableProps } from '@/types-SRT'
-import { parseCSSVarId } from '@/utils/style.utils.shadcn'
+import { parseCSSVarId } from '@/utils/style.utils'
 import { parseFromValuesOrFunc } from '@/utils/utils'
 import { SRT_TableBody, Memo_SRT_TableBody } from '@/components/body/SRT_TableBody'
 import { SRT_TableFooter } from '@/components/footer/SRT_TableFooter'

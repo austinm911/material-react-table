@@ -4,7 +4,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { SRT_TableHeadCellFilterContainer } from './SRT_TableHeadCellFilterContainer'
 import type { ButtonProps, SRT_Header, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
-import { getColumnFilterInfo, useDropdownOptions } from '../../utils/column.utils.shadcn'
+import { getColumnFilterInfo, useDropdownOptions } from '../../utils/column.utils'
 import { getValueAndLabel, parseFromValuesOrFunc } from '../../utils/utils'
 import { cn } from '@/lib/utils'
 

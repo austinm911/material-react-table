@@ -1,7 +1,7 @@
 import type { RefObject } from 'react'
 import { SRT_TableBodyRowGrabHandle } from '../../components/body/SRT_TableBodyRowGrabHandle'
 import type { SRT_ColumnDef, SRT_RowData, SRT_StatefulTableOptions } from '../../types-SRT'
-import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils.shadcn'
+import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils'
 
 export const getSRT_RowDragColumnDef = <TData extends SRT_RowData>(
 	tableOptions: SRT_StatefulTableOptions<TData>,

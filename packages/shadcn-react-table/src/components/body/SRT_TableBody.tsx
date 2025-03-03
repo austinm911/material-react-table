@@ -1,12 +1,12 @@
 import { memo, useMemo } from 'react'
 import type { VirtualItem } from '@tanstack/react-virtual'
-import TableBody, { type TableBodyProps } from '@mui/material/TableBody'
-import Typography from '@mui/material/Typography'
 import { SRT_TableBodyRow, Memo_SRT_TableBodyRow } from './SRT_TableBodyRow'
-import { useMRT_RowVirtualizer } from '../../hooks/useMRT_RowVirtualizer'
-import { useMRT_Rows } from '../../hooks/useMRT_Rows'
-import type { SRT_ColumnVirtualizer, SRT_Row, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
+import { useSRT_RowVirtualizer } from '../../hooks/useSRT_RowVirtualizer'
+import { useSRT_Rows } from '../../hooks/useSRT_Rows'
+import type { SRT_ColumnVirtualizer, SRT_Row, SRT_RowData, SRT_TableInstance, TableBodyProps } from '../../types-SRT'
 import { parseFromValuesOrFunc } from '../../utils/utils'
+import { TableBody, TableRow, TableCell } from '../ui/table'
+import { cn } from '@/lib/utils'
 
 export interface SRT_TableBodyProps<TData extends SRT_RowData> extends TableBodyProps {
 	columnVirtualizer?: SRT_ColumnVirtualizer
@@ -16,6 +16,7 @@ export interface SRT_TableBodyProps<TData extends SRT_RowData> extends TableBody
 export const SRT_TableBody = <TData extends SRT_RowData>({
 	columnVirtualizer,
 	table,
+	className,
 	...rest
 }: SRT_TableBodyProps<TData>) => {
 	const {
@@ -54,9 +55,9 @@ export const SRT_TableBody = <TData extends SRT_RowData>({
 			.map((r) => r.id)
 	}, [rowPinning, getRowModel().rows])
 
-	const rows = useMRT_Rows(table)
+	const rows = useSRT_Rows(table)
 
-	const rowVirtualizer = useMRT_RowVirtualizer(table, rows)
+	const rowVirtualizer = useSRT_RowVirtualizer(table, rows)
 
 	const { virtualRows } = rowVirtualizer ?? {}
 
@@ -71,13 +72,13 @@ export const SRT_TableBody = <TData extends SRT_RowData>({
 			{!rowPinningDisplayMode?.includes('sticky') && getIsSomeRowsPinned('top') && (
 				<TableBody
 					{...tableBodyProps}
-					sx={(theme) => ({
+					className={cn(className)}
+					style={{
 						display: layoutMode?.startsWith('grid') ? 'grid' : undefined,
 						position: 'sticky',
 						top: tableHeadHeight - 1,
 						zIndex: 1,
-						...(parseFromValuesOrFunc(tableBodyProps?.sx, theme) as any),
-					})}
+					}}
 				>
 					{getTopRows().map((row, staticRowIndex) => {
 						const props = {
@@ -95,61 +96,60 @@ export const SRT_TableBody = <TData extends SRT_RowData>({
 			)}
 			<TableBody
 				{...tableBodyProps}
-				sx={(theme) => ({
+				className={cn(className)}
+				style={{
 					display: layoutMode?.startsWith('grid') ? 'grid' : undefined,
 					height: rowVirtualizer ? `${rowVirtualizer.getTotalSize()}px` : undefined,
 					minHeight: !rows.length ? '100px' : undefined,
 					position: 'relative',
-					...(parseFromValuesOrFunc(tableBodyProps?.sx, theme) as any),
-				})}
+				}}
 			>
 				{tableBodyProps?.children ??
 					(!rows.length ? (
-						<tr
+						<TableRow
 							style={{
 								display: layoutMode?.startsWith('grid') ? 'grid' : undefined,
 							}}
 						>
-							<td
+							<TableCell
 								colSpan={table.getVisibleLeafColumns().length}
 								style={{
 									display: layoutMode?.startsWith('grid') ? 'grid' : undefined,
 								}}
 							>
 								{renderEmptyRowsFallback?.({ table }) ?? (
-									<Typography
-										sx={{
-											color: 'text.secondary',
-											fontStyle: 'italic',
+									<div
+										className="text-muted-foreground italic text-center py-8 w-full"
+										style={{
 											maxWidth: `min(100vw, ${tablePaperRef.current?.clientWidth ?? 360}px)`,
-											py: '2rem',
-											textAlign: 'center',
-											width: '100%',
 										}}
 									>
 										{globalFilter || columnFilters.length
 											? localization.noResultsFound
 											: localization.noRecordsToDisplay}
-									</Typography>
+									</div>
 								)}
-							</td>
-						</tr>
+							</TableCell>
+						</TableRow>
 					) : (
 						<>
-							{(virtualRows ?? rows).map((rowOrVirtualRow, staticRowIndex) => {
-								let row = rowOrVirtualRow as MRT_Row<TData>
+							{(virtualRows ?? rows).map((rowOrVirtualRow, index) => {
+								let row = rowOrVirtualRow as SRT_Row<TData>
+								let staticRowIndex = index
+
 								if (rowVirtualizer) {
 									if (renderDetailPanel) {
 										if (rowOrVirtualRow.index % 2 === 1) {
 											return null
-										} else {
-											staticRowIndex = rowOrVirtualRow.index / 2
 										}
+
+										staticRowIndex = rowOrVirtualRow.index / 2
 									} else {
 										staticRowIndex = rowOrVirtualRow.index
 									}
 									row = rows[staticRowIndex]
 								}
+
 								const props = {
 									...commonRowProps,
 									pinnedRowIds,
@@ -171,13 +171,13 @@ export const SRT_TableBody = <TData extends SRT_RowData>({
 			{!rowPinningDisplayMode?.includes('sticky') && getIsSomeRowsPinned('bottom') && (
 				<TableBody
 					{...tableBodyProps}
-					sx={(theme) => ({
+					className={cn(className)}
+					style={{
 						bottom: tableFooterHeight - 1,
 						display: layoutMode?.startsWith('grid') ? 'grid' : undefined,
 						position: 'sticky',
 						zIndex: 1,
-						...(parseFromValuesOrFunc(tableBodyProps?.sx, theme) as any),
-					})}
+					}}
 				>
 					{getBottomRows().map((row, staticRowIndex) => {
 						const props = {

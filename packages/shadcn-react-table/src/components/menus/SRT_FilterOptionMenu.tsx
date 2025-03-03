@@ -132,7 +132,6 @@ export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
 			columnFilterModeOptions,
 			globalFilterModeOptions,
 			localization,
-			shadcnTheme: { menuBackgroundColor },
 			renderColumnFilterModeMenuItems,
 			renderGlobalFilterModeMenuItems,
 		},
@@ -251,9 +250,9 @@ export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
 								key={option}
 								label={label}
 								onClick={() => handleSelectFilterMode(option as SRT_FilterOption)}
-								selected={option === filterOption}
+								// selected={option === filterOption}
 								table={table}
-								value={option}
+								// value={option}
 							/>
 							{divider && <DropdownMenuSeparator />}
 						</>

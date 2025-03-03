@@ -1,6 +1,6 @@
 import { SRT_ActionMenuItem } from './SRT_ActionMenuItem'
 import type { SRT_RowData, SRT_TableInstance } from '../../types-SRT'
-import { openEditingCell } from '../../utils/cell.utils.shadcn'
+import { openEditingCell } from '../../utils/cell.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../ui/dropdown-menu'
 

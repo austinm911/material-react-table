@@ -3,7 +3,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../../components/ui/too
 import { SRT_ExpandAllButton } from '../../components/buttons/SRT_ExpandAllButton'
 import { SRT_ExpandButton } from '../../components/buttons/SRT_ExpandButton'
 import type { SRT_ColumnDef, SRT_RowData, SRT_StatefulTableOptions } from '../../types-SRT'
-import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils.shadcn'
+import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils'
 
 export const getSRT_RowExpandColumnDef = <TData extends SRT_RowData>(
 	tableOptions: SRT_StatefulTableOptions<TData>,

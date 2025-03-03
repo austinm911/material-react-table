@@ -11,8 +11,7 @@ import type {
 	SRT_TableInstance,
 	SRT_VirtualItem,
 } from '../../types-SRT'
-import { getIsRowSelected } from '../../utils/row.utils.shadcn'
-import { commonCellBeforeAfterStyles, getCommonPinnedCellStyles } from '../../utils/style.utils.shadcn'
+import { getIsRowSelected } from '../../utils/row.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { TableRow } from '@/components/ui/table'
 
@@ -49,7 +48,6 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
 			enableStickyHeader,
 			layoutMode,
 			memoMode,
-			shadcnTheme: { baseBackgroundColor, pinnedRowBackgroundColor, selectedRowBackgroundColor },
 			shadcnTableBodyRowProps,
 			renderDetailPanel,
 			rowPinningDisplayMode,
@@ -120,7 +118,6 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
 				className={className}
 				style={{
 					transform: virtualRow ? `translateY(${virtualRow.start}px)` : undefined,
-					backgroundColor: baseBackgroundColor,
 					bottom:
 						!virtualRow && bottomPinnedIndex !== undefined && isRowPinned
 							? `${bottomPinnedIndex * rowHeight + (enableStickyFooter ? tableFooterHeight - 1 : 0)}px`

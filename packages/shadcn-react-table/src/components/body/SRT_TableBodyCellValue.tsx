@@ -21,10 +21,7 @@ export const SRT_TableBodyCellValue = <TData extends SRT_RowData>({
 }: SRT_TableBodyCellValueProps<TData>) => {
 	const {
 		getState,
-		options: {
-			enableFilterMatchHighlighting,
-			shadcnTheme: { matchHighlightColor },
-		},
+		options: { enableFilterMatchHighlighting },
 	} = table
 	const { column, row } = cell
 	const { columnDef } = column
@@ -67,7 +64,7 @@ export const SRT_TableBodyCellValue = <TData extends SRT_RowData>({
 		allowedTypes.includes(typeof renderedCellValue) &&
 		((filterValue &&
 			allowedTypes.includes(typeof filterValue) &&
-			['autocomplete', 'text'].includes(columnDef.filterVariant!)) ||
+			['autocomplete', 'text'].includes(columnDef.filterVariant ?? '')) ||
 			(globalFilter && allowedTypes.includes(typeof globalFilter) && column.getCanGlobalFilter()))
 	) {
 		const chunks = highlightWords?.({
@@ -84,7 +81,7 @@ export const SRT_TableBodyCellValue = <TData extends SRT_RowData>({
 							key={key}
 							className={
 								match
-									? 'bg-[matchHighlightColor] rounded-sm text-black dark:text-white p-[2px_1px]'
+									? 'bg-[hsl(var(--warning) / 0.2)] rounded-sm text-black dark:text-white p-[2px_1px]'
 									: undefined
 							}
 						>

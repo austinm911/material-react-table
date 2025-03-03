@@ -19,12 +19,7 @@ import type {
 	SRT_TableState,
 	SRT_Updater,
 } from '../types-SRT'
-import {
-	getAllLeafColumnDefs,
-	getColumnId,
-	getDefaultColumnFilterFn,
-	prepareColumns,
-} from '../utils/column.utils.shadcn'
+import { getAllLeafColumnDefs, getColumnId, getDefaultColumnFilterFn, prepareColumns } from '../utils/column.utils'
 import {
 	getDefaultColumnOrderIds,
 	showRowActionsColumn,
@@ -34,8 +29,8 @@ import {
 	showRowPinningColumn,
 	showRowSelectionColumn,
 	showRowSpacerColumn,
-} from '../utils/displayColumn.utils.shadcn'
-import { createRow } from '../utils/tanstack.helpers.shadcn'
+} from '../utils/displayColumn.utils'
+import { createRow } from '../utils/tanstack.helpers'
 import { getSRT_RowActionsColumnDef } from './display-columns/getSRT_RowActionsColumnDef'
 import { getSRT_RowDragColumnDef } from './display-columns/getSRT_RowDragColumnDef'
 import { getSRT_RowExpandColumnDef } from './display-columns/getSRT_RowExpandColumnDef'

@@ -3,7 +3,6 @@ import { SRT_TablePagination } from './SRT_TablePagination'
 import { SRT_ToolbarAlertBanner } from './SRT_ToolbarAlertBanner'
 import { SRT_ToolbarDropZone } from './SRT_ToolbarDropZone'
 import type { SRT_RowData, SRT_TableInstance } from '../../types-SRT'
-import { getCommonToolbarStyles } from '../../utils/style.utils.shadcn'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { cn } from '@/lib/utils'
 

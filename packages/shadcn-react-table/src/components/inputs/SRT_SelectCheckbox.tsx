@@ -4,8 +4,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 import type { CheckboxProps, SRT_Row, SRT_RowData, SRT_TableInstance } from '@/types-SRT'
-import { getIsRowSelected, getSRT_RowSelectionHandler, getSRT_SelectAllHandler } from '@/utils/row.utils.shadcn'
-import { getCommonTooltipProps } from '@/utils/style.utils.shadcn'
+import { getIsRowSelected, getSRT_RowSelectionHandler, getSRT_SelectAllHandler } from '@/utils/row.utils'
+import { getCommonTooltipProps } from '@/utils/style.utils'
 import { parseFromValuesOrFunc } from '@/utils/utils'
 
 export interface SRT_SelectCheckboxProps<TData extends SRT_RowData> extends CheckboxProps {

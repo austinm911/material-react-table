@@ -35,7 +35,7 @@ export const SRT_TableHead = <TData extends SRT_RowData>({
 			ref={(ref: HTMLTableSectionElement) => {
 				tableHeadRef.current = ref
 				if (tableHeadProps?.ref) {
-					tableHeadProps.ref.current = ref
+					tableHeadProps.ref
 				}
 			}}
 			className={cn(

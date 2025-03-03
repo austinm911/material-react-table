@@ -81,7 +81,16 @@ export const SRT_TableContainer = <TData extends SRT_RowData>({
 				...tableContainerProps?.style,
 			}}
 		>
-			{loading ? <SRT_TableLoadingOverlay table={table} /> : null}
+			{loading ? (
+				<SRT_TableLoadingOverlay
+					table={table}
+					max={100}
+					value={50}
+					min={0}
+					gaugePrimaryColor="red"
+					gaugeSecondaryColor="blue"
+				/>
+			) : null}
 			<SRT_Table table={table} />
 			{(createModalOpen || editModalOpen) && <SRT_EditRowModal open table={table} />}
 			{enableCellActions && actionCell && <SRT_CellActionMenu table={table} />}

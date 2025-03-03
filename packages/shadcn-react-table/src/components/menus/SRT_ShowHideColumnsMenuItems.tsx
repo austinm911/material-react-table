@@ -5,7 +5,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { cn } from '@/lib/utils'
 import { type Dispatch, type DragEvent, type SetStateAction, useRef, useState } from 'react'
 import type { DropdownMenuItemProps, SRT_Column, SRT_RowData, SRT_TableInstance } from '../../types-SRT'
-import { reorderColumn } from '../../utils/column.utils.shadcn'
+import { reorderColumn } from '../../utils/column.utils'
 import { SRT_ColumnPinningButtons } from '../buttons/SRT_ColumnPinningButtons'
 import { SRT_GrabHandleButton } from '../buttons/SRT_GrabHandleButton'
 
