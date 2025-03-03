@@ -8,6 +8,7 @@ import { parseFromValuesOrFunc } from '../../utils/utils'
 import { SRT_GlobalFilterTextField } from '../inputs/SRT_GlobalFilterTextField'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { cn } from '@/lib/utils'
+import { getCommonToolbarStyles } from '@/utils/style.utils'
 
 export interface SRT_TopToolbarProps<TData extends SRT_RowData> {
 	table: SRT_TableInstance<TData>
@@ -20,85 +21,73 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({ table }: SRT_TopTool
 			enableGlobalFilter,
 			enablePagination,
 			enableToolbarInternalActions,
-			shadcnTopToolbarProps,
 			positionGlobalFilter,
 			positionPagination,
 			positionToolbarAlertBanner,
 			positionToolbarDropZone,
 			renderTopToolbarCustomActions,
+			shadcnTopToolbarProps,
 		},
 		refs: { topToolbarRef },
 	} = table
+	const { showColumnFilters } = getState()
 
-	const { isFullScreen, showGlobalFilter } = getState()
-
-	const isMobile = useMediaQuery('(max-width:720px)')
-	const isTablet = useMediaQuery('(max-width:1024px)')
-
-	const toolbarProps = parseFromValuesOrFunc(shadcnTopToolbarProps, { table })
-
-	const stackAlertBanner = isMobile || !!renderTopToolbarCustomActions || (showGlobalFilter && isTablet)
-
-	const globalFilterProps = {
-		sx: !isTablet
-			? {
-					zIndex: 2,
-				}
-			: undefined,
-		table,
+	const toolbarProps = {
+		...parseFromValuesOrFunc(shadcnTopToolbarProps, { table }),
 	}
+
+	const stackAlertBanner = positionToolbarAlertBanner === 'top'
+	const stackDropZone = ['both', 'top'].includes(positionToolbarDropZone ?? '')
 
 	return (
 		<div
-			{...toolbarProps}
-			ref={(ref: HTMLDivElement) => {
-				topToolbarRef.current = ref
-				if (toolbarProps?.ref) {
-					toolbarProps.ref
+			ref={(node) => {
+				if (node) {
+					topToolbarRef.current = node
+					if (toolbarProps?.ref) {
+						// @ts-expect-error
+						toolbarProps.ref.current = node
+					}
 				}
 			}}
 			className={cn(
-				isFullScreen ? 'sticky top-0' : 'relative',
-				'w-full',
-				parseFromValuesOrFunc(toolbarProps?.className, { theme: {} }) as string,
+				// Remove flex-wrap-reverse and add flex-col to ensure vertical stacking
+				'flex flex-col gap-2 w-full p-2',
+				toolbarProps?.className,
 			)}
+			{...toolbarProps}
 		>
-			{positionToolbarAlertBanner === 'top' && (
-				<SRT_ToolbarAlertBanner stackAlertBanner={stackAlertBanner} table={table} />
-			)}
-			{['both', 'top'].includes(positionToolbarDropZone ?? '') && <SRT_ToolbarDropZone table={table} />}
-			<div
-				className={cn(
-					'flex',
-					'items-start',
-					'box-border',
-					'gap-2',
-					'justify-between',
-					'p-2',
-					stackAlertBanner ? 'relative' : 'absolute',
-					'right-0',
-					'top-0',
-					'w-full',
-				)}
-			>
-				{enableGlobalFilter && positionGlobalFilter === 'left' && (
-					<SRT_GlobalFilterTextField {...globalFilterProps} />
-				)}
-				{renderTopToolbarCustomActions?.({ table }) ?? <span />}
-				{enableToolbarInternalActions ? (
-					<div className={cn('flex', 'items-center', 'flex-wrap-reverse', 'gap-2', 'justify-end')}>
-						{enableGlobalFilter && positionGlobalFilter === 'right' && (
-							<SRT_GlobalFilterTextField {...globalFilterProps} />
-						)}
-						<SRT_ToolbarInternalButtons table={table} />
-					</div>
-				) : (
-					enableGlobalFilter &&
-					positionGlobalFilter === 'right' && <SRT_GlobalFilterTextField {...globalFilterProps} />
-				)}
+			{/* Alert Banner */}
+			{stackAlertBanner && <SRT_ToolbarAlertBanner table={table} />}
+
+			{/* Drop Zone */}
+			{stackDropZone && <SRT_ToolbarDropZone table={table} />}
+
+			{/* Main Toolbar Content */}
+			<div className="flex items-center justify-between w-full gap-2">
+				{/* Left Side: Custom Actions */}
+				<div className="flex items-center gap-2">{renderTopToolbarCustomActions?.({ table })}</div>
+
+				{/* Right Side: Internal Actions */}
+				<div className="flex items-center gap-2 ml-auto">
+					{enableGlobalFilter && positionGlobalFilter === 'left' && (
+						<SRT_GlobalFilterTextField table={table} />
+					)}
+					{enableToolbarInternalActions && <SRT_ToolbarInternalButtons table={table} />}
+					{enableGlobalFilter && positionGlobalFilter === 'right' && (
+						<SRT_GlobalFilterTextField table={table} />
+					)}
+				</div>
 			</div>
-			{enablePagination && ['both', 'top'].includes(positionPagination ?? '') && (
-				<SRT_TablePagination position="top" table={table} />
+
+			{/* Column Filters */}
+			{/* {showColumnFilters && <SRT_ColumnFilters table={table} />} */}
+
+			{/* Pagination */}
+			{enablePagination && ['top', 'both'].includes(positionPagination ?? '') && (
+				<div className="flex justify-center w-full">
+					<SRT_TablePagination position="top" table={table} />
+				</div>
 			)}
 			<SRT_LinearProgressBar isTopToolbar table={table} />
 		</div>

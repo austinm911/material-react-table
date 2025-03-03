@@ -29,13 +29,7 @@ export const SRT_ShowHideColumnsMenuItems = <TData extends SRT_RowData>({
 }: SRT_ShowHideColumnsMenuItemsProps<TData>) => {
 	const {
 		getState,
-		options: {
-			enableColumnOrdering,
-			enableColumnPinning,
-			enableHiding,
-			localization,
-			shadcnTheme: { draggingBorderColor },
-		},
+		options: { enableColumnOrdering, enableColumnPinning, enableHiding, localization },
 		setColumnOrder,
 	} = table
 	const { columnOrder } = getState()
@@ -95,7 +89,7 @@ export const SRT_ShowHideColumnsMenuItems = <TData extends SRT_RowData>({
 					'outline-2 outline-dashed': isDragging
 						? 'outline-gray-500'
 						: hoveredColumn?.id === column.id
-							? draggingBorderColor
+							? 'outline-gray-500'
 							: 'outline-none',
 				})}
 				onDragEnter={handleDragEnter}

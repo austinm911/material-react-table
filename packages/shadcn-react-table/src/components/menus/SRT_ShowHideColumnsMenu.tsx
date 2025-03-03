@@ -31,13 +31,7 @@ export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
 		getRightLeafColumns,
 		getState,
 		initialState,
-		options: {
-			enableColumnOrdering,
-			enableColumnPinning,
-			enableHiding,
-			localization,
-			shadcnTheme: { menuBackgroundColor },
-		},
+		options: { enableColumnOrdering, enableColumnPinning, enableHiding, localization },
 	} = table
 	const { columnOrder, columnPinning, density } = getState()
 
@@ -86,10 +80,7 @@ export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
 			<DropdownMenuTrigger asChild>
 				<div onKeyDown={() => setAnchorEl(anchorEl)} />
 			</DropdownMenuTrigger>
-			<DropdownMenuContent
-				className={cn('flex flex-col gap-2 p-2', density === 'compact' ? 'py-1' : 'py-2')}
-				style={{ backgroundColor: menuBackgroundColor }}
-			>
+			<DropdownMenuContent className={cn('flex flex-col gap-2 p-2', density === 'compact' ? 'py-1' : 'py-2')}>
 				<div className="flex justify-between gap-2">
 					{enableHiding && (
 						<Button

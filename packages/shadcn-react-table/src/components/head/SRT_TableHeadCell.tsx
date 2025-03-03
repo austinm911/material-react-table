@@ -103,7 +103,7 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
 		if (showResizeBorder) {
 			return columnResizeDirection === 'ltr' ? { borderRight: borderStyle } : { borderLeft: borderStyle }
 		}
-		const draggingBorders = borderStyle
+		const draggingBordersStyle = borderStyle
 			? {
 					borderLeft: borderStyle,
 					borderRight: borderStyle,
@@ -111,8 +111,15 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
 				}
 			: undefined
 
-		return draggingBorders
-	}, [draggingColumn, hoveredColumn, columnSizingInfo.isResizingColumn])
+		return draggingBordersStyle
+	}, [
+		draggingColumn,
+		hoveredColumn,
+		columnSizingInfo.isResizingColumn,
+		columnResizeDirection,
+		columnResizeMode,
+		header.subHeaders.length,
+	])
 
 	const handleDragEnter = (_e: DragEvent) => {
 		if (enableGrouping && hoveredColumn?.id === 'drop-zone') {
@@ -192,6 +199,8 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
 						: 'pt-5',
 				enableMultiSort && column.getCanSort() ? 'select-none' : '',
 				textAlign === 'center' ? 'text-center' : textAlign === 'right' ? 'text-right' : 'text-left',
+				draggingBorders,
+				layoutMode?.startsWith('grid') ? 'flex flex-col' : '',
 				tableCellProps.className,
 			)}
 			style={{
@@ -201,8 +210,6 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
 					table,
 					tableCellProps,
 				}),
-				...draggingBorders,
-				...(layoutMode?.startsWith('grid') ? { flexDirection: 'column' } : {}),
 				...tableCellProps.style,
 			}}
 		>
@@ -210,36 +217,34 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
 				? null
 				: (tableCellProps.children ?? (
 						<div
-							className="flex items-center w-full"
-							style={{
-								flexDirection: tableCellProps?.align === 'right' ? 'row-reverse' : 'row',
-								justifyContent:
-									columnDefType === 'group' || tableCellProps?.align === 'center'
-										? 'center'
-										: column.getCanResize()
-											? 'space-between'
-											: 'flex-start',
-								position: 'relative',
-							}}
+							className={cn(
+								'flex items-center w-full gap-2',
+								{
+									'flex-row-reverse': tableCellProps?.align === 'right',
+									'justify-center': columnDefType === 'group' || tableCellProps?.align === 'center',
+									'justify-between': column.getCanResize(),
+									'justify-start': !column.getCanResize(),
+								},
+								'relative',
+							)}
 						>
 							<div
-								className="flex items-center"
+								className={cn('flex items-center gap-2', {
+									'cursor-pointer': column.getCanSort() && columnDefType !== 'group',
+									'flex-row-reverse': tableCellProps?.align === 'right',
+									'overflow-hidden': columnDefType === 'data',
+									'pl-[${headerPL}rem]': tableCellProps?.align === 'center',
+								})}
 								onKeyDown={column.getToggleSortingHandler()}
-								style={{
-									cursor: column.getCanSort() && columnDefType !== 'group' ? 'pointer' : undefined,
-									flexDirection: tableCellProps?.align === 'right' ? 'row-reverse' : 'row',
-									overflow: columnDefType === 'data' ? 'hidden' : undefined,
-									paddingLeft: tableCellProps?.align === 'center' ? `${headerPL}rem` : undefined,
-								}}
 							>
 								<div
-									className="hover:text-clip"
-									style={{
-										minWidth: `${Math.min(columnDef.header?.length ?? 0, 4)}ch`,
-										overflow: columnDefType === 'data' ? 'hidden' : undefined,
-										textOverflow: 'ellipsis',
-										whiteSpace: (columnDef.header?.length ?? 0) < 20 ? 'nowrap' : 'normal',
-									}}
+									className={cn('hover:text-clip', {
+										'min-w-[4ch]': true,
+										'overflow-hidden': columnDefType === 'data',
+										'text-ellipsis': true,
+										'whitespace-nowrap': (columnDef.header?.length ?? 0) < 20,
+										'whitespace-normal': (columnDef.header?.length ?? 0) >= 20,
+									})}
 								>
 									{HeaderElement}
 								</div>

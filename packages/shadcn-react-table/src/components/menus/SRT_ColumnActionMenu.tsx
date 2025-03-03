@@ -45,7 +45,6 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
 				VisibilityOffIcon,
 			},
 			localization,
-			shadcnTheme: { menuBackgroundColor },
 			renderColumnActionsMenuItems,
 		},
 		refs: { filterInputRefs },
@@ -295,11 +294,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
 					}}
 				/>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent
-				className={`${density === 'compact' ? 'py-1' : 'py-2'}`}
-				style={{ backgroundColor: menuBackgroundColor }}
-				{...contentProps}
-			>
+			<DropdownMenuContent className={`${density === 'compact' ? 'py-1' : 'py-2'}`} {...contentProps}>
 				{columnDef.renderColumnActionsMenuItems?.({
 					closeMenu: () => setAnchorEl(null),
 					column,
