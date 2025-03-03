@@ -1,6 +1,5 @@
 import { type DragEvent, memo, useMemo, useRef } from 'react'
 import type { VirtualItem } from '@tanstack/react-virtual'
-import type { Theme } from '@mui/material/styles'
 import { SRT_TableBodyCell, Memo_SRT_TableBodyCell } from './SRT_TableBodyCell'
 import { SRT_TableDetailPanel } from './SRT_TableDetailPanel'
 import type {
@@ -13,7 +12,7 @@ import type {
 	SRT_VirtualItem,
 } from '../../types-SRT'
 import { getIsRowSelected } from '../../utils/row.utils.shadcn'
-import { commonCellBeforeAfterStyles, getCommonPinnedCellStyles } from '../../utils/style.utils'
+import { commonCellBeforeAfterStyles, getCommonPinnedCellStyles } from '../../utils/style.utils.shadcn'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { TableRow } from '@/components/ui/table'
 
@@ -50,8 +49,8 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
 			enableStickyHeader,
 			layoutMode,
 			memoMode,
-			mrtTheme: { baseBackgroundColor, pinnedRowBackgroundColor, selectedRowBackgroundColor },
-			muiTableBodyRowProps,
+			shadcnTheme: { baseBackgroundColor, pinnedRowBackgroundColor, selectedRowBackgroundColor },
+			shadcnTableBodyRowProps,
 			renderDetailPanel,
 			rowPinningDisplayMode,
 		},
@@ -71,7 +70,7 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
 	const isHoveredRow = hoveredRow?.id === row.id
 
 	const tableRowProps = {
-		...parseFromValuesOrFunc(muiTableBodyRowProps, {
+		...parseFromValuesOrFunc(shadcnTableBodyRowProps, {
 			row,
 			staticRowIndex,
 			table,

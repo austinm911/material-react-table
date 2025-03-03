@@ -87,7 +87,9 @@ MRT is made up of the following groups of components:
 | SRT_Table               | 🟧      |
 | SRT_TableContainer      | 🟧      |
 | SRT_TableLoadingOverlay | 🟧      |
-| SRT_TablePaper          | 🟧      |
+| SRT_TableBodyCell       | 🟧      |
+| SRT_TableBodyRow        | 🟧      |
+| SRT_TableBody           | 🟧      |
 
 #### Table Footer
 
